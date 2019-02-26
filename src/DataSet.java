@@ -1,3 +1,4 @@
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,26 +9,40 @@ public class DataSet {
     private static int[] inputs = new int[784];
 
     DataSet() {
-        ArrayList<Integer> trainingSet = readFile("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
-        this.label = trainingSet.get(0);
-        inputs[inputs.length - 1] = 0;
-        for (int i = 0; i < inputs.length - 1; i++) {
-            inputs[i] = trainingSet.get(i + 1);
+        int[][] trainingSet = readFile("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv", 5000);
+        System.out.println(Arrays.deepToString(trainingSet));
+        System.out.println(trainingSet[0].length);
+        for (int i = 0; i < 784; i++) {
+            inputs[i] = trainingSet[2][i];
         }
     }
 
-    private static ArrayList readFile(String fileName) {
-        ArrayList<Integer> x = new ArrayList();
+    public static void main(String[] args) {
+        DataSet d = new DataSet();
+        System.out.println(Arrays.toString(d.getInput()));
+    }
+
+    private static int[][] readFile(String fileName, int batchSize) {
+        int[][] x = new int[batchSize][784];
+        int start = 0;
         try {
             Scanner n = new Scanner(new File(fileName));
             n.useDelimiter(",");
-            while (n.hasNextInt()) {
-                x.add(Integer.parseInt(n.next()));
+
+            while (start < batchSize) {
+                while (n.hasNextInt()) {
+                    for (int i = 0; i < 784; i++) {
+                        x[start][i] = (Integer.parseInt(n.next()));
+                    }
+                    break;
+                }
+                start++;
+                n.nextLine();
             }
+
         } catch (IOException e) {
             System.out.println(e);
         }
-
         return x;
     }
 
