@@ -1,12 +1,14 @@
 public class Run {
     public static void main(String[] args) {
-        int batchSize = 60000;
+        int batchSizeTraining = 60000;
+        int batchSizeTesting = 10000;
         double accuracy = 0;
-        DataSet trainingData = new DataSet(batchSize);
-        TestingDataSet testingData = new TestingDataSet();
+
+        DataSet trainingData = new DataSet(batchSizeTraining,"C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
+        DataSet testingData = new DataSet(batchSizeTesting, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
         Network network = new Network(784, 100, 10);
 
-        for (int i = 0; i < batchSize; i++) {
+        for (int i = 0; i < batchSizeTraining; i++) {
             network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
         }
 
@@ -17,7 +19,7 @@ public class Run {
                 accuracy++;
             }
         }
-        System.out.println("accuracy: " + (accuracy / 100) + "%");
+        System.out.println("Accuracy: " + (accuracy / 100) + "%");
     }
 
     private static int getGuess(double[] outputs) {

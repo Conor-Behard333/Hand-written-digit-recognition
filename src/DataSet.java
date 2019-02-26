@@ -4,8 +4,8 @@ import java.util.Scanner;
 public class DataSet {
     int[][] trainingSet;
 
-    DataSet(int batchSize) {
-        trainingSet = loadData("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv", batchSize);
+    DataSet(int batchSize, String filePath) {
+        trainingSet = loadData(filePath, batchSize);
     }
 
     private static int[][] loadData(String fileName, int batchSize) {
@@ -24,7 +24,6 @@ public class DataSet {
                 row++;
                 n.nextLine();
             }
-
         } catch (IOException e) {
             System.out.println(e);
         }
