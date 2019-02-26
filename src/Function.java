@@ -22,7 +22,7 @@ class Function {
     double[] setWeights(int size) {
         double[] arr = new double[size];
         for (int i = 0; i < size; i++) {
-            arr[i] = Math.random() * 1;
+            arr[i] = Math.random() * 2 - 1;
         }
         return arr;
     }
@@ -34,7 +34,6 @@ class Function {
     double derivative(double x) {
         return x * (1 - x);
     }
-
 
     double softMax(double[] weightedSums, int neuron) {
         double[] output = new double[weightedSums.length];

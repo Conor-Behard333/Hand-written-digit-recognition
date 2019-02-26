@@ -10,7 +10,7 @@ public class TestingDataSet {
     }
 
     private static int[][] loadData(String fileName) {
-        int[][] x = new int[1][784];
+        int[][] x = new int[10000][784];
         int row = 0;
         try {
             Scanner n = new Scanner(new File(fileName));
@@ -32,7 +32,7 @@ public class TestingDataSet {
         return x;
     }
 
-    int[] getIndividualData(int n) {
+    int[] getInputData(int n) {
         int[] x = new int[784];
         for (int i = 1; i < 784; i++) {
             x[i] = trainingSet[n][i];

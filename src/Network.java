@@ -1,7 +1,5 @@
-import java.util.Arrays;
-
 class Network {
-    private final double LR = 0.1;
+    private final double LR = 0.01;
     private int numOfInputNeurons;
     private int numOfHiddenNeurons;
     private int numOfOutputNeurons;
@@ -35,6 +33,7 @@ class Network {
         for (int i = 0; i < numOfOutputNeurons; i++) {
             output_neurons[i].setWeightedSum(hidden_outputs);
         }
+
         double[] weightedSum = new double[numOfOutputNeurons];
         for (int i = 0; i < numOfOutputNeurons; i++) {
             weightedSum[i] = output_neurons[i].getWeightedSum();
@@ -58,7 +57,7 @@ class Network {
         }
         loss = -(sum / numOfOutputNeurons);
 
-        System.out.println("Error: " + loss);
+        //System.out.println("Error: " + loss);
 
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             hidden_outputs[i] = hidden_neurons[i].getOutput();

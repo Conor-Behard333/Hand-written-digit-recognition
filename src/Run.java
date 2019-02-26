@@ -2,18 +2,17 @@ import java.util.Arrays;
 
 public class Run {
     public static void main(String[] args) {
-
-        Network network = new Network(784, 30, 10);
-        DataSet ds = new DataSet(50000);
-        TestingDataSet tds = new TestingDataSet();
+        DataSet trainingData = new DataSet(10000);
+        TestingDataSet testingData = new TestingDataSet();
+        Network network = new Network(784, 100, 10);
         //train the network
-        for (int i = 0; i < 50000 - 1; i++) {
-            network.train(ds.getIndividualData(i), getTarget(ds.getLabel(i)));
+        for (int i = 0; i < 10000; i++) {
+            network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
         }
-
-        System.out.println(Arrays.toString(network.feedForward(tds.getIndividualData(0))));
-        System.out.println("label: " + tds.getLabel(0));
+        System.out.println(Arrays.toString(network.feedForward(testingData.getInputData(1))));
+        System.out.println("label: " + testingData.getLabel(1));
     }
+
 
     private static double[] getTarget(int label) {
         switch (label) {

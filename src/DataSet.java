@@ -31,7 +31,7 @@ public class DataSet {
         return x;
     }
 
-    int[] getIndividualData(int n) {
+    int[] getInputData(int n) {
         int[] x = new int[784];
         for (int i = 1; i < 784; i++) {
             x[i] = trainingSet[n][i];
