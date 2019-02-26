@@ -1,18 +1,39 @@
-import java.util.Arrays;
-
 public class Run {
     public static void main(String[] args) {
-        DataSet trainingData = new DataSet(10000);
+        int batchSize = 60000;
+        double accuracy = 0;
+        DataSet trainingData = new DataSet(batchSize);
         TestingDataSet testingData = new TestingDataSet();
         Network network = new Network(784, 100, 10);
-        //train the network
-        for (int i = 0; i < 10000; i++) {
+
+        for (int i = 0; i < batchSize; i++) {
             network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
         }
-        System.out.println(Arrays.toString(network.feedForward(testingData.getInputData(1))));
-        System.out.println("label: " + testingData.getLabel(1));
+
+        for (int n = 0; n < 10000; n++) {
+            int guess = getGuess(network.feedForward(testingData.getInputData(n)));
+            int label = testingData.getLabel(n);
+            if (label == guess) {
+                accuracy++;
+            }
+        }
+        System.out.println("accuracy: " + (accuracy / 100) + "%");
     }
 
+    private static int getGuess(double[] outputs) {
+        double largest = 0;
+        for (double output : outputs) {
+            if (output >= largest) {
+                largest = output;
+            }
+        }
+        for (int i = 0; i < outputs.length; i++) {
+            if (outputs[i] == largest) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     private static double[] getTarget(int label) {
         switch (label) {

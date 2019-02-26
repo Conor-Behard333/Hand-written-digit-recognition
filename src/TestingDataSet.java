@@ -10,12 +10,13 @@ public class TestingDataSet {
     }
 
     private static int[][] loadData(String fileName) {
-        int[][] x = new int[10000][784];
+        int size = 10000;
+        int[][] x = new int[size][784];
         int row = 0;
         try {
             Scanner n = new Scanner(new File(fileName));
             n.useDelimiter(",");
-            while (row < 1) {
+            while (row < size) {
                 while (n.hasNextInt()) {
                     for (int i = 0; i < 784; i++) {
                         x[row][i] = (Integer.parseInt(n.next()));
