@@ -1,42 +1,27 @@
-import javax.xml.crypto.Data;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class DataSet {
-    private static int label;
-    private static int[] inputs = new int[784];
+    int[][] trainingSet;
 
-    DataSet() {
-        int[][] trainingSet = readFile("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv", 5000);
-        System.out.println(Arrays.deepToString(trainingSet));
-        System.out.println(trainingSet[0].length);
-        for (int i = 0; i < 784; i++) {
-            inputs[i] = trainingSet[2][i];
-        }
+    DataSet(int batchSize) {
+        trainingSet = loadData("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv", batchSize);
     }
 
-    public static void main(String[] args) {
-        DataSet d = new DataSet();
-        System.out.println(Arrays.toString(d.getInput()));
-    }
-
-    private static int[][] readFile(String fileName, int batchSize) {
+    private static int[][] loadData(String fileName, int batchSize) {
         int[][] x = new int[batchSize][784];
-        int start = 0;
+        int row = 0;
         try {
             Scanner n = new Scanner(new File(fileName));
             n.useDelimiter(",");
-
-            while (start < batchSize) {
+            while (row < batchSize) {
                 while (n.hasNextInt()) {
                     for (int i = 0; i < 784; i++) {
-                        x[start][i] = (Integer.parseInt(n.next()));
+                        x[row][i] = (Integer.parseInt(n.next()));
                     }
                     break;
                 }
-                start++;
+                row++;
                 n.nextLine();
             }
 
@@ -46,12 +31,16 @@ public class DataSet {
         return x;
     }
 
-    int[] getInput() {
-        return inputs;
+    int[] getIndividualData(int n) {
+        int[] x = new int[784];
+        for (int i = 1; i < 784; i++) {
+            x[i] = trainingSet[n][i];
+        }
+        return x;
     }
 
-    int getLabel() {
-        return label;
+    int getLabel(int n) {
+        return trainingSet[n][0];
     }
 
 }

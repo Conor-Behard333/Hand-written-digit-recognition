@@ -22,6 +22,7 @@ class Network {
     }
 
     double[] feedForward(int[] inputs) {
+        Function f = new Function();
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double[] output_outputs = new double[numOfOutputNeurons];
 
@@ -32,29 +33,38 @@ class Network {
         }
         //passes hidden outputs to output layer and gets their outputs
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].setOutput(hidden_outputs);
-            output_outputs[i] = output_neurons[i].getOutput();
+            output_neurons[i].setWeightedSum(hidden_outputs);
+        }
+        double[] weightedSum = new double[numOfOutputNeurons];
+        for (int i = 0; i < numOfOutputNeurons; i++) {
+            weightedSum[i] = output_neurons[i].getWeightedSum();
         }
 
+        for (int i = 0; i < numOfOutputNeurons; i++) {
+            output_neurons[i].setOutput(f.softMax(weightedSum, i));
+            output_outputs[i] = output_neurons[i].getOutput();
+        }
         return output_outputs;
     }
 
-    void train(int[] inputs, double target) {
+    void train(int[] inputs, double[] target) {
         double[] outputs = feedForward(inputs);
-        double[] error = new double[outputs.length];
+        double error;// cross-entropy
         double[] hidden_outputs = new double[numOfHiddenNeurons];
-        for (int i = 0; i < error.length; i++) {
-            error[i] = 1d / 2 * Math.pow((target - outputs[i]), 2);
+        double sum = 0;
+        for (int i = 0; i < numOfOutputNeurons; i++) {
+            sum += target[i] * Math.log(outputs[i]) + (1 - target[i]) * (Math.log(1 - outputs[i]));
         }
+        error = -(sum / numOfOutputNeurons);
 
-        // System.out.println("Error: " + Arrays.toString(error));
+        System.out.println("Error: " + error);
 
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             hidden_outputs[i] = hidden_neurons[i].getOutput();
         }
         //tune output weights
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].tuneWeights(LR, hidden_outputs, target);
+            output_neurons[i].tuneWeights(LR, hidden_outputs, target[i]);
         }
         //tune Hidden weights
         for (int i = 0; i < numOfHiddenNeurons; i++) {

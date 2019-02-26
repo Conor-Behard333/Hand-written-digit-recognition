@@ -35,4 +35,17 @@ class Function {
     double dSigmoid(double x) {
         return x * (1 - x);
     }
+
+
+    double softMax(double[] weightedSums, int neuron) {
+        double[] output = new double[weightedSums.length];
+        double sum = 0;
+        for (int i = 0; i < weightedSums.length; i++) {
+            sum += Math.exp(weightedSums[i]);
+        }
+        for (int i = 0; i < output.length; i++) {
+            output[i] = Math.exp(weightedSums[i]) / sum;
+        }
+        return output[neuron];
+    }
 }
