@@ -6,7 +6,7 @@ public class Run {
         int epochs = 1;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
         DataSet testingData = new DataSet(batchSizeTesting, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
-        Network network = new Network(784, 70, 10);
+        Network network = new Network(784, 74, 10);
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSizeTraining; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
@@ -20,7 +20,8 @@ public class Run {
                 accuracy++;
             }
         }
-        System.out.println("Accuracy: " + (accuracy / 100) + "%");//72.7%
+        System.out.println("Accuracy: " + (accuracy / 100) + "%");
+        //Best Accuracy: 74.61%
     }
 
     private static int getGuess(double[] outputs) {
