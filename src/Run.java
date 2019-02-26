@@ -3,16 +3,16 @@ import java.util.Arrays;
 public class Run {
     public static void main(String[] args) {
 
-        Network network = new Network(784, 20, 10);
-        DataSet ds = new DataSet(25000);
+        Network network = new Network(784, 30, 10);
+        DataSet ds = new DataSet(50000);
+        TestingDataSet tds = new TestingDataSet();
         //train the network
-        for (int i = 0; i < 25000 - 1; i++) {
+        for (int i = 0; i < 50000 - 1; i++) {
             network.train(ds.getIndividualData(i), getTarget(ds.getLabel(i)));
         }
-        System.out.println(Arrays.toString(network.feedForward(ds.getIndividualData(14999))));
-        System.out.println("label: " + ds.getLabel(25000 - 1));
 
-
+        System.out.println(Arrays.toString(network.feedForward(tds.getIndividualData(0))));
+        System.out.println("label: " + tds.getLabel(0));
     }
 
     private static double[] getTarget(int label) {

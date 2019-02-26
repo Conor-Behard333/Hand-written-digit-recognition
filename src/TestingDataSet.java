@@ -1,47 +1,47 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class TestingDataSet {
-    private static int label;
-    private static int[] inputs = new int[784];
+    int[][] trainingSet;
 
     TestingDataSet() {
-        ArrayList<Integer> trainingSet = readFile("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
-        this.label = trainingSet.get(0);
-        inputs[inputs.length - 1] = 0;
-        for (int i = 0; i < inputs.length - 1; i++) {
-            inputs[i] = trainingSet.get(i + 1);
-        }
+        trainingSet = loadData("C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
     }
 
-    private static ArrayList readFile(String fileName) {
-        ArrayList<Integer> x = new ArrayList();
+    private static int[][] loadData(String fileName) {
+        int[][] x = new int[1][784];
+        int row = 0;
         try {
             Scanner n = new Scanner(new File(fileName));
             n.useDelimiter(",");
-            while (n.hasNextInt()) {
-                x.add(Integer.parseInt(n.next()));
+            while (row < 1) {
+                while (n.hasNextInt()) {
+                    for (int i = 0; i < 784; i++) {
+                        x[row][i] = (Integer.parseInt(n.next()));
+                    }
+                    break;
+                }
+                row++;
+                n.nextLine();
             }
+
         } catch (IOException e) {
             System.out.println(e);
         }
-
         return x;
     }
 
-    int[] getInput() {
-        return inputs;
+    int[] getIndividualData(int n) {
+        int[] x = new int[784];
+        for (int i = 1; i < 784; i++) {
+            x[i] = trainingSet[n][i];
+        }
+        return x;
     }
 
-    int label() {
-        return label;
+    int getLabel(int n) {
+        return trainingSet[n][0];
     }
+
 }
-
-
-
-
-

@@ -51,6 +51,7 @@ class Network {
         double[] outputs = feedForward(inputs);
         double loss;// cross-entropy
         double[] hidden_outputs = new double[numOfHiddenNeurons];
+
         double sum = 0;
         for (int i = 0; i < numOfOutputNeurons; i++) {
             sum += target[i] * Math.log(outputs[i]) + (1 - target[i]) * (Math.log(1 - outputs[i]));
