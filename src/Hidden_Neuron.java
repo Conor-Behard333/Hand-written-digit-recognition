@@ -22,7 +22,7 @@ class Hidden_Neuron {
 
     private double delta_weights(double LR, double input, double weightedDeltaHiddenTotal) {
         //derivative of sigmoid(output) multiplied with the hidden weighted delta total
-        double deltaOutput = f.dSigmoid(output) * weightedDeltaHiddenTotal;
+        double deltaOutput = f.derivative(output) * weightedDeltaHiddenTotal;
         //learning rate multiplied with the delta output and the input
         return LR * deltaOutput * input;
     }

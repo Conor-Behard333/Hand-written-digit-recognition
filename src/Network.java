@@ -49,15 +49,15 @@ class Network {
 
     void train(int[] inputs, double[] target) {
         double[] outputs = feedForward(inputs);
-        double error;// cross-entropy
+        double loss;// cross-entropy
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double sum = 0;
         for (int i = 0; i < numOfOutputNeurons; i++) {
             sum += target[i] * Math.log(outputs[i]) + (1 - target[i]) * (Math.log(1 - outputs[i]));
         }
-        error = -(sum / numOfOutputNeurons);
+        loss = -(sum / numOfOutputNeurons);
 
-        System.out.println("Error: " + error);
+        System.out.println("Error: " + loss);
 
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             hidden_outputs[i] = hidden_neurons[i].getOutput();

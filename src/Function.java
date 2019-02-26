@@ -31,8 +31,7 @@ class Function {
         return 1d / (1 + Math.exp(-x));
     }
 
-    //((x * (1 - x)) = derivative of sigmoid
-    double dSigmoid(double x) {
+    double derivative(double x) {
         return x * (1 - x);
     }
 

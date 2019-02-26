@@ -11,13 +11,9 @@ class Output_Neuron {
         this.weightedDeltaHidden = new double[hiddenNeurons];
     }
 
-    void setWeightedSum(double[] hiddenInputs) {
-        weightedSum = f.getWeightedSum(hiddenInputs, weights);
-    }
-
     void tuneWeights(double LR, double[] hidden_output, double target) {
         //derivative of mean squared error multiplied by the derivative of softmax(output)
-        double delta = (target - output) * f.dSigmoid(output);
+        double delta = (target - output) * f.derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += delta_weights(i, LR, delta, hidden_output);
         }
@@ -42,5 +38,9 @@ class Output_Neuron {
 
     double getWeightedSum() {
         return weightedSum;
+    }
+
+    void setWeightedSum(double[] hiddenInputs) {
+        weightedSum = f.getWeightedSum(hiddenInputs, weights);
     }
 }
