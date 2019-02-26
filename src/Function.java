@@ -1,7 +1,6 @@
 class Function {
     //for output
     double getWeightedSum(double[] inputs, double... weights) {
-        // TODO: 19-Feb-19 Add bias
         double sum = 0;
         for (int i = 0; i < weights.length; i++) {
             sum += weights[i] * inputs[i];
@@ -11,7 +10,6 @@ class Function {
 
     //for hidden
     double getWeightedSum(int[] inputs, double... weights) {
-        // TODO: 19-Feb-19 Add bias
         double sum = 0;
         for (int i = 0; i < weights.length; i++) {
             sum += weights[i] * inputs[i];
