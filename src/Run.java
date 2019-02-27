@@ -1,9 +1,13 @@
 public class Run {
     public static void main(String[] args) {
+        //load data
+        //show gui
+        //train
+        //feed forward
         int batchSizeTraining = 60000;
         int batchSizeTesting = 10000;
         double accuracy = 0;
-        int epochs = 1;
+        int epochs = 2;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
         DataSet testingData = new DataSet(batchSizeTesting, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
         Network network = new Network(784, 74, 10);
@@ -23,6 +27,8 @@ public class Run {
         System.out.println("Accuracy: " + (accuracy / 100) + "%");
         //Best Accuracy: 74.61%
     }
+
+
 
     private static int getGuess(double[] outputs) {
         double largest = 0;
