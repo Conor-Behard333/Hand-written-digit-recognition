@@ -9,7 +9,7 @@ class Hidden_Neuron {
         this.weights = f.setWeights(weights.length);
     }
 
-    void tuneWeights(double LR, int[] inputs, double weightedDeltaHiddenTotal) {
+    void tuneWeights(double LR, double[] inputs, double weightedDeltaHiddenTotal) {
         for (int i = 0; i < weights.length; i++) {
             weights[i] += delta_weights(LR, inputs[i], weightedDeltaHiddenTotal);
         }
@@ -26,7 +26,7 @@ class Hidden_Neuron {
         return output;
     }
 
-    void setOutput(int[] inputs) {
+    void setOutput(double[] inputs) {
         this.weightedSum = f.getWeightedSum(inputs, weights);
         this.output = f.sigmoid(weightedSum);
     }

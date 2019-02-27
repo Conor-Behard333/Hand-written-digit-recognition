@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Run {
     public static void main(String[] args) {
         //load data
@@ -25,9 +27,8 @@ public class Run {
             }
         }
         System.out.println("Accuracy: " + (accuracy / 100) + "%");
-        //Best Accuracy: 74.61%
+        //Best Accuracy: 88.11%
     }
-
 
 
     private static int getGuess(double[] outputs) {

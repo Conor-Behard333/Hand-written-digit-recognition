@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class DataSet {
@@ -30,13 +31,35 @@ public class DataSet {
         return x;
     }
 
-    int[] getInputData(int n) {
-        int[] x = new int[784];
+    double[] getInputData(int n) {
+        double[] x = new double[784];
         for (int i = 1; i < 784; i++) {
             x[i] = trainingSet[n][i];
         }
+        x = normalise(x);
         return x;
     }
+
+    double[] normalise(double[] x) {
+        int min = 0;
+        double max = getMax(x);
+        double[] y = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            y[i] = (x[i] - min) / (max - min);
+        }
+        return y;
+    }
+
+    double getMax(double[] x) {
+        double max = 0;
+        for (int i = 0; i < x.length; i++) {
+            if (x[i] > max) {
+                max = x[i];
+            }
+        }
+        return max;
+    }
+
 
     int getLabel(int n) {
         return trainingSet[n][0];

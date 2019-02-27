@@ -19,7 +19,7 @@ class Network {
         createOutputNeurons();
     }
 
-    double[] feedForward(int[] inputs) {
+    double[] feedForward(double[] inputs) {
         Function f = new Function();
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double[] output_outputs = new double[numOfOutputNeurons];
@@ -46,7 +46,7 @@ class Network {
         return output_outputs;
     }
 
-    void train(int[] inputs, double[] target) {
+    void train(double[] inputs, double[] target) {
         double[] outputs = feedForward(inputs);
         double loss;// cross-entropy
         double[] hidden_outputs = new double[numOfHiddenNeurons];
