@@ -12,7 +12,6 @@ public class ImageConverter {
         double[] input = {};
         try {
             image = ImageIO.read(new File("C:\\Users\\conor\\OneDrive\\My Documents\\image.png"));
-            scale();
             input = new double[image.getHeight() * image.getWidth()];
             for (int i = 0; i < input.length; i++) {
                 for (int y = 0; y < image.getHeight(); y++) {
@@ -25,14 +24,6 @@ public class ImageConverter {
             System.out.println(e);
         }
         System.out.println(Arrays.toString(input));
-    }
-
-    private static void scale() {
-        Image scaledImg = image.getScaledInstance(28, 28, image.SCALE_SMOOTH);
-        image = new BufferedImage(28, 28, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = image.createGraphics();
-        g2.drawImage(scaledImg, 0, 0, null);
-        g2.dispose();
     }
 
     private static double getLuminance(int x, int y) {

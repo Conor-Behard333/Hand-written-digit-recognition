@@ -49,7 +49,7 @@ public class GUI extends JFrame {
     private void addCanvasPanel() {
         canvas = new Canvas();
         canvas.setLocation(0, 0);
-        canvas.setSize(100, 100);//435, 500
+        canvas.setSize(100, 100);//normally 435, 500 but made smaller for testing
         canvas.setBackground(Color.white);
         getContentPane().add(canvas);
     }
