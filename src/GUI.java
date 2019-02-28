@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class GUI extends JFrame {
     private static Network network;
@@ -25,11 +26,6 @@ public class GUI extends JFrame {
         setResizable(false);
         setVisible(true);
     }
-
-    public static void main(String[] args) {
-        GUI g = new GUI(new Network(784, 74, 10));
-    }
-
 
     private void createUI() {
         addDivider();
@@ -49,8 +45,8 @@ public class GUI extends JFrame {
     private void addCanvasPanel() {
         canvas = new Canvas();
         canvas.setLocation(0, 0);
-        canvas.setSize(100, 100);//normally 435, 500 but made smaller for testing
-        canvas.setBackground(Color.white);
+        canvas.setSize(100, 100);//normally 435, 500
+        canvas.setBackground(Color.black);
         getContentPane().add(canvas);
     }
 
@@ -93,13 +89,10 @@ public class GUI extends JFrame {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    private class ButtonTrainActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            //train network
+            ImageConverter ic = new ImageConverter();
+            System.out.println(network.getGuess(network.feedForward(ic.getInput())));
+            getContentPane().remove(canvas);
+            addCanvasPanel();
         }
     }
 

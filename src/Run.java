@@ -1,23 +1,26 @@
+import sun.nio.ch.Net;
+
 import java.util.Arrays;
 
 public class Run {
     public static void main(String[] args) {
         //load data
-        //show gui
-        //train
-        //feed forward
         int batchSizeTraining = 60000;
         int batchSizeTesting = 10000;
-        double accuracy = 0;
-        int epochs = 2;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
         DataSet testingData = new DataSet(batchSizeTesting, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
+
         Network network = new Network(784, 74, 10);
+        //train
+        double accuracy = 0;
+        int epochs = 2;
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSizeTraining; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
         }
+        //show gui
+        GUI ui = new GUI(network);
 
         for (int n = 0; n < 10000; n++) {
             int guess = getGuess(network.feedForward(testingData.getInputData(n)));

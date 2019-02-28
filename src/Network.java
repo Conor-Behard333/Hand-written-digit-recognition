@@ -88,4 +88,19 @@ class Network {
         }
     }
 
+    public int getGuess(double[] outputs) {
+        double largest = 0;
+        for (double output : outputs) {
+            if (output >= largest) {
+                largest = output;
+            }
+        }
+        for (int i = 0; i < outputs.length; i++) {
+            if (outputs[i] == largest) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
 }
