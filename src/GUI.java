@@ -11,7 +11,7 @@ class GUI extends JFrame {
     private Network network;
     private Canvas canvas;
 
-    private GUI(Network network) {
+    GUI(Network network) {
         this.network = network;
         createUI();
         setTitle("Neural Network");
@@ -22,33 +22,38 @@ class GUI extends JFrame {
     }
 
     private void createUI() {
-        addDivider();
+        addDividers();
         addCanvasPanel();
         addCenterPanel();
         addPredictPanel();
     }
 
-    private void addDivider() {
-        JPanel divider = new JPanel();
-        divider.setLocation(435, 0);
-        divider.setSize(30, 500);
-        divider.setBackground(Color.gray);
-        getContentPane().add(divider);
+    private void addDividers() {
+        Color color = Color.gray;
+        JPanel dividerMiddle = newPanel(435, 0, 30, 500, color);
+        getContentPane().add(dividerMiddle);
+
+        JPanel dividerLeft = newPanel(0, 0, 30, 500, color);
+        getContentPane().add(dividerLeft);
+
+        JPanel dividerTop = newPanel(0, 0, 900, 30, color);
+        getContentPane().add(dividerTop);
+
+        JPanel dividerRight = newPanel(870, 0, 30, 500, color);
+        getContentPane().add(dividerRight);
     }
+
 
     private void addCanvasPanel() {
         canvas = new Canvas();
-        canvas.setLocation(0, 0);
-        canvas.setSize(100, 100);//normally 435, 500
+        canvas.setLocation(30, 30);
+        canvas.setSize(405, 470);
         canvas.setBackground(Color.black);
         getContentPane().add(canvas);
     }
 
     private void addCenterPanel() {
-        JPanel centre = new JPanel();
-        centre.setLocation(0, 500);
-        centre.setSize(900, 100);
-        centre.setBackground(Color.gray);
+        JPanel centre = newPanel(0, 500, 900, 100, Color.gray);
         getContentPane().add(centre);
 
         JButton clearCanvas = new JButton("Clear");
@@ -62,15 +67,19 @@ class GUI extends JFrame {
         buttonGuess.setPreferredSize(new Dimension(425, 50));
         buttonGuess.addActionListener(new ButtonGuessActionListener());
         centre.add(buttonGuess);
-
     }
 
     private void addPredictPanel() {
-        JPanel predict = new JPanel();
-        predict.setLocation(500, 0);
-        predict.setSize(435, 500);
-        predict.setBackground(Color.white);
+        JPanel predict = newPanel(500, 30, 405, 470, Color.white);
         getContentPane().add(predict);
+    }
+
+    private JPanel newPanel(int x, int y, int width, int height, Color color) {
+        JPanel temp = new JPanel();
+        temp.setLocation(x, y);
+        temp.setSize(width, height);
+        temp.setBackground(color);
+        return temp;
     }
 
     private class ButtonGuessActionListener implements ActionListener {
@@ -83,8 +92,8 @@ class GUI extends JFrame {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            ImageConverter ic = new ImageConverter();
-            System.out.println(network.getGuess(network.feedForward(ic.getInput())));
+            ImageConverter imageConverter = new ImageConverter();
+            System.out.println(network.getGuess(network.feedForward(imageConverter.getInput())));
             getContentPane().remove(canvas);
             addCanvasPanel();
         }
