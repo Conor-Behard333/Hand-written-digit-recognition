@@ -1,5 +1,3 @@
-import sun.nio.ch.Net;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,8 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-
 public class GUI extends JFrame {
     private static Network network;
     private JButton buttonGuess, clearCanvas;
@@ -24,7 +20,6 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        setVisible(true);
     }
 
     private void createUI() {

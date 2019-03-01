@@ -1,52 +1,20 @@
-import sun.nio.ch.Net;
-
-import java.util.Arrays;
-
 public class Run {
     public static void main(String[] args) {
         //load data
         int batchSizeTraining = 60000;
-        int batchSizeTesting = 10000;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
-        DataSet testingData = new DataSet(batchSizeTesting, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
 
         Network network = new Network(784, 74, 10);
         //train
-        double accuracy = 0;
-        int epochs = 2;
+        int epochs = 5;
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSizeTraining; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
         }
-        //show gui
+        //display gui
         GUI ui = new GUI(network);
-
-        for (int n = 0; n < 10000; n++) {
-            int guess = getGuess(network.feedForward(testingData.getInputData(n)));
-            int label = testingData.getLabel(n);
-            if (label == guess) {
-                accuracy++;
-            }
-        }
-        System.out.println("Accuracy: " + (accuracy / 100) + "%");
-        //Best Accuracy: 88.11%
-    }
-
-
-    private static int getGuess(double[] outputs) {
-        double largest = 0;
-        for (double output : outputs) {
-            if (output >= largest) {
-                largest = output;
-            }
-        }
-        for (int i = 0; i < outputs.length; i++) {
-            if (outputs[i] == largest) {
-                return i;
-            }
-        }
-        return -1;
+        ui.setVisible(true);
     }
 
     private static double[] getTarget(int label) {

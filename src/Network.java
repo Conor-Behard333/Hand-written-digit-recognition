@@ -24,12 +24,11 @@ class Network {
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double[] output_outputs = new double[numOfOutputNeurons];
 
-        //passes inputs to hidden layer and gets their outputs
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             hidden_neurons[i].setOutput(inputs);
             hidden_outputs[i] = hidden_neurons[i].getOutput();
         }
-        //passes hidden outputs to output layer and gets their outputs
+
         for (int i = 0; i < numOfOutputNeurons; i++) {
             output_neurons[i].setWeightedSum(hidden_outputs);
         }
@@ -47,32 +46,37 @@ class Network {
     }
 
     void train(double[] inputs, double[] target) {
-        double[] outputs = feedForward(inputs);
-        double loss;// cross-entropy
-        double[] hidden_outputs = new double[numOfHiddenNeurons];
-
-        double sum = 0;
-        for (int i = 0; i < numOfOutputNeurons; i++) {
-            sum += target[i] * Math.log(outputs[i]) + (1 - target[i]) * (Math.log(1 - outputs[i]));
-        }
-        loss = -(sum / numOfOutputNeurons);
-
-        //System.out.println("Error: " + loss);
-
-        for (int i = 0; i < numOfHiddenNeurons; i++) {
-            hidden_outputs[i] = hidden_neurons[i].getOutput();
-        }
+        feedForward(inputs);
+        //back propagation
+        //get hidden outputs
+        double[] hidden_outputs = getHiddenOutputs();
         //tune output weights
-        for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].tuneWeights(LR, hidden_outputs, target[i]);
-        }
+        tuneOutputWeights(hidden_outputs, target);
         //tune Hidden weights
+        tuneHiddenWeights(inputs);
+    }
+
+    private double[] getHiddenOutputs() {
+        double[] x = new double[numOfHiddenNeurons];
+        for (int i = 0; i < numOfHiddenNeurons; i++) {
+            x[i] = hidden_neurons[i].getOutput();
+        }
+        return x;
+    }
+
+    private void tuneHiddenWeights(double[] inputs) {
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             double weightedDeltaHiddenTotal = 0;
             for (int j = 0; j < numOfOutputNeurons; j++) {
                 weightedDeltaHiddenTotal += output_neurons[j].getWeightedDeltaHidden()[i];
             }
             hidden_neurons[i].tuneWeights(LR, inputs, weightedDeltaHiddenTotal);
+        }
+    }
+
+    private void tuneOutputWeights(double[] hidden_outputs, double[] target) {
+        for (int i = 0; i < numOfOutputNeurons; i++) {
+            output_neurons[i].tuneWeights(LR, hidden_outputs, target[i]);
         }
     }
 
@@ -88,7 +92,7 @@ class Network {
         }
     }
 
-    public int getGuess(double[] outputs) {
+    int getGuess(double[] outputs) {
         double largest = 0;
         for (double output : outputs) {
             if (output >= largest) {
