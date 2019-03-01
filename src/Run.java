@@ -1,10 +1,12 @@
+import java.io.IOException;
+
 public class Run {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //load data
         int batchSizeTraining = 60000;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
-        Network network = new Network(784, 74, 10);
+        Network network = new Network(784, 30, 10);
         //train
         int epochs = 5;
         for (int j = 0; j < epochs; j++) {

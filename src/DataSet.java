@@ -1,69 +1,45 @@
 import java.io.*;
 import java.util.Scanner;
-public class DataSet {
-    int[][] trainingSet;
 
-    DataSet(int batchSize, String filePath) {
+class DataSet {
+    private final int imageSize = 784;
+    private int[][] trainingSet;
+    private Function f = new Function();
+
+    DataSet(int batchSize, String filePath) throws IOException {
         trainingSet = loadData(filePath, batchSize);
     }
 
-    private static int[][] loadData(String fileName, int batchSize) {
-        int[][] x = new int[batchSize][784];
+    private int[][] loadData(String fileName, int batchSize) throws IOException {
+        int[][] x = new int[batchSize][imageSize];
         int row = 0;
-        try {
-            Scanner n = new Scanner(new File(fileName));
-            n.useDelimiter(",");
-            while (row < batchSize) {
-                while (n.hasNextInt()) {
-                    for (int i = 0; i < 784; i++) {
-                        x[row][i] = (Integer.parseInt(n.next()));
-                    }
-                    break;
+        Scanner n = new Scanner(new File(fileName));
+        n.useDelimiter(",");
+        while (row < batchSize) {
+            while (n.hasNextInt()) {
+                for (int i = 0; i < imageSize; i++) {
+                    x[row][i] = (Integer.parseInt(n.next()));
                 }
-                row++;
-                n.nextLine();
+                break;
             }
-        } catch (IOException e) {
-            System.out.println(e);
+            row++;
+            n.nextLine();
         }
+
         return x;
     }
 
     double[] getInputData(int n) {
-        double[] x = new double[784];
-        for (int i = 1; i < 784; i++) {
+        double[] x = new double[imageSize];
+        for (int i = 1; i < imageSize; i++) {
             x[i] = trainingSet[n][i];
         }
-        x = normalise(x);
+        x = f.normalise(x);
         return x;
     }
-
-    double[] normalise(double[] x) {
-        int min = 0;
-        double max = getMax(x);
-        double[] y = new double[x.length];
-        for (int i = 0; i < x.length; i++) {
-            y[i] = (x[i] - min) / (max - min);
-        }
-        return y;
-    }
-
-    double getMax(double[] x) {
-        double max = 0;
-        for (int i = 0; i < x.length; i++) {
-            if (x[i] > max) {
-                max = x[i];
-            }
-        }
-        return max;
-    }
-
 
     int getLabel(int n) {
         return trainingSet[n][0];
     }
 
 }
-
-
-

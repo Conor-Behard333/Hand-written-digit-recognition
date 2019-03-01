@@ -26,12 +26,32 @@ class Function {
     double softMax(double[] weightedSums, int neuron) {
         double[] output = new double[weightedSums.length];
         double sum = 0;
-        for (int i = 0; i < weightedSums.length; i++) {
-            sum += Math.exp(weightedSums[i]);
+        for (double weight : weightedSums) {
+            sum += Math.exp(weight);
         }
         for (int i = 0; i < output.length; i++) {
             output[i] = Math.exp(weightedSums[i]) / sum;
         }
         return output[neuron];
+    }
+
+    double[] normalise(double[] x) {
+        int min = 0;
+        double max = getMax(x);
+        double[] y = new double[x.length];
+        for (int i = 0; i < x.length; i++) {
+            y[i] = (x[i] - min) / (max - min);
+        }
+        return y;
+    }
+
+    private double getMax(double[] values) {
+        double max = 0;
+        for (double value : values) {
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
 }

@@ -6,13 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-public class GUI extends JFrame {
-    private static Network network;
-    private JButton buttonGuess, clearCanvas;
-    private JPanel centre, predict, divider;
+
+class GUI extends JFrame {
+    private Network network;
     private Canvas canvas;
 
-    public GUI(Network network) {
+    private GUI(Network network) {
         this.network = network;
         createUI();
         setTitle("Neural Network");
@@ -30,7 +29,7 @@ public class GUI extends JFrame {
     }
 
     private void addDivider() {
-        divider = new JPanel();
+        JPanel divider = new JPanel();
         divider.setLocation(435, 0);
         divider.setSize(30, 500);
         divider.setBackground(Color.gray);
@@ -46,19 +45,19 @@ public class GUI extends JFrame {
     }
 
     private void addCenterPanel() {
-        centre = new JPanel();
+        JPanel centre = new JPanel();
         centre.setLocation(0, 500);
         centre.setSize(900, 100);
         centre.setBackground(Color.gray);
         getContentPane().add(centre);
 
-        clearCanvas = new JButton("Clear");
+        JButton clearCanvas = new JButton("Clear");
         clearCanvas.setLocation(0, 600);
         clearCanvas.setPreferredSize(new Dimension(425, 50));
         clearCanvas.addActionListener(new ButtonClearActionListener());
         centre.add(clearCanvas);
 
-        buttonGuess = new JButton("Guess");
+        JButton buttonGuess = new JButton("Guess");
         buttonGuess.setLocation(450, 600);
         buttonGuess.setPreferredSize(new Dimension(425, 50));
         buttonGuess.addActionListener(new ButtonGuessActionListener());
@@ -67,7 +66,7 @@ public class GUI extends JFrame {
     }
 
     private void addPredictPanel() {
-        predict = new JPanel();
+        JPanel predict = new JPanel();
         predict.setLocation(500, 0);
         predict.setSize(435, 500);
         predict.setBackground(Color.white);
