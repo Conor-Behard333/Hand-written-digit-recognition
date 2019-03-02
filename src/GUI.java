@@ -10,12 +10,15 @@ import java.io.IOException;
 class GUI extends JFrame {
     private Network network;
     private Canvas canvas;
+    private ImagePanel predict;
+    private String filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
 
     GUI(Network network) {
         this.network = network;
         createUI();
-        setTitle("Neural Network");
+        setTitle("Neural Network - Digit Classifier");
         setSize(900, 600);
+        setBackground(Color.black);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -43,7 +46,6 @@ class GUI extends JFrame {
         getContentPane().add(dividerRight);
     }
 
-
     private void addCanvasPanel() {
         canvas = new Canvas();
         canvas.setLocation(30, 30);
@@ -70,7 +72,7 @@ class GUI extends JFrame {
     }
 
     private void addPredictPanel() {
-        JPanel predict = newPanel(500, 30, 405, 470, Color.white);
+        predict = new ImagePanel(filePath);
         getContentPane().add(predict);
     }
 
@@ -82,9 +84,11 @@ class GUI extends JFrame {
         return temp;
     }
 
+
     private class ButtonGuessActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            int guess;
             BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
             canvas.paint(image.getGraphics());
             try {
@@ -93,18 +97,68 @@ class GUI extends JFrame {
                 ex.printStackTrace();
             }
             ImageConverter imageConverter = new ImageConverter();
-            System.out.println(network.getGuess(network.feedForward(imageConverter.getInput())));
-            getContentPane().remove(canvas);
-            addCanvasPanel();
+            guess = network.getGuess(network.feedForward(imageConverter.getInput()));
+            System.out.println(guess);
+            filePath = getImagePath(guess);
+            //load input image into predict panel
+            getContentPane().remove(predict);
+            addPredictPanel();
+            repaint();
+            revalidate();
+        }
+
+
+        private String getImagePath(int guess) {
+            String fileName = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\";
+            switch (guess) {
+                case -1:
+                    fileName += "None.png";
+                    break;
+                case 0:
+                    fileName += "Zero.png";
+                    break;
+                case 1:
+                    fileName += "One.png";
+                    break;
+                case 2:
+                    fileName += "Two.png";
+                    break;
+                case 3:
+                    fileName += "Three.png";
+                    break;
+                case 4:
+                    fileName += "Four.png";
+                    break;
+                case 5:
+                    fileName += "Five.png";
+                    break;
+                case 6:
+                    fileName += "Six.png";
+                    break;
+                case 7:
+                    fileName += "Seven.png";
+                    break;
+                case 8:
+                    fileName += "Eight.png";
+                    break;
+                case 9:
+                    fileName += "Nine.png";
+                    break;
+            }
+            return fileName;
         }
     }
 
     private class ButtonClearActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //clear canvas
+            filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
             getContentPane().remove(canvas);
+            getContentPane().remove(predict);
             addCanvasPanel();
+            addPredictPanel();
+            revalidate();
+            repaint();
         }
     }
 }
