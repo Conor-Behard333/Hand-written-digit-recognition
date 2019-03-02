@@ -7,13 +7,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-class GUI extends JFrame {
+class GuessUI extends JFrame {
     private Network network;
     private Canvas canvas;
     private ImagePanel predict;
     private String filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
 
-    GUI(Network network) {
+    GuessUI(Network network) {
         this.network = network;
         createUI();
         setTitle("Neural Network - Digit Classifier");
