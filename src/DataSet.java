@@ -25,7 +25,6 @@ class DataSet {
             row++;
             n.nextLine();
         }
-
         return x;
     }
 
