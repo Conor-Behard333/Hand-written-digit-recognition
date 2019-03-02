@@ -5,16 +5,20 @@ public class Run {
         //load data
         int batchSizeTraining = 60000;
         DataSet trainingData = new DataSet(batchSizeTraining, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
+        DataSet testingData = new DataSet(10000, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_test.csv");
 
-        Network network = new Network(784, 30, 10);
+        Network network = new Network(784, 74, 10);//optimal = 74 hidden
         //train
         int epochs = 5;
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSizeTraining; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
+            for (int i = 0; i < 10000; i++) {
+                network.train(testingData.getInputData(i), getTarget(testingData.getLabel(i)));
+            }
         }
-        //display gui
+        //display user interface
         GUI ui = new GUI(network);
         ui.setVisible(true);
     }
