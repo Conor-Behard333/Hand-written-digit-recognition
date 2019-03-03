@@ -9,7 +9,7 @@ public class Function {
         return sum;
     }
 
-    double[] setWeights(int size) {
+    double[] randomiseWeights(int size) {
         double[] arr = new double[size];
         for (int i = 0; i < size; i++) {
             arr[i] = Math.random() * 2 - 1;

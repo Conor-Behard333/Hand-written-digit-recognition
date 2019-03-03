@@ -89,67 +89,35 @@ public class GuessUI extends JFrame {
         return temp;
     }
 
-
     private class ButtonGuessActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             int guess;
-            BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            canvas.paint(image.getGraphics());
             try {
+                BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                canvas.paint(image.getGraphics());
                 ImageIO.write(image, "png", new File("C:\\Users\\conor\\OneDrive\\My Documents\\image.png"));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            //converts the image the user drew into a 28 by 28 png
             ImageConverter imageConverter = new ImageConverter();
-            guess = network.getGuess(network.feedForward(imageConverter.getInput()));
+            double[] input = imageConverter.getInput();
+            guess = network.getGuess(network.feedForward(input));
             filePath = getImagePath(guess);
+
             //load input image into predict panel
-            getContentPane().remove(predict);
-            addPredictPanel();
-            repaint();
+            getContentPane().remove(predict);//removes current prediction
+            addPredictPanel();//adds the new panel
+            repaint();//draws the image onto the panel
             revalidate();
         }
 
 
         private String getImagePath(int guess) {
             String fileName = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\";
-            switch (guess) {
-                case -1:
-                    fileName += "None.png";
-                    break;
-                case 0:
-                    fileName += "Zero.png";
-                    break;
-                case 1:
-                    fileName += "One.png";
-                    break;
-                case 2:
-                    fileName += "Two.png";
-                    break;
-                case 3:
-                    fileName += "Three.png";
-                    break;
-                case 4:
-                    fileName += "Four.png";
-                    break;
-                case 5:
-                    fileName += "Five.png";
-                    break;
-                case 6:
-                    fileName += "Six.png";
-                    break;
-                case 7:
-                    fileName += "Seven.png";
-                    break;
-                case 8:
-                    fileName += "Eight.png";
-                    break;
-                case 9:
-                    fileName += "Nine.png";
-                    break;
-            }
-            return fileName;
+            String[] fileEnding = {"Zero.png", "One.png", "Two.png", "Three.png", "Four.png", "Five.png", "Six.png", "Seven.png", "Eight.png", "Nine.png", "None.png"};
+            return fileName + fileEnding[guess];
         }
     }
 

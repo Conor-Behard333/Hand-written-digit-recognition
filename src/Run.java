@@ -8,16 +8,17 @@ import java.io.IOException;
 public class Run {
     public static void main(String[] args) throws IOException {
         NetworkSettingsUI settings = new NetworkSettingsUI();
-        int batchSize = settings.getBatchSize();
-        int epochs = settings.getEpochs();
-        int hiddenNeurons = settings.getHiddenNeurons();
+        int batchSize = settings.getBatchSize();//how many values are trained by the network
+        int epochs = settings.getEpochs();//how many times the network trains an entire batch
+        int hiddenNeurons = settings.getHiddenNeurons();//how many hidden neurons the network has
 
-        //load data
+        //load the training data
         DataSet trainingData = new DataSet(batchSize, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
+        //create the network with 784 input neurons, x hidden neurons and 10 output neurons
         Network network = new Network(784, hiddenNeurons, 10);//optimal and default = 74 hidden
 
-        //train
+        //trains the network
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSize; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
@@ -30,7 +31,6 @@ public class Run {
 //        NetworkModelUI n = new NetworkModelUI(74);
 //        n.setVisible(true);
     }
-
 
     private static double[] getTarget(int label) {
         switch (label) {

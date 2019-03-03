@@ -9,7 +9,7 @@ class Output_Neuron {
 
     Output_Neuron(int hiddenNeurons) {
         this.weights = new double[hiddenNeurons];
-        this.weights = f.setWeights(weights.length);
+        this.weights = f.randomiseWeights(weights.length);
         this.weightedDeltaHidden = new double[hiddenNeurons];
     }
 

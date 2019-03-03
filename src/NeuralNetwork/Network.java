@@ -26,36 +26,38 @@ public class Network {
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double[] output_outputs = new double[numOfOutputNeurons];
 
+        //set and get the hidden neuron's outputs
         for (int i = 0; i < numOfHiddenNeurons; i++) {
             hidden_neurons[i].setOutput(inputs);
             hidden_outputs[i] = hidden_neurons[i].getOutput();
         }
 
+        //set the weighted sum of each output neuron
         for (int i = 0; i < numOfOutputNeurons; i++) {
             output_neurons[i].setWeightedSum(hidden_outputs);
         }
 
+        //get the weighted sum of each output neuron and put them into an array
         double[] weightedSum = new double[numOfOutputNeurons];
         for (int i = 0; i < numOfOutputNeurons; i++) {
             weightedSum[i] = output_neurons[i].getWeightedSum();
         }
 
+        //set and get the output neuron's outputs
         for (int i = 0; i < numOfOutputNeurons; i++) {
             output_neurons[i].setOutput(f.softMax(weightedSum, i));
             output_outputs[i] = output_neurons[i].getOutput();
         }
+        //return the final output of the network
         return output_outputs;
     }
 
     public void train(double[] inputs, double[] target) {
         feedForward(inputs);
         //back propagation
-        //get hidden outputs
-        double[] hidden_outputs = getHiddenOutputs();
-        //tune output weights
-        tuneOutputWeights(hidden_outputs, target);
-        //tune Hidden weights
-        tuneHiddenWeights(inputs);
+        double[] hidden_outputs = getHiddenOutputs();//get hidden outputs
+        tuneOutputWeights(hidden_outputs, target);//tune output weights
+        tuneHiddenWeights(inputs); //tune Hidden weights
     }
 
     private double[] getHiddenOutputs() {
@@ -106,7 +108,6 @@ public class Network {
                 return i;
             }
         }
-        return -1;
+        return 10;
     }
-
 }
