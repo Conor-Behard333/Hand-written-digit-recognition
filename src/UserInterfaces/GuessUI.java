@@ -103,7 +103,6 @@ public class GuessUI extends JFrame {
             }
             ImageConverter imageConverter = new ImageConverter();
             guess = network.getGuess(network.feedForward(imageConverter.getInput()));
-            System.out.println(guess);
             filePath = getImagePath(guess);
             //load input image into predict panel
             getContentPane().remove(predict);

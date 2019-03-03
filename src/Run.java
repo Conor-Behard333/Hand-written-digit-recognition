@@ -15,7 +15,7 @@ public class Run {
         //load data
         DataSet trainingData = new DataSet(batchSize, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
-        Network network = new Network(784, hiddenNeurons, 10);//optimal = 74 hidden
+        Network network = new Network(784, hiddenNeurons, 10);//optimal and default = 74 hidden
 
         //train
         for (int j = 0; j < epochs; j++) {
