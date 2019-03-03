@@ -1,7 +1,7 @@
 package NeuralNetwork;
 
 public class Network {
-    private final double LR = 0.025;
+    private final double LR = 0.05;
     private int numOfInputNeurons;
     private int numOfHiddenNeurons;
     private int numOfOutputNeurons;
