@@ -1,4 +1,6 @@
-class Hidden_Neuron {
+package NeuralNetwork;
+
+public class Hidden_Neuron {
     private double weightedSum;
     private double output;
     private double[] weights;

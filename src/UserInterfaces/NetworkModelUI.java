@@ -1,7 +1,9 @@
+package UserInterfaces;
+
 import javax.swing.*;
 import java.awt.*;
 
-class NetworkModelUI extends JFrame {
+public class NetworkModelUI extends JFrame {
     private final int input = 784;
     private final int hidden;
     private final int output = 10;
@@ -11,9 +13,9 @@ class NetworkModelUI extends JFrame {
     private JPanel outputPanel;
     private JPanel outputPercentagePanel;
 
-    NetworkModelUI(int hidden) {
+    public NetworkModelUI(int hidden) {
         this.hidden = hidden;
-        setTitle("Neural Network - Digit Classifier");
+        setTitle("Neural NeuralNetwork.Network - Digit Classifier");
         setSize(800, 1040);
         setBackground(Color.black);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

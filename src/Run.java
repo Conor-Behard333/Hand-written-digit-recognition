@@ -1,3 +1,8 @@
+import NeuralNetwork.Network;
+import ProcessingData.DataSet;
+import UserInterfaces.GuessUI;
+import UserInterfaces.NetworkSettingsUI;
+
 import java.io.IOException;
 
 public class Run {

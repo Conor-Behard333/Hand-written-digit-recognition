@@ -1,3 +1,5 @@
+package NeuralNetwork;
+
 class Output_Neuron {
     private double weightedSum;
     private double output;

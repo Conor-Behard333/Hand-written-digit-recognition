@@ -1,3 +1,8 @@
+package UserInterfaces;
+
+import NeuralNetwork.Network;
+import ProcessingData.ImageConverter;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -7,16 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-class GuessUI extends JFrame {
+public class GuessUI extends JFrame {
     private Network network;
     private Canvas canvas;
     private ImagePanel predict;
     private String filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
 
-    GuessUI(Network network) {
+    public GuessUI(Network network) {
         this.network = network;
         createUI();
-        setTitle("Neural Network - Digit Classifier");
+        setTitle("Neural NeuralNetwork.Network - Digit Classifier");
         setSize(900, 600);
         setBackground(Color.black);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

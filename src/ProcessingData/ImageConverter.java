@@ -1,10 +1,14 @@
+package ProcessingData;
+
+import NeuralNetwork.Function;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-class ImageConverter {
+public class ImageConverter {
     private BufferedImage image;
     private Function f = new Function();
 
@@ -35,7 +39,7 @@ class ImageConverter {
         return new int[]{(int) ((double) xSum / n), (int) ((double) ySum / n)};
     }
 
-    double[] getInput() {
+   public double[] getInput() {
         double[] input = new double[784];
         try {
             int i = 0;

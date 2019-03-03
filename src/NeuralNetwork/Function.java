@@ -1,4 +1,6 @@
-class Function {
+package NeuralNetwork;
+
+public class Function {
     double getWeightedSum(double[] inputs, double... weights) {
         double sum = 0;
         for (int i = 0; i < weights.length; i++) {
@@ -35,7 +37,7 @@ class Function {
         return output[neuron];
     }
 
-    double[] normalise(double[] x) {
+    public double[] normalise(double[] x) {
         int min = 0;
         double max = getMax(x);
         double[] y = new double[x.length];

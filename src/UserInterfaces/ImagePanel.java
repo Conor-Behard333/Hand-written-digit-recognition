@@ -1,4 +1,5 @@
-import javax.imageio.IIOImage;
+package UserInterfaces;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;

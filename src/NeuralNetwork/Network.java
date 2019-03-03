@@ -1,4 +1,6 @@
-class Network {
+package NeuralNetwork;
+
+public class Network {
     private final double LR = 0.01;
     private int numOfInputNeurons;
     private int numOfHiddenNeurons;
@@ -7,7 +9,7 @@ class Network {
     private Hidden_Neuron[] hidden_neurons;
     private Output_Neuron[] output_neurons;
 
-    Network(int inputNeurons, int hiddenNeurons, int outputNeurons) {
+    public Network(int inputNeurons, int hiddenNeurons, int outputNeurons) {
         this.numOfInputNeurons = inputNeurons;
         this.numOfHiddenNeurons = hiddenNeurons;
         this.numOfOutputNeurons = outputNeurons;
@@ -19,7 +21,7 @@ class Network {
         createOutputNeurons();
     }
 
-    double[] feedForward(double[] inputs) {
+    public double[] feedForward(double[] inputs) {
         Function f = new Function();
         double[] hidden_outputs = new double[numOfHiddenNeurons];
         double[] output_outputs = new double[numOfOutputNeurons];
@@ -45,7 +47,7 @@ class Network {
         return output_outputs;
     }
 
-    void train(double[] inputs, double[] target) {
+    public void train(double[] inputs, double[] target) {
         feedForward(inputs);
         //back propagation
         //get hidden outputs
@@ -92,7 +94,7 @@ class Network {
         }
     }
 
-    int getGuess(double[] outputs) {
+    public int getGuess(double[] outputs) {
         double largest = 0;
         for (double output : outputs) {
             if (output >= largest) {
