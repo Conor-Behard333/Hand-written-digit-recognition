@@ -1,4 +1,4 @@
-package UserInterfaces;
+package UserInterfaces.GuessUI;
 
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;

@@ -1,4 +1,4 @@
-package UserInterfaces;
+package UserInterfaces.GuessUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class ImagePanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.black);
-        g.fillRect(30,30,405,470);
+        g.fillRect(30, 30, 405, 470);
         g.drawImage(img, 465, 30, null);
     }
 }

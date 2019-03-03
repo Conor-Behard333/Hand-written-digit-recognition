@@ -39,7 +39,7 @@ public class ImageConverter {
         return new int[]{(int) ((double) xSum / n), (int) ((double) ySum / n)};
     }
 
-   public double[] getInput() {
+    public double[] getInput() {
         double[] input = new double[784];
         try {
             int i = 0;
