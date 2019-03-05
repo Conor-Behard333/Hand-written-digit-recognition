@@ -1,6 +1,7 @@
 import NeuralNetwork.Network;
 import ProcessingData.DataSet;
 import UserInterfaces.GuessUI.GuessUI;
+import UserInterfaces.NetworkModelUI;
 import UserInterfaces.NetworkSettingsUI;
 
 import java.io.IOException;
@@ -10,13 +11,12 @@ public class Run {
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//how many values are trained by the network
         int epochs = settings.getEpochs();//how many times the network trains an entire batch
-        int hiddenNeurons = settings.getHiddenNeurons();//how many hidden neurons the network has
 
         //load the training data
         DataSet trainingData = new DataSet(batchSize, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
-        //create the network with 784 input neurons, x hidden neurons and 10 output neurons
-        Network network = new Network(784, hiddenNeurons, 10);//optimal and default = 74 hidden
+        //create the network with 784 input neurons, 74 hidden neurons (layer 1), 74 hidden neurons (layer 2) and 10 output neurons
+        Network network = new Network(784, 74, 74, 10);
 
         //trains the network
         for (int j = 0; j < epochs; j++) {

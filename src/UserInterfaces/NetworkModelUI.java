@@ -8,11 +8,6 @@ public class NetworkModelUI extends JFrame {
     private final int hidden;
     private final int output = 10;
 
-    private JPanel inputPanel;
-    private JPanel hiddenPanel;
-    private JPanel outputPanel;
-    private JPanel outputPercentagePanel;
-
     public NetworkModelUI(int hidden) {
         this.hidden = hidden;
         setTitle("Neural NeuralNetwork.Network - Digit Classifier");
@@ -25,27 +20,20 @@ public class NetworkModelUI extends JFrame {
     }
 
     private void createUI() {
-        JPanel inputPanel = createPanel(0, 0, 200, 1040, Color.yellow);
-        inputPanel.setLayout(new GridLayout(input, 1));
-        getContentPane().add(inputPanel);
 
-        JPanel hiddenPanel = createPanel(200, 0, 200, 1040, Color.red);
-        inputPanel.setLayout(new GridLayout(hidden, 1));
-        getContentPane().add(hiddenPanel);
+        getContentPane().add(new Neuron(input, 0, 0, 200, 1040));
 
-        JPanel outputPanel = createPanel(400, 0, 200, 1040, Color.blue);
-        inputPanel.setLayout(new GridLayout(output, 1));
-        getContentPane().add(outputPanel);
+        getContentPane().add(new Neuron(hidden, 200, 0, 200, 1040));
 
-        JPanel outputPercentagePanel = createPanel(600, 0, 200, 1040, Color.white);
-        getContentPane().add(outputPercentagePanel);
+        getContentPane().add(new Neuron(output, 400, 0, 200, 1040));
+
+        getContentPane().add(createPanel(600, 0, 200, 1040));
     }
 
-    private JPanel createPanel(int x, int y, int width, int height, Color color) {
+    private JPanel createPanel(int x, int y, int width, int height) {
         JPanel temp = new JPanel();
         temp.setLocation(x, y);
         temp.setSize(width, height);
-        temp.setBackground(color);
         return temp;
     }
 }

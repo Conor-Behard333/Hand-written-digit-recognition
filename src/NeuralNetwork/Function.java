@@ -17,14 +17,6 @@ public class Function {
         return arr;
     }
 
-    double sigmoid(double x) {
-        return 1d / (1 + Math.exp(-x));
-    }
-
-    double derivative(double x) {
-        return x * (1 - x);
-    }
-
     double softMax(double[] weightedSums, int neuron) {
         double[] output = new double[weightedSums.length];
         double sum = 0;
@@ -55,5 +47,13 @@ public class Function {
             }
         }
         return max;
+    }
+
+    double sigmoid(double x) {
+        return 1d / (1 + Math.exp(-x));
+    }
+
+    double derivative(double x) {
+        return x * (1 - x);
     }
 }

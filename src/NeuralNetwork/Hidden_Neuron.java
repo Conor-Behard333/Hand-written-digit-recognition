@@ -1,24 +1,28 @@
 package NeuralNetwork;
 
-class Hidden_Neuron {
+public class Hidden_Neuron {
+    private double weightedSum;
     private double output;
     private double[] weights;
+    private double[] deltaSum;
     private Function f = new Function();
 
-    Hidden_Neuron(int inputNeurons) {
-        this.weights = new double[inputNeurons];
+    Hidden_Neuron(int previousLayer) {
+        this.weights = new double[previousLayer];
         this.weights = f.randomiseWeights(weights.length);
+        this.deltaSum = new double[previousLayer];
     }
 
-    void tuneWeights(double LR, double[] inputs, double weightedDeltaHiddenTotal) {
+    void tuneWeights(double LR, double[] prevOutputs, double deltaSumTotal) {
+        double gradient = deltaSumTotal * f.derivative(output);
         for (int i = 0; i < weights.length; i++) {
-            weights[i] += delta_weights(LR, inputs[i], weightedDeltaHiddenTotal);
+            weights[i] += LR * prevOutputs[i] * gradient;
+            deltaSum[i] = gradient * weights[i];
         }
     }
 
-    private double delta_weights(double LR, double input, double weightedDeltaHiddenTotal) {
-        double deltaOutput = f.derivative(output) * weightedDeltaHiddenTotal;
-        return LR * deltaOutput * input;
+    double[] getDeltaSum() {
+        return deltaSum;
     }
 
     double getOutput() {
@@ -26,7 +30,7 @@ class Hidden_Neuron {
     }
 
     void setOutput(double[] inputs) {
-        double weightedSum = f.getWeightedSum(inputs, weights);
+        this.weightedSum = f.getWeightedSum(inputs, weights);
         this.output = f.sigmoid(weightedSum);
     }
 }
