@@ -16,7 +16,7 @@ public class Run {
         DataSet trainingData = new DataSet(batchSize, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
         //create the network with 784 input neurons, 74 hidden neurons (layer 1), 74 hidden neurons (layer 2) and 10 output neurons
-        Network network = new Network(784, 74, 74, 10);
+        Network network = new Network(784, 45, 45, 10);//45 gets optimum accuracy
 
         //trains the network
         for (int j = 0; j < epochs; j++) {
