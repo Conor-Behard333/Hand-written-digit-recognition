@@ -109,8 +109,7 @@ public class GuessUI extends JFrame {
             guess = network.getGuess(network.feedForward(input));
             filePath = getImagePath(guess);
 
-            System.out.println(Arrays.toString(network.feedForward(input)));
-
+            //sets the confidence of the networks guess
             predictionUI.setPredictions(network.feedForward(input));
 
             //load input image into predict panel
