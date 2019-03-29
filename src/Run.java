@@ -1,13 +1,13 @@
 import NeuralNetwork.Network;
 import ProcessingData.DataSet;
 import UserInterfaces.GuessUI.GuessUI;
-import UserInterfaces.PredictionUI;
 import UserInterfaces.NetworkSettingsUI;
 
 import java.io.IOException;
 
 public class Run {
     public static void main(String[] args) throws IOException {
+
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//how many values are trained by the network
         int epochs = settings.getEpochs();//how many times the network trains an entire batch
