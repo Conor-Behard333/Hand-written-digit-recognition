@@ -1,7 +1,7 @@
 import NeuralNetwork.Network;
 import ProcessingData.DataSet;
 import UserInterfaces.GuessUI.GuessUI;
-import UserInterfaces.NetworkModelUI;
+import UserInterfaces.PredictionUI;
 import UserInterfaces.NetworkSettingsUI;
 
 import java.io.IOException;
@@ -28,8 +28,6 @@ public class Run {
         GuessUI guessUI = new GuessUI(network);
         guessUI.setVisible(true);
 
-//        NetworkModelUI n = new NetworkModelUI(74);
-//        n.setVisible(true);
     }
 
     private static double[] getTarget(int label) {

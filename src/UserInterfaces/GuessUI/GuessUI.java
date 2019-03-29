@@ -2,6 +2,7 @@ package UserInterfaces.GuessUI;
 
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
+import UserInterfaces.PredictionUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,12 +12,14 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class GuessUI extends JFrame {
     private Network network;
     private Canvas canvas;
     private ImagePanel predict;
     private String filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
+    private PredictionUI predictionUI = new PredictionUI();
 
     public GuessUI(Network network) {
         this.network = network;
@@ -105,6 +108,10 @@ public class GuessUI extends JFrame {
             double[] input = imageConverter.getInput();
             guess = network.getGuess(network.feedForward(input));
             filePath = getImagePath(guess);
+
+            System.out.println(Arrays.toString(network.feedForward(input)));
+
+            predictionUI.setPredictions(network.feedForward(input));
 
             //load input image into predict panel
             getContentPane().remove(predict);//removes current prediction
