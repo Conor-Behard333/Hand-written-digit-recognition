@@ -28,6 +28,11 @@ public class ImageConverter {
         } catch (IOException e) {
             System.out.println(e);
         }
+//        try {
+//            ImageIO.write(image, "png", new File("C:\\Users\\conor\\OneDrive\\My Documents\\imageTest.png"));
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
         input = f.normalise(input);//normalises the input data
         return input;
     }
@@ -80,8 +85,3 @@ public class ImageConverter {
         return (red * 0.2126d + green * 0.7152d + blue * 0.0722d);
     }
 }
-//try {
-//                ImageIO.write(image, "png", new File("C:\\Users\\conor\\OneDrive\\My Documents\\imageTest.png"));
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
