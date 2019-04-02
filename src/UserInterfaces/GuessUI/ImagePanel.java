@@ -4,16 +4,15 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 
 public class ImagePanel extends JPanel {
-    Image img;
+    private Image img;
 
     ImagePanel(String FilePath) {
         try {
             img = ImageIO.read(new File(FilePath));
-        } catch (IOException e) {
-            System.err.println(e);
+        } catch (Exception error) {
+            System.err.println(error);
         }
     }
 

@@ -23,7 +23,7 @@ public class GuessUI extends JFrame {
     public GuessUI(Network network) {
         this.network = network;
         createUI();
-        setTitle("Neural NeuralNetwork.Network - Digit Classifier");
+        setTitle("Neural NeuralNetwork - Digit Classifier");
         setSize(900, 600);
         setBackground(Color.black);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

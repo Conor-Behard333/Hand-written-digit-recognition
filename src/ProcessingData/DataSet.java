@@ -20,11 +20,8 @@ public class DataSet {
         Scanner n = new Scanner(new File(fileName));
         n.useDelimiter(",");
         while (row < batchSize) {
-            while (n.hasNextInt()) {
-                for (int i = 0; i < imageSize; i++) {
-                    x[row][i] = (Integer.parseInt(n.next()));
-                }
-                break;
+            for (int i = 0; i < imageSize; i++) {
+                x[row][i] = (Integer.parseInt(n.next()));
             }
             row++;
             n.nextLine();
