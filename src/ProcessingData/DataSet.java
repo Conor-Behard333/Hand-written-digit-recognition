@@ -39,7 +39,10 @@ public class DataSet {
     }
 
     /*
-     * Returns a specified row of the training set data
+     * Returns a normalised specified row of the training set data
+     *
+     * Index starts at 1 because the first value in the array is the label
+     * (the number in which the values equal)
      */
     public double[] getInputData(int n) {
         double[] x = new double[imageSize];
@@ -50,6 +53,9 @@ public class DataSet {
         return x;
     }
 
+    /*
+     * Returns the label of the values at a specified line
+     */
     public int getLabel(int n) {
         return trainingSet[n][0];
     }
