@@ -7,29 +7,31 @@ import java.io.IOException;
 
 public class Run {
     public static void main(String[] args) throws IOException {
-
         NetworkSettingsUI settings = new NetworkSettingsUI();
-        int batchSize = settings.getBatchSize();//how many values are trained by the network
-        int epochs = settings.getEpochs();//how many times the network trains an entire batch
+        int batchSize = settings.getBatchSize();//How many values are trained by the network
+        int epochs = settings.getEpochs();//How many times the network trains an entire batch
 
-        //load the training data
+        //Load the training data
         DataSet trainingData = new DataSet(batchSize, "C:\\Users\\conor\\IdeaProjects\\Files\\mnist_train.csv");
 
-        //create the network with 784 input neurons, 45 hidden neurons (layer 1), 45 hidden neurons (layer 2) and 10 output neurons
+        //Create the network with 784 input neurons, 45 hidden neurons (layer 1), 45 hidden neurons (layer 2) and 10 output neurons
         Network network = new Network(784, 45, 45, 10);//45 gets optimum accuracy
 
-        //trains the network
+        //Trains the network
         for (int j = 0; j < epochs; j++) {
             for (int i = 0; i < batchSize; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
         }
-        //display the guess user interface
+
+        //Display the guess user interface
         GuessUI guessUI = new GuessUI(network);
         guessUI.setVisible(true);
-
     }
 
+    /*
+     * Based on the label this method returns the target values for the network
+     */
     private static double[] getTarget(int label) {
         switch (label) {
             case 0:

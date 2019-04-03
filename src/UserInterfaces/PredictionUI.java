@@ -6,9 +6,12 @@ import java.text.DecimalFormat;
 
 public class PredictionUI extends JFrame {
     private String[] confidence = new String[10];
-    private JLabel[] predictionsLabel = new JLabel[10];
+    private JLabel[] guessLabels = new JLabel[10];
     private JProgressBar[] progressBars = new JProgressBar[10];
 
+    /*
+     * Creates the window which displays the confidence of the networks guess
+     */
     public PredictionUI() {
         setTitle("Neural Network - Digit Classifier - Predictions");
         setSize(500, 600);
@@ -20,18 +23,24 @@ public class PredictionUI extends JFrame {
         setVisible(true);
     }
 
+    /*
+     * Adds a label and progress bar into the window
+     */
     private void createUI() {
         int yPos = 10;
         for (int i = 0; i < 10; i++) {
-            predictionsLabel[i] = createLabel(yPos, i);
+            guessLabels[i] = createLabel(yPos, i);
             progressBars[i] = createProgressBar(yPos);
             yPos += 50;
-            getContentPane().add(predictionsLabel[i]);
+            getContentPane().add(guessLabels[i]);
             getContentPane().add(progressBars[i]);
         }
         getContentPane().add(createPanel());
     }
 
+    /*
+     * creates a progress Bar
+     */
     private JProgressBar createProgressBar(int yPos) {
         JProgressBar temp = new JProgressBar();
         temp.setSize(200, 20);
@@ -42,6 +51,9 @@ public class PredictionUI extends JFrame {
         return temp;
     }
 
+    /*
+     * creates a label
+     */
     private JLabel createLabel(int yPos, int i) {
         JLabel temp = new JLabel(i + ": 0.00%");
         temp.setSize(100, 20);
@@ -50,13 +62,19 @@ public class PredictionUI extends JFrame {
         return temp;
     }
 
+    /*
+     * creates a JPanel
+     */
     private JPanel createPanel() {
         JPanel temp = new JPanel();
         temp.setLocation(500, 600);
         return temp;
     }
 
-    public void setPredictions(double[] outputs) {
+    /*
+     * Sets the progress bar and guess label to the appropriate values (values that the network generated)
+     */
+    public void setConfidence(double[] outputs) {
         DecimalFormat df = new DecimalFormat("#.##");
         for (int i = 0; i < 10; i++) {
             confidence[i] = df.format(outputs[i] * 100);
@@ -66,10 +84,13 @@ public class PredictionUI extends JFrame {
             int value = (int) (Double.parseDouble(confidence[i]));
             progressBars[i].setForeground(getPbColour(value));
             progressBars[i].setValue(value);
-            predictionsLabel[i].setText(guess[i]);
+            guessLabels[i].setText(guess[i]);
         }
     }
 
+    /*
+     * Returns the colour of the progress bar based on what the confidence is
+     */
     private Color getPbColour(int value) {
         if (value >= 0 && value < 20) {
             return Color.red;

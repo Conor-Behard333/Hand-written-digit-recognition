@@ -8,6 +8,9 @@ import java.io.File;
 public class ImagePanel extends JPanel {
     private Image img;
 
+    /*
+     * reads an image and stores it as an image
+     */
     ImagePanel(String FilePath) {
         try {
             img = ImageIO.read(new File(FilePath));
@@ -16,6 +19,9 @@ public class ImagePanel extends JPanel {
         }
     }
 
+    /*
+     * draws the image initialised by the constructor
+     */
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.black);

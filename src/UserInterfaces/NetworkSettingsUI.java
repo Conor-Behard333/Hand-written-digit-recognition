@@ -11,8 +11,10 @@ public class NetworkSettingsUI {
         String[] epochValues = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};//available epoch values
         String[] batchSizeValues = {"10000", "20000", "30000", "40000", "50000", "60000"};//available batch size values 60000 is the max
 
+        //asks the user how many epochs they want the network to do
         String epochs = (String) JOptionPane.showInputDialog(frame, "How many epochs do you want?", "Neural Network Settings", JOptionPane.QUESTION_MESSAGE, null, epochValues, epochValues[0]);
 
+        //the size of the training data used
         String batchSize = (String) JOptionPane.showInputDialog(frame, "How many training value do you want to use?", "Neural Network Settings", JOptionPane.QUESTION_MESSAGE, null, batchSizeValues, batchSizeValues[0]);
 
         if ((epochs != null) && (epochs.length() > 0)) {
