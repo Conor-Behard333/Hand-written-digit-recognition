@@ -81,7 +81,7 @@ public class Function {
 
     /*
      * Returns the value of x having gone through
-     * the derivative of sigmoid function
+     * the derivative of sigmoid and soft max function
      */
     double derivative(double x) {
         return x * (1 - x);
