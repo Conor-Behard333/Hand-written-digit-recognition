@@ -5,12 +5,11 @@ import javax.swing.*;
 public class NetworkSettingsUI {
     private int epochs;
     private int batchSize;
-    private int hiddenNeurons;
 
     public NetworkSettingsUI() {
         JFrame frame = new JFrame();
         String[] epochValues = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};//available epoch values
-        String[] batchSizeValues = {"10000", "20000", "30000", "40000", "50000", "60000"};//available batch size values
+        String[] batchSizeValues = {"10000", "20000", "30000", "40000", "50000", "60000"};//available batch size values 60000 is the max
 
         String epochs = (String) JOptionPane.showInputDialog(frame, "How many epochs do you want?", "Neural Network Settings", JOptionPane.QUESTION_MESSAGE, null, epochValues, epochValues[0]);
 
@@ -34,9 +33,5 @@ public class NetworkSettingsUI {
 
     public int getBatchSize() {
         return batchSize;
-    }
-
-    public int getHiddenNeurons() {
-        return hiddenNeurons;
     }
 }
