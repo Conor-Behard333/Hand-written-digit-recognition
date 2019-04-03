@@ -15,6 +15,9 @@ public class Canvas extends JPanel {
         addMouseMotionListener(new MList());
     }
 
+    /*
+     * Paints a circle at the location of the mouse
+     */
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -23,7 +26,13 @@ public class Canvas extends JPanel {
         g.drawPolyline(x, y, points);
     }
 
+    /*
+     * Action Listener for the mouse
+     */
     class MList extends MouseMotionAdapter {
+        /*
+         * Updates the mouse's x and y position
+         */
         public void mouseDragged(MouseEvent e) {
             x[points] = e.getX();
             y[points] = e.getY();
