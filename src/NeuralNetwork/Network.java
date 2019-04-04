@@ -1,63 +1,68 @@
 package NeuralNetwork;
 
 public class Network {
-    private final double LR = 0.05;
+    private final double LR = 0.07;
     private int numOfInputNeurons;
-    private int numOfHiddenNeurons_layer_1;
-    private int numOfHiddenNeurons_layer_2;
     private int numOfOutputNeurons;
-
-    private Hidden_Neuron[] hiddenLayer_1;
-    private Hidden_Neuron[] hiddenLayer_2;
+    private int[] numOfHiddenNeurons;
+    private int numberOfHiddenLayers;
+    private Hidden_Neuron[][] hiddenLayer;
     private Output_Neuron[] output_neurons;
 
     /*
      * initialises all the global variables used and creates all the necessary neurons
      */
-    public Network(int inputNeurons, int hiddenNeurons_layer_1, int hiddenNeurons_layer_2, int outputNeurons) {
+    public Network(int inputNeurons, int outputNeurons, int... hiddenNeurons) {
+        this.numberOfHiddenLayers = hiddenNeurons.length;
         this.numOfInputNeurons = inputNeurons;
-        this.numOfHiddenNeurons_layer_1 = hiddenNeurons_layer_1;
-        this.numOfHiddenNeurons_layer_2 = hiddenNeurons_layer_2;
         this.numOfOutputNeurons = outputNeurons;
 
-        this.hiddenLayer_1 = new Hidden_Neuron[hiddenNeurons_layer_1];
-        this.hiddenLayer_2 = new Hidden_Neuron[hiddenNeurons_layer_2];
+        //stores how many neurons are in each hidden layer
+        this.numOfHiddenNeurons = new int[numberOfHiddenLayers];
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            numOfHiddenNeurons[i] = hiddenNeurons[i];
+        }
+
         this.output_neurons = new Output_Neuron[outputNeurons];
+        //stores all the hidden neurons for each hidden layer
+        this.hiddenLayer = new Hidden_Neuron[numberOfHiddenLayers][];
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            hiddenLayer[i] = new Hidden_Neuron[hiddenNeurons[i]];
+        }
 
-        createHiddenNeurons(true);//Creates the first layer of hidden neurons
-        createHiddenNeurons(false);//Creates the second layer of hidden neurons
-        createOutputNeurons();//Creates the output layer
+        createHiddenNeurons();//creates all the hidden neurons
+        createOutputNeurons();//creates all the output neurons
     }
-
 
     /*
      * Puts the inputs into the network and feeds it through
      */
     public double[] feedForward(double[] inputs) {
-        double[] hidden_outputs_layer_1 = new double[numOfHiddenNeurons_layer_1];
-        double[] hidden_outputs_layer_2 = new double[numOfHiddenNeurons_layer_2];
         double[] output_outputs = new double[numOfOutputNeurons];
         double[] weightedSum = new double[numOfOutputNeurons];
 
-        //1. Calculate the output for each hidden neuron in the first layer using the image inputs
-        for (int i = 0; i < numOfHiddenNeurons_layer_1; i++) {
-            hiddenLayer_1[i].calculateOutput(inputs);
-            hidden_outputs_layer_1[i] = hiddenLayer_1[i].getOutput();
+        //stores the outputs for each hidden output for each hidden layer
+        double[][] hidden_outputs = new double[numberOfHiddenLayers][];
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            hidden_outputs[i] = new double[numOfHiddenNeurons[i]];
         }
 
-        //2. Calculate the output for each hidden neuron in the second layer using the first hidden layer outputs
-        for (int i = 0; i < numOfHiddenNeurons_layer_2; i++) {
-            hiddenLayer_2[i].calculateOutput(hidden_outputs_layer_1);
-            hidden_outputs_layer_2[i] = hiddenLayer_2[i].getOutput();
+        //1.calculates the outputs for each hidden neuron in each hidden layer
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            for (int j = 0; j < numOfHiddenNeurons[i]; j++) {
+                hiddenLayer[i][j].calculateOutput(inputs);
+                hidden_outputs[i][j] = hiddenLayer[i][j].getOutput();
+            }
+            inputs = hidden_outputs[i];
         }
 
-        //3. Calculate the weighted sum for each output neuron in the output layer using the second hidden layer outputs
+        //2. Calculate the weighted sum for each output neuron in the output layer using the second hidden layer outputs
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].calculateWeightedSum(hidden_outputs_layer_2);
+            output_neurons[i].calculateWeightedSum(hidden_outputs[numberOfHiddenLayers - 1]);
             weightedSum[i] = output_neurons[i].getWeightedSum();
         }
 
-        //4. Calculate the output for each output neuron in the output layer using the second hidden layer outputs
+        //3. Calculate the output for each output neuron in the output layer using the second hidden layer outputs
         for (int i = 0; i < numOfOutputNeurons; i++) {
             output_neurons[i].calculateOutput(weightedSum, i);
             output_outputs[i] = output_neurons[i].getOutput();
@@ -69,65 +74,57 @@ public class Network {
      * Trains the network with the training values using back propagation
      */
     public void train(double[] inputs, double[] target) {
+        double[][] hidden_outputs = new double[numberOfHiddenLayers][];
         //1. Feeds the inputs through the network
         feedForward(inputs);
 
         //get hidden outputs for each layer
-        double[] hidden_outputs_layer_2 = getHiddenOutputsLayer(false);
-        double[] hidden_outputs_layer_1 = getHiddenOutputsLayer(true);
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            hidden_outputs[i] = getHiddenOutputsLayer(i);
+        }
 
         //2. Tunes the output weights
-        tuneOutputWeights(hidden_outputs_layer_2, target);
+        tuneOutputWeights(hidden_outputs[numberOfHiddenLayers - 1], target);
 
-        //3. Tunes the second hidden layer's weights
-        tuneHiddenWeightsLayer(hidden_outputs_layer_1, false);
+        //3. Tunes the hidden layers in-between the first hidden layer and the output layer
+        for (int i = numberOfHiddenLayers - 1; i > 0; i--) {
+            tuneHiddenWeightsLayer(hidden_outputs[i - 1], i);
+        }
 
         //4. Tunes the first hidden layer's weights
-        tuneHiddenWeightsLayer(inputs, true);
+        tuneHiddenWeightsLayer(inputs, 0);
     }
 
     /*
-     * Returns the first hidden layer outputs if 'firsLayer' = true
-     * otherwise it will return the second hidden layer outputs
+     * Returns an array of the outputs for each neuron in a given hidden layer
      */
-    private double[] getHiddenOutputsLayer(boolean firstLayer) {
-        if (firstLayer) {
-            double[] x = new double[numOfHiddenNeurons_layer_1];
-            for (int i = 0; i < numOfHiddenNeurons_layer_1; i++) {
-                x[i] = hiddenLayer_1[i].getOutput();
-            }
-            return x;
-        } else {
-            double[] x = new double[numOfHiddenNeurons_layer_2];
-            for (int i = 0; i < numOfHiddenNeurons_layer_2; i++) {
-                x[i] = hiddenLayer_2[i].getOutput();
-            }
-            return x;
+    private double[] getHiddenOutputsLayer(int layer) {
+        double[] x = new double[numOfHiddenNeurons[layer]];
+        for (int i = 0; i < numOfHiddenNeurons[layer]; i++) {
+            x[i] = hiddenLayer[layer][i].getOutput();
         }
+        return x;
     }
 
     /*
-     * Tunes the weights of the first layer if 'firstLayer' = true
-     * otherwise it will tune the weights of the second layer
-     *
-     * deltaSumTotal is the sum of
+     * Tunes the weights for the hidden layers
      */
-    private void tuneHiddenWeightsLayer(double[] inputs, boolean firstLayer) {
-        if (firstLayer) {
-            for (int i = 0; i < numOfHiddenNeurons_layer_1; i++) {
-                double deltaSumTotal = 0;
-                for (int j = 0; j < numOfHiddenNeurons_layer_2; j++) {
-                    deltaSumTotal += hiddenLayer_2[j].getDeltaSum()[i];
-                }
-                hiddenLayer_1[i].tuneWeights(LR, inputs, deltaSumTotal);
-            }
-        } else {
-            for (int i = 0; i < numOfHiddenNeurons_layer_2; i++) {
+    private void tuneHiddenWeightsLayer(double[] inputs, int layer) {
+        if (numberOfHiddenLayers == layer + 1) {
+            for (int i = 0; i < numOfHiddenNeurons[layer]; i++) {
                 double deltaSumTotal = 0;
                 for (int j = 0; j < numOfOutputNeurons; j++) {
                     deltaSumTotal += output_neurons[j].getDeltaSum()[i];
                 }
-                hiddenLayer_2[i].tuneWeights(LR, inputs, deltaSumTotal);
+                hiddenLayer[layer][i].tuneWeights(LR, inputs, deltaSumTotal);
+            }
+        } else {
+            for (int i = 0; i < numOfHiddenNeurons[layer]; i++) {
+                double deltaSumTotal = 0;
+                for (int j = 0; j < numOfHiddenNeurons[layer + 1]; j++) {
+                    deltaSumTotal += hiddenLayer[layer + 1][j].getDeltaSum()[i];
+                }
+                hiddenLayer[layer][i].tuneWeights(LR, inputs, deltaSumTotal);
             }
         }
     }
@@ -144,14 +141,14 @@ public class Network {
     /*
      * Creates hidden neurons
      */
-    private void createHiddenNeurons(boolean firstLayer) {
-        if (firstLayer) {
-            for (int i = 0; i < numOfHiddenNeurons_layer_1; i++) {
-                hiddenLayer_1[i] = new Hidden_Neuron(numOfInputNeurons);
-            }
-        } else {
-            for (int i = 0; i < numOfHiddenNeurons_layer_2; i++) {
-                hiddenLayer_2[i] = new Hidden_Neuron(numOfHiddenNeurons_layer_1);
+    private void createHiddenNeurons() {
+        for (int i = 0; i < numberOfHiddenLayers; i++) {
+            for (int j = 0; j < numOfHiddenNeurons[i]; j++) {
+                if (i == 0) {
+                    hiddenLayer[i][j] = new Hidden_Neuron(numOfInputNeurons);
+                } else {
+                    hiddenLayer[i][j] = new Hidden_Neuron(numOfHiddenNeurons[i - 1]);
+                }
             }
         }
     }
@@ -161,7 +158,7 @@ public class Network {
      */
     private void createOutputNeurons() {
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i] = new Output_Neuron(numOfHiddenNeurons_layer_2);
+            output_neurons[i] = new Output_Neuron(numOfHiddenNeurons[numberOfHiddenLayers - 1]);
         }
     }
 
