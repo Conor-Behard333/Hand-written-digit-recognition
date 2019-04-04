@@ -45,7 +45,7 @@ public class PredictionUI extends JFrame {
         JProgressBar temp = new JProgressBar();
         temp.setSize(200, 20);
         temp.setLocation(140, yPos);
-        temp.setMaximum(0);
+        temp.setMinimum(0);
         temp.setMaximum(100);
         temp.setStringPainted(true);
         return temp;
