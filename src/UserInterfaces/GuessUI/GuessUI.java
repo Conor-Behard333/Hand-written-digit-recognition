@@ -17,7 +17,7 @@ public class GuessUI extends JFrame {
     private Network network;
     private Canvas canvas;
     private ImagePanel predict;
-    private String filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
+    private String filePath = "Resources\\Number0-9\\None.png";
     private PredictionUI predictionUI = new PredictionUI();
 
     /*
@@ -135,7 +135,7 @@ public class GuessUI extends JFrame {
             try {
                 BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 canvas.paint(image.getGraphics());
-                ImageIO.write(image, "png", new File("C:\\Users\\conor\\OneDrive\\My Documents\\image.png"));
+                ImageIO.write(image, "png", new File("Resources\\image.png"));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -163,7 +163,7 @@ public class GuessUI extends JFrame {
          * Returns the filepath associated with the guess
          */
         private String getImagePath(int guess) {
-            String fileName = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\";
+            String fileName = "Resources\\Number0-9\\";
             String[] fileEnding = {"Zero.png", "One.png", "Two.png", "Three.png", "Four.png", "Five.png", "Six.png", "Seven.png", "Eight.png", "Nine.png", "None.png"};
             return fileName + fileEnding[guess];
         }
@@ -179,7 +179,7 @@ public class GuessUI extends JFrame {
          * reset to its original state (just a black background)
          */
         public void actionPerformed(ActionEvent e) {
-            filePath = "C:\\Users\\conor\\OneDrive\\My Documents\\Number0-9\\None.png";
+            filePath = "Resources\\Number0-9\\None.png";
             getContentPane().remove(canvas);//removes current drawing
             getContentPane().remove(predict);//removes current prediction
             addCanvasPanel();//adds the new canvas panel

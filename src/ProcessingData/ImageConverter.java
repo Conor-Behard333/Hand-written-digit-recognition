@@ -23,7 +23,7 @@ public class ImageConverter {
         double[] input = new double[784];
         int i = 0;
         try {
-            image = ImageIO.read(new File("C:\\Users\\conor\\OneDrive\\My Documents\\image.png"));//reads the image the user drew
+            image = ImageIO.read(new File("Resources\\image.png"));//reads the image the user drew
             image = getScaledImage();//scales the image to a 20 by 20 png
             image = getCenteredImage();//centres the image onto a 28 by 28 image
             for (int y = 0; y < image.getHeight(); y++) {
