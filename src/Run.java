@@ -33,30 +33,16 @@ public class Run {
      * Based on the label this method returns the target values for the network
      */
     private static double[] getTarget(int label) {
-        switch (label) {
-            case 0:
-                return new double[]{1, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-            case 1:
-                return new double[]{0, 1, 0, 0, 0, 0, 0, 0, 0, 0};
-            case 2:
-                return new double[]{0, 0, 1, 0, 0, 0, 0, 0, 0, 0};
-            case 3:
-                return new double[]{0, 0, 0, 1, 0, 0, 0, 0, 0, 0};
-            case 4:
-                return new double[]{0, 0, 0, 0, 1, 0, 0, 0, 0, 0};
-            case 5:
-                return new double[]{0, 0, 0, 0, 0, 1, 0, 0, 0, 0};
-            case 6:
-                return new double[]{0, 0, 0, 0, 0, 0, 1, 0, 0, 0};
-            case 7:
-                return new double[]{0, 0, 0, 0, 0, 0, 0, 1, 0, 0};
-            case 8:
-                return new double[]{0, 0, 0, 0, 0, 0, 0, 0, 1, 0};
-            case 9:
-                return new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
-            default:
-                System.out.println("ERROR");
-                return null;
-        }
+        double[][] targets = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
+        return targets[label];
     }
 }
