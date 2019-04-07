@@ -21,7 +21,7 @@ public class Canvas extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(40, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setStroke(new BasicStroke(37, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setPaint(Color.white);
         g.drawPolyline(x, y, points);
     }

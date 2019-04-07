@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 
-public class PredictionUI extends JFrame {
+public class ConfidenceUI extends JFrame {
     private String[] confidence = new String[10];
     private JLabel[] guessLabels = new JLabel[10];
     private JProgressBar[] progressBars = new JProgressBar[10];
@@ -12,8 +12,8 @@ public class PredictionUI extends JFrame {
     /*
      * Creates the window which displays the confidence of the networks guess
      */
-    public PredictionUI() {
-        setTitle("Neural Network - Digit Classifier - Predictions");
+    public ConfidenceUI() {
+        setTitle("Neural Network - Digit Classifier - Confidence");
         setSize(500, 600);
         setBackground(Color.black);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

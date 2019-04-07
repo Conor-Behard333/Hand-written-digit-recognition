@@ -2,7 +2,7 @@ package UserInterfaces.GuessUI;
 
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
-import UserInterfaces.PredictionUI;
+import UserInterfaces.ConfidenceUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,7 +18,7 @@ public class GuessUI extends JFrame {
     private Canvas canvas;
     private ImagePanel predict;
     private String filePath = "Resources\\Number0-9\\None.png";
-    private PredictionUI predictionUI = new PredictionUI();
+    private ConfidenceUI predictionUI = new ConfidenceUI();
 
     /*
      * Creates the window for the guess UI
