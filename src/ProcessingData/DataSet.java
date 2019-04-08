@@ -7,14 +7,17 @@ import java.util.Scanner;
 
 public class DataSet {
     private final int imageSize = 784;
-    private int[][] trainingSet;
+    private int[][] trainingData;
     private Function f = new Function();
+    private int batchSize;
 
     /*
      * Initialises the int 2d array trainingSet
      */
     public DataSet(int batchSize, String filePath) throws IOException {
-        trainingSet = loadData(filePath, batchSize);
+        this.batchSize = batchSize;
+        trainingData = loadData(filePath);
+
     }
 
     /*
@@ -23,19 +26,29 @@ public class DataSet {
      *
      * Each row is a different image
      */
-    private int[][] loadData(String fileName, int batchSize) throws IOException {
-        int[][] x = new int[batchSize][imageSize];
+    private int[][] loadData(String fileName) throws IOException {
+        int[][] trainingData = new int[batchSize][imageSize];
         int row = 0;
         Scanner n = new Scanner(new File(fileName));
         n.useDelimiter(",");
         while (row < batchSize) {
             for (int i = 0; i < imageSize; i++) {
-                x[row][i] = (Integer.parseInt(n.next()));
+                trainingData[row][i] = (Integer.parseInt(n.next()));
             }
             row++;
             n.nextLine();
         }
-        return x;
+        return trainingData;
+    }
+
+    public void randomiseTrainingData() {
+        for (int i = 0; i < batchSize; i++) {
+            int rand = (int) (Math.random() * batchSize);
+            int[] temp = trainingData[i];
+            trainingData[i] = trainingData[rand];
+            trainingData[rand] = temp;
+        }
+
     }
 
     /*
@@ -47,7 +60,7 @@ public class DataSet {
     public double[] getInputData(int n) {
         double[] x = new double[imageSize];
         for (int i = 1; i < imageSize; i++) {
-            x[i] = trainingSet[n][i];
+            x[i] = trainingData[n][i];
         }
         x = f.normalise(x);
         return x;
@@ -57,7 +70,6 @@ public class DataSet {
      * Returns the label of the values at a specified line
      */
     public int getLabel(int n) {
-        return trainingSet[n][0];
+        return trainingData[n][0];
     }
-
 }

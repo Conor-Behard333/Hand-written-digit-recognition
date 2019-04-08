@@ -22,6 +22,7 @@ public class Run {
             for (int i = 0; i < batchSize; i++) {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
+            trainingData.randomiseTrainingData();
         }
 
         //Display the guess user interface
