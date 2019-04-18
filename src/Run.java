@@ -5,11 +5,9 @@ import UserInterfaces.LoadingUI;
 import UserInterfaces.NetworkSettingsUI;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class Run {
     public static void main(String[] args) throws Exception {
-
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//How many values are trained by the network
