@@ -58,5 +58,4 @@ class Output_Neuron {
         return deltaSum;
     }
 
-
 }
