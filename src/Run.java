@@ -4,10 +4,15 @@ import UserInterfaces.GuessUI.GuessUI;
 import UserInterfaces.LoadingUI;
 import UserInterfaces.NetworkSettingsUI;
 
+import javax.swing.*;
 import java.io.IOException;
 
 public class Run {
     public static void main(String[] args) throws IOException {
+        try{
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        }catch (Exception e){
+        }
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//How many values are trained by the network
         int epochs = settings.getEpochs();//How many times the network trains an entire batch
@@ -36,7 +41,6 @@ public class Run {
         //Display the guess user interface
         GuessUI guessUI = new GuessUI(network);
         guessUI.setVisible(true);
-
     }
 
     /*
