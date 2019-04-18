@@ -1,6 +1,7 @@
 import NeuralNetwork.Network;
 import ProcessingData.DataSet;
 import UserInterfaces.GuessUI.GuessUI;
+import UserInterfaces.LoadingUI;
 import UserInterfaces.NetworkSettingsUI;
 
 import java.io.IOException;
@@ -10,6 +11,10 @@ public class Run {
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//How many values are trained by the network
         int epochs = settings.getEpochs();//How many times the network trains an entire batch
+
+        //display loading GUI
+        LoadingUI load = new LoadingUI();
+        load.setVisible(true);
 
         //Load the training data
         DataSet trainingData = new DataSet(batchSize, "Resources\\mnist_train.csv");
@@ -25,9 +30,13 @@ public class Run {
             trainingData.randomiseTrainingData();
         }
 
+        //close loading GUI
+        load.setVisible(false);
+
         //Display the guess user interface
         GuessUI guessUI = new GuessUI(network);
         guessUI.setVisible(true);
+
     }
 
     /*
