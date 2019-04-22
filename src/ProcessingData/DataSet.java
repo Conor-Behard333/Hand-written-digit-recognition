@@ -48,7 +48,6 @@ public class DataSet {
             trainingData[i] = trainingData[rand];
             trainingData[rand] = temp;
         }
-
     }
 
     /*
