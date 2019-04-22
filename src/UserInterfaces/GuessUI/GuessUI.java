@@ -139,6 +139,7 @@ public class GuessUI extends JFrame {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            
             //Converts the image the user drew into a 28 by 28 png and stores
             //the grey scale values of each pixel in a double array which are
             //then put into the network and the largest output is the guess which
