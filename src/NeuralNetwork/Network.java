@@ -173,6 +173,7 @@ public class Network {
                 largest = output;
             }
         }
+        
         for (int i = 0; i < outputs.length; i++) {
             if (outputs[i] == largest) {
                 return i;
