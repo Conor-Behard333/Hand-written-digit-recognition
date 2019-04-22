@@ -87,6 +87,7 @@ public class ImageConverter {
         double xSum = 0;
         double ySum = 0;
         long n = 0;
+        
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
                 int weight = new Color(image.getRGB(x, y)).getRed();
@@ -95,8 +96,10 @@ public class ImageConverter {
                 n += weight;
             }
         }
+        
         centreOfMass[0] = (int) (xSum / n);
         centreOfMass[1] = (int) (ySum / n);
+        
         return centreOfMass;
     }
 
