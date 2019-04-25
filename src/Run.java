@@ -1,5 +1,5 @@
 import NeuralNetwork.Network;
-import ProcessingData.DataSet;
+import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
 import UserInterfaces.LoadingUI;
 import UserInterfaces.NetworkSettingsUI;
@@ -18,7 +18,7 @@ public class Run {
         load.setVisible(true);
 
         //Load the training data
-        DataSet trainingData = new DataSet(batchSize, "Resources\\mnist_train.csv");
+        LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\mnist_train.csv");
 
         //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
         Network network = new Network(784, 10, 50, 50);

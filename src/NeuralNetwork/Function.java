@@ -31,15 +31,25 @@ public class Function {
      * output = (e^weightedSum[i]) / Σ(e^weightedSum[i])
      */
     double softMax(double[] weightedSums, int neuron) {
+        double sum = getSumOfWeightedSum(weightedSums);
+        double[] output = getOutputArray(weightedSums, sum);
+        return output[neuron];
+    }
+
+    private double[] getOutputArray(double[] weightedSums, double sum) {
         double[] output = new double[weightedSums.length];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = Math.exp(weightedSums[i]) / sum;
+        }
+        return output;
+    }
+
+    private double getSumOfWeightedSum(double[] weightedSums) {
         double sum = 0;
         for (double weightedSum : weightedSums) {
             sum += Math.exp(weightedSum);
         }
-        for (int i = 0; i < output.length; i++) {
-            output[i] = Math.exp(weightedSums[i]) / sum;
-        }
-        return output[neuron];
+        return sum;
     }
 
     /*
@@ -48,12 +58,12 @@ public class Function {
      * Normalisation function:
      * normalised number = (number - minimum)/(maximum - minimum)
      */
-    public double[] normalise(double[] x) {
+    public double[] normalise(double[] inputs) {
         int min = 0;
-        double max = getMax(x);
-        double[] y = new double[x.length];
-        for (int i = 0; i < x.length; i++) {
-            y[i] = (x[i] - min) / (max - min);
+        double max = getMax(inputs);
+        double[] y = new double[inputs.length];
+        for (int i = 0; i < inputs.length; i++) {
+            y[i] = (inputs[i] - min) / (max - min);
         }
         return y;
     }

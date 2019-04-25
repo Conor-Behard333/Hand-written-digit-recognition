@@ -1,7 +1,6 @@
 package NeuralNetwork;
 
 class Hidden_Neuron {
-
     private double output;
     private double[] weights;
     private double[] deltaSum;
@@ -50,6 +49,4 @@ class Hidden_Neuron {
     double getOutput() {
         return output;
     }
-
-
 }
