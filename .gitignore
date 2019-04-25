@@ -27,3 +27,4 @@ hs_err_pid*
 *.iml
 Resources/mnist_train.csv
 
+out/production/NEA_Project/META-INF/
