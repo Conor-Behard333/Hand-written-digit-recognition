@@ -48,7 +48,6 @@ public class LoadDataSet {
             trainingData[i] = trainingData[rand];
             trainingData[rand] = temp;
         }
-
     }
 
     /*
