@@ -3,6 +3,7 @@ package UserInterfaces.GuessUI;
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
 import UserInterfaces.ConfidenceUI;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -83,17 +84,27 @@ public class GuessUI extends JFrame {
         JPanel centre = newPanel(0, 500, 900, 100, Color.gray);
         getContentPane().add(centre);
 
-        JButton clearCanvas = new JButton("Clear");
-        clearCanvas.setLocation(0, 600);
-        clearCanvas.setPreferredSize(new Dimension(425, 50));
-        clearCanvas.addActionListener(new ButtonClearActionListener());
+        JButton clearCanvas = getClearButton();
         centre.add(clearCanvas);
 
+        JButton buttonGuess = getGuessButton();
+        centre.add(buttonGuess);
+    }
+
+    private JButton getGuessButton() {
         JButton buttonGuess = new JButton("Guess");
         buttonGuess.setLocation(450, 600);
         buttonGuess.setPreferredSize(new Dimension(425, 50));
         buttonGuess.addActionListener(new ButtonGuessActionListener());
-        centre.add(buttonGuess);
+        return buttonGuess;
+    }
+
+    private JButton getClearButton() {
+        JButton clearCanvas = new JButton("Clear");
+        clearCanvas.setLocation(0, 600);
+        clearCanvas.setPreferredSize(new Dimension(425, 50));
+        clearCanvas.addActionListener(new ButtonClearActionListener());
+        return clearCanvas;
     }
 
     /*
@@ -131,16 +142,13 @@ public class GuessUI extends JFrame {
          * and will be shown as progress bars
          */
         public void actionPerformed(ActionEvent e) {
-            //Writes the drawn image and stores it as a png at the directory:
-            //C:\Users\conor\OneDrive\My Documents\image.png
+            //Writes the drawn image and stores it as a png at the src directory
             try {
-                BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-                canvas.paint(image.getGraphics());
-                ImageIO.write(image, "png", new File("Resources\\image.png"));
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                createImageFile();
+            } catch (Exception error) {
+                System.out.println(error);
             }
-            
+
             //Converts the image the user drew into a 28 by 28 png and stores
             //the grey scale values of each pixel in a double array which are
             //then put into the network and the largest output is the guess which
@@ -155,10 +163,20 @@ public class GuessUI extends JFrame {
             predictionUI.setConfidence(network.feedForward(input));
 
             //load input image into predict panel
+            loadPredictPanel();
+        }
+
+        private void loadPredictPanel() {
             getContentPane().remove(predict);//removes current prediction
             addPredictPanel();//adds the new panel
             repaint();//draws the image onto the panel
             revalidate();
+        }
+
+        private void createImageFile() throws IOException {
+            BufferedImage image = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            canvas.paint(image.getGraphics());
+            ImageIO.write(image, "png", new File("Resources\\image.png"));
         }
 
         /*

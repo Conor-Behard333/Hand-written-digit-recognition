@@ -42,49 +42,57 @@ public class ConfidenceUI extends JFrame {
      * creates a progress Bar
      */
     private JProgressBar createProgressBar(int yPos) {
-        JProgressBar temp = new JProgressBar();
-        temp.setSize(200, 20);
-        temp.setLocation(140, yPos);
-        temp.setMinimum(0);
-        temp.setMaximum(100);
-        temp.setStringPainted(true);
-        return temp;
+        JProgressBar progressBar = new JProgressBar();
+        progressBar.setSize(200, 20);
+        progressBar.setLocation(140, yPos);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setStringPainted(true);
+        return progressBar;
     }
 
     /*
      * creates a label
      */
     private JLabel createLabel(int yPos, int i) {
-        JLabel temp = new JLabel(i + ": 0.00%");
-        temp.setSize(100, 20);
-        temp.setFont(new Font(getName(), Font.PLAIN, 20));
-        temp.setLocation(10, yPos);
-        return temp;
+        JLabel label = new JLabel(i + ": 0.00%");
+        label.setSize(100, 20);
+        label.setFont(new Font(getName(), Font.PLAIN, 20));
+        label.setLocation(10, yPos);
+        return label;
     }
 
     /*
      * creates a JPanel
      */
     private JPanel createPanel() {
-        JPanel temp = new JPanel();
-        temp.setLocation(500, 600);
-        return temp;
+        JPanel panel = new JPanel();
+        panel.setLocation(500, 600);
+        return panel;
     }
 
     /*
      * Sets the progress bar and guess label to the appropriate values (values that the network generated)
      */
     public void setConfidence(double[] outputs) {
-        DecimalFormat df = new DecimalFormat("#.##");
-        for (int i = 0; i < 10; i++) {
-            confidence[i] = df.format(outputs[i] * 100);
-        }
+        formatConfidenceAsPercentage(outputs);
+        setValuesOfProgressBar();
+    }
+
+    private void setValuesOfProgressBar() {
         String[] guess = {"0: " + confidence[0] + "%", "1: " + confidence[1] + "%", "2: " + confidence[2] + "%", "3: " + confidence[3] + "%", "4: " + confidence[4] + "%", "5: " + confidence[5] + "%", "6: " + confidence[6] + "%", "7: " + confidence[7] + "%", "8: " + confidence[8] + "%", "9: " + confidence[9] + "%"};
         for (int i = 0; i < 10; i++) {
             int value = (int) (Double.parseDouble(confidence[i]));
             progressBars[i].setForeground(getPbColour(value));
             progressBars[i].setValue(value);
             guessLabels[i].setText(guess[i]);
+        }
+    }
+
+    private void formatConfidenceAsPercentage(double[] outputs) {
+        DecimalFormat df = new DecimalFormat("#.##");
+        for (int i = 0; i < 10; i++) {
+            confidence[i] = df.format(outputs[i] * 100);
         }
     }
 

@@ -14,19 +14,18 @@ public class NetworkSettingsUI {
         //asks the user how many epochs they want the network to do
         String epochs = (String) JOptionPane.showInputDialog(frame, "How many epochs do you want?", "Neural Network Settings", JOptionPane.QUESTION_MESSAGE, null, epochValues, epochValues[0]);
 
-        if ((epochs != null) && (epochs.length() > 0)) {
-            this.epochs = Integer.parseInt(epochs);
-        } else {
-            System.exit(0);
-        }
-
         //the size of the training data used
         String batchSize = (String) JOptionPane.showInputDialog(frame, "How many training value do you want to use?", "Neural Network Settings", JOptionPane.QUESTION_MESSAGE, null, batchSizeValues, batchSizeValues[0]);
 
-        if ((batchSize != null) && (batchSize.length() > 0)) {
-            this.batchSize = Integer.parseInt(batchSize);
-        } else {
+        checkValidEntry(epochs, batchSize);
+    }
+
+    private void checkValidEntry(String epochs, String batchSize) {
+        if (epochs == null || batchSize == null) {
             System.exit(0);
+        } else {
+            this.epochs = Integer.parseInt(epochs);
+            this.batchSize = Integer.parseInt(batchSize);
         }
     }
 
