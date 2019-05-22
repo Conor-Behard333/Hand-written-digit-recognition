@@ -25,7 +25,10 @@ public class NetworkSettingsUI {
         JTextField batchSizeValue = new JTextField();
         JComponent[] batchSizeInput = getJComponent("How many values do you want to train the network with? Maximum: 60000 ", batchSizeValue);
         JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-        batchSize = Integer.parseInt(batchSizeValue.getText());
+        batchSize = getInt(batchSizeValue, 60000);
+        if (batchSize < 0 || batchSize > 60000) {
+            batchSize = 60000;
+        }
     }
 
     private void setHiddenNeurons() {
@@ -36,13 +39,24 @@ public class NetworkSettingsUI {
         JComponent[] hiddenNeuronInput = getJComponent("Number of hidden neurons?", hiddenNeuronValues);
 
         JOptionPane.showConfirmDialog(frame, hiddenLayerInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-        int numOfHiddenLayers = Integer.parseInt(hiddenLayerValues.getText());
+        int numOfHiddenLayers = getInt(hiddenLayerValues, 2);
+
         numOfHiddenNeurons = new int[numOfHiddenLayers];
 
         for (int i = 0; i < numOfHiddenLayers; i++) {
             JOptionPane.showConfirmDialog(frame, hiddenNeuronInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-            numOfHiddenNeurons[i] = Integer.parseInt(hiddenNeuronValues.getText());
+            numOfHiddenNeurons[i] = getInt(hiddenNeuronValues, 50);
+
         }
+    }
+
+    private int getInt(JTextField textField, int defaultValue) {
+        int text = defaultValue;
+        try {
+            text = Integer.parseInt(textField.getText());
+        } catch (Exception e) {
+        }
+        return text;
     }
 
     private JComponent[] getJComponent(String text, JTextField textField) {
