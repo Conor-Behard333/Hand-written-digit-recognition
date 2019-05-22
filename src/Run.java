@@ -12,6 +12,7 @@ public class Run {
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//How many values are trained by the network
         int epochs = settings.getEpochs();//How many times the network trains an entire batch
+        int[] hiddenNeurons = settings.getHiddenNeurons();
 
         //display loading GUI
         LoadingUI load = new LoadingUI();
@@ -21,7 +22,7 @@ public class Run {
         LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\mnist_train.csv");
 
         //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
-        Network network = new Network(784, 10, 50, 50);
+        Network network = new Network(784, 10, hiddenNeurons);
 
         //Trains the network
         for (int j = 0; j < epochs; j++) {
