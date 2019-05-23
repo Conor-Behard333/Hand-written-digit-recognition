@@ -24,10 +24,20 @@ public class NetworkSettingsUI {
     private void setBatchSize() {
         JTextField batchSizeValue = new JTextField();
         JComponent[] batchSizeInput = getJComponent("How many values do you want to train the network with? Maximum: 60000 ", batchSizeValue);
-        JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-        batchSize = getInt(batchSizeValue, 60000);
-        if (batchSize < 0 || batchSize > 60000) {
-            batchSize = 60000;
+
+        while (true) {
+            try {
+                JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
+                batchSize = Integer.parseInt(batchSizeValue.getText());
+                if (batchSize < 0 || batchSize > 60000) {
+                    showInvalidInput("Invalid Input! Batch size has to be between 1 and 60000");
+                    continue;
+                }
+            } catch (Exception e) {
+                showInvalidInput("Invalid Input!");
+                continue;
+            }
+            break;
         }
     }
 
@@ -38,25 +48,54 @@ public class NetworkSettingsUI {
         JComponent[] hiddenLayerInput = getJComponent("Number of hidden layers?", hiddenLayerValues);
         JComponent[] hiddenNeuronInput = getJComponent("Number of hidden neurons?", hiddenNeuronValues);
 
-        JOptionPane.showConfirmDialog(frame, hiddenLayerInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-        int numOfHiddenLayers = getInt(hiddenLayerValues, 2);
+        int numOfHiddenLayers = getNumOfHiddenLayers(hiddenLayerValues, hiddenLayerInput);
 
         numOfHiddenNeurons = new int[numOfHiddenLayers];
 
-        for (int i = 0; i < numOfHiddenLayers; i++) {
-            JOptionPane.showConfirmDialog(frame, hiddenNeuronInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-            numOfHiddenNeurons[i] = getInt(hiddenNeuronValues, 50);
+        setHiddenNeurons(hiddenNeuronValues, hiddenNeuronInput, numOfHiddenLayers);
 
+    }
+
+    private int getNumOfHiddenLayers(JTextField hiddenLayerValues, JComponent[] hiddenLayerInput) {
+        int numOfHiddenLayers;
+        while (true) {
+            try {
+                JOptionPane.showConfirmDialog(frame, hiddenLayerInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
+                numOfHiddenLayers = Integer.parseInt(hiddenLayerValues.getText());
+                if (numOfHiddenLayers < 1) {
+                    showInvalidInput("Invalid Input! Requires a number greater than 0 ");
+                    continue;
+                }
+            } catch (Exception e) {
+                showInvalidInput("Invalid Input!");
+                continue;
+            }
+            break;
+        }
+        return numOfHiddenLayers;
+    }
+
+    private void setHiddenNeurons(JTextField hiddenNeuronValues, JComponent[] hiddenNeuronInput, int numOfHiddenLayers) {
+        for (int i = 0; i < numOfHiddenLayers; i++) {
+            while (true) {
+                try {
+                    JOptionPane.showConfirmDialog(frame, hiddenNeuronInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
+                    numOfHiddenNeurons[i] = Integer.parseInt(hiddenNeuronValues.getText());
+                    if (numOfHiddenNeurons[i] < 1) {
+                        showInvalidInput("Invalid Input! Requires a number greater than 0 ");
+                        continue;
+                    }
+                } catch (Exception e) {
+                    showInvalidInput("Invalid Input!");
+                    continue;
+                }
+                break;
+            }
         }
     }
 
-    private int getInt(JTextField textField, int defaultValue) {
-        int text = defaultValue;
-        try {
-            text = Integer.parseInt(textField.getText());
-        } catch (Exception e) {
-        }
-        return text;
+    private void showInvalidInput(String errorMessage) {
+        JOptionPane.showConfirmDialog(frame, errorMessage, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
     }
 
     private JComponent[] getJComponent(String text, JTextField textField) {
