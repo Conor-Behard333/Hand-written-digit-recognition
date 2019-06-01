@@ -36,7 +36,7 @@ public class ImageConverter {
             System.out.println(e);
         }
 //        try {
-//            ImageIO.write(image, "png", new File("C:\\Users\\conor\\OneDrive\\My Documents\\imageTest.png"));
+//            ImageIO.write(image, "png", new File("Resources\\Test_Image.png"));
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
 //        }

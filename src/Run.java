@@ -12,7 +12,7 @@ public class Run {
         NetworkSettingsUI settings = new NetworkSettingsUI();
         int batchSize = settings.getBatchSize();//How many values are trained by the network
         int epochs = settings.getEpochs();//How many times the network trains an entire batch
-        int[] hiddenNeurons = settings.getHiddenNeurons();
+        int[] hiddenNeurons = settings.getHiddenNeurons();//An array containing the number of neurons in each hidden layer
 
         //display loading GUI
         LoadingUI load = new LoadingUI();

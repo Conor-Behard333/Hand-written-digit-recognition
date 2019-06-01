@@ -1,18 +1,17 @@
 package NeuralNetwork;
 
-class Output_Neuron {
+class Output_Neuron extends Function {
     private double weightedSum;
     private double output;
     private double[] weights;
     private double[] deltaSum;
-    private Function f = new Function();
 
     /*
      * Initialises global variables
      */
     Output_Neuron(int hiddenNeurons) {
         this.weights = new double[hiddenNeurons];
-        this.weights = f.randomiseWeights(weights.length);
+        this.weights = randomiseWeights(weights.length);
         this.deltaSum = new double[hiddenNeurons];
     }
 
@@ -25,7 +24,7 @@ class Output_Neuron {
      * this is used to tune the weights of the next layer
      */
     void tuneWeights(double LR, double[] prevOutputs, double target) {
-        double gradient = (target - output) * f.derivative(output);
+        double gradient = (target - output) * derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += LR * prevOutputs[i] * gradient;
             deltaSum[i] = gradient * weights[i];
@@ -36,14 +35,14 @@ class Output_Neuron {
      * Calculates the output and assigns it to the variable 'output'
      */
     void calculateOutput(double[] weightedSums, int i) {
-        output = f.softMax(weightedSums, i);
+        output = softMax(weightedSums, i);
     }
 
     /*
      * Calculates the weighted sum and assigns it to the variable 'weightedSum'
      */
     void calculateWeightedSum(double[] hiddenInputs) {
-        weightedSum = f.getWeightedSum(hiddenInputs, weights);
+        weightedSum = getWeightedSum(hiddenInputs, weights);
     }
 
     double getOutput() {

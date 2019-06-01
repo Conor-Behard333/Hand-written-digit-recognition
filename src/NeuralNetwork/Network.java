@@ -7,7 +7,7 @@ public class Network {
     private int[] numOfHiddenNeurons;
     private int numberOfHiddenLayers;
     private Hidden_Neuron[][] hiddenLayer;
-    private Output_Neuron[] output_neurons;
+    private Output_Neuron[] outputNeurons;
 
     /*
      * initialises all the global variables used and creates all the necessary neurons
@@ -23,7 +23,7 @@ public class Network {
             numOfHiddenNeurons[i] = hiddenNeurons[i];
         }
 
-        this.output_neurons = new Output_Neuron[outputNeurons];
+        this.outputNeurons = new Output_Neuron[outputNeurons];
         //stores all the hidden neurons for each hidden layer
         this.hiddenLayer = new Hidden_Neuron[numberOfHiddenLayers][];
         for (int i = 0; i < numberOfHiddenLayers; i++) {
@@ -60,15 +60,15 @@ public class Network {
 
     private void GetOutputLayerOutputs(double[] outputLayer_Outputs, double[] weightedSum) {
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].calculateOutput(weightedSum, i);
-            outputLayer_Outputs[i] = output_neurons[i].getOutput();
+            outputNeurons[i].calculateOutput(weightedSum, i);
+            outputLayer_Outputs[i] = outputNeurons[i].getOutput();
         }
     }
 
     private void calculateOutputWeightedSum(double[] weightedSum, double[] hiddenLayer_output) {
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].calculateWeightedSum(hiddenLayer_output);
-            weightedSum[i] = output_neurons[i].getWeightedSum();
+            outputNeurons[i].calculateWeightedSum(hiddenLayer_output);
+            weightedSum[i] = outputNeurons[i].getWeightedSum();
         }
     }
 
@@ -97,28 +97,28 @@ public class Network {
         tuneOutputWeights(hidden_outputs[numberOfHiddenLayers - 1], target);
 
         //3. Tunes the hidden layers in-between the first hidden layer and the output layer
-        tuneInBetweenHiddenLayerWeights(hidden_outputs);
+        tuneHiddenLayerWeights(hidden_outputs);
 
         //4. Tunes the first hidden layer's weights
         tuneFirstLayer(inputs);
     }
 
-    private void tuneInBetweenHiddenLayerWeights(double[][] hidden_outputs) {
+    private void tuneHiddenLayerWeights(double[][] hidden_outputs) {
         for (int i = numberOfHiddenLayers - 2; i > 0; i--) {
-            tuneInBetweenLayers(hidden_outputs[i - 1], i);
+            tuneHiddenLayers(hidden_outputs[i - 1], i);
         }
     }
 
     private void getHiddenLayerOutputs(double[][] hidden_outputs) {
         for (int i = 0; i < numberOfHiddenLayers; i++) {
-            hidden_outputs[i] = getHiddenOutputsLayer(i);
+            hidden_outputs[i] = getHiddenOutputs(i);
         }
     }
 
     /*
      * Returns an array of the outputs for each neuron in a given hidden layer
      */
-    private double[] getHiddenOutputsLayer(int layer) {
+    private double[] getHiddenOutputs(int layer) {
         double[] x = new double[numOfHiddenNeurons[layer]];
         for (int i = 0; i < numOfHiddenNeurons[layer]; i++) {
             x[i] = hiddenLayer[layer][i].getOutput();
@@ -126,7 +126,7 @@ public class Network {
         return x;
     }
 
-    private void tuneInBetweenLayers(double[] inputs, int layer) {
+    private void tuneHiddenLayers(double[] inputs, int layer) {
         for (int i = 0; i < numOfHiddenNeurons[layer]; i++) {
             double deltaSumTotal = 0;
             for (int j = 0; j < numOfHiddenNeurons[layer + 1]; j++) {
@@ -140,7 +140,7 @@ public class Network {
         for (int i = 0; i < numOfHiddenNeurons[0]; i++) {
             double deltaSumTotal = 0;
             for (int j = 0; j < numOfOutputNeurons; j++) {
-                deltaSumTotal += output_neurons[j].getDeltaSum()[i];
+                deltaSumTotal += outputNeurons[j].getDeltaSum()[i];
             }
             hiddenLayer[0][i].tuneWeights(LR, inputs, deltaSumTotal);
         }
@@ -151,7 +151,7 @@ public class Network {
      */
     private void tuneOutputWeights(double[] hidden_outputs, double[] target) {
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i].tuneWeights(LR, hidden_outputs, target[i]);
+            outputNeurons[i].tuneWeights(LR, hidden_outputs, target[i]);
         }
     }
 
@@ -175,7 +175,7 @@ public class Network {
      */
     private void createOutputNeurons() {
         for (int i = 0; i < numOfOutputNeurons; i++) {
-            output_neurons[i] = new Output_Neuron(numOfHiddenNeurons[numberOfHiddenLayers - 1]);
+            outputNeurons[i] = new Output_Neuron(numOfHiddenNeurons[numberOfHiddenLayers - 1]);
         }
     }
 
