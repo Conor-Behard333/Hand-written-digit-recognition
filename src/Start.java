@@ -2,6 +2,7 @@ import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
 import UserInterfaces.Other.LoadingUI;
+import UserInterfaces.Other.SaveOrLoad;
 import UserInterfaces.Other.NetworkSettingsUI;
 
 import javax.swing.*;
@@ -51,11 +52,9 @@ public class Start {
             trainingData.randomiseTrainingData();
         }
 
-        double[] weights = network.getWeights();
-        for (int i = 0; i < weights.length; i++) {
-            System.out.println(i + 1 + ": " + weights[i]);
-        }
-
+        //double[] weights = network.getWeights();
+        //new SaveOrLoad().writeFile("Best_weights", weights);
+        
         //close loading GUI
         load.setVisible(false);
 
