@@ -57,4 +57,15 @@ class Output_Neuron extends Function {
         return deltaSum;
     }
 
+    double[] getWeights() {
+        double[] weights = new double[this.weights.length];
+        for (int i = 0; i < this.weights.length; i++) {
+            weights[i] = this.weights[i];
+        }
+        return weights;
+    }
+
+    public void setWeights(double[] weights) {
+        this.weights = weights;
+    }
 }

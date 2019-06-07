@@ -5,6 +5,7 @@ import UserInterfaces.Other.LoadingUI;
 import UserInterfaces.Other.NetworkSettingsUI;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Start {
 
@@ -48,6 +49,11 @@ public class Start {
                 network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
             }
             trainingData.randomiseTrainingData();
+        }
+
+        double[] weights = network.getWeights();
+        for (int i = 0; i < weights.length; i++) {
+            System.out.println(i + 1 + ": " + weights[i]);
         }
 
         //close loading GUI
