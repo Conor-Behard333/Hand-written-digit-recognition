@@ -24,7 +24,6 @@ public class NetworkSettingsUI {
     private void setBatchSize() {
         JTextField batchSizeValue = new JTextField();
         JComponent[] batchSizeInput = getJComponent("How many values do you want to train the network with? Maximum: 60000 ", batchSizeValue);
-
         while (true) {
             try {
                 JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
