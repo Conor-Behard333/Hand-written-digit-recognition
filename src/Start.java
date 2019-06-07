@@ -25,7 +25,6 @@ public class Start {
         return targets[label];
     }
 
-
     public void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         NetworkSettingsUI settings = new NetworkSettingsUI();

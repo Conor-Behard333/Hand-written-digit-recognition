@@ -17,7 +17,6 @@ public class InfoUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
-
     }
 
     private void createUI() {

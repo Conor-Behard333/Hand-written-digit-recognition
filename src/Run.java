@@ -9,12 +9,10 @@ public class Run {
         infoUI.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {
-
             }
 
             @Override
             public void windowClosing(WindowEvent e) {
-
             }
 
             public void windowClosed(WindowEvent e) {
@@ -27,22 +25,18 @@ public class Run {
 
             @Override
             public void windowIconified(WindowEvent e) {
-
             }
 
             @Override
             public void windowDeiconified(WindowEvent e) {
-
             }
 
             @Override
             public void windowActivated(WindowEvent e) {
-
             }
 
             @Override
             public void windowDeactivated(WindowEvent e) {
-
             }
         });
     }
