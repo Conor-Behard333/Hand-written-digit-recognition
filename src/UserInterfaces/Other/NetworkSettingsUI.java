@@ -1,4 +1,4 @@
-package UserInterfaces;
+package UserInterfaces.Other;
 
 import javax.swing.*;
 

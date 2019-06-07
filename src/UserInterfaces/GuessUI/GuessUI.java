@@ -2,8 +2,7 @@ package UserInterfaces.GuessUI;
 
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
-import UserInterfaces.ConfidenceUI;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+import UserInterfaces.Other.ConfidenceUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,7 +12,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class GuessUI extends JFrame {
     private Network network;

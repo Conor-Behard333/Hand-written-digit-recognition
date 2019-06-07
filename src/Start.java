@@ -1,8 +1,8 @@
 import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
-import UserInterfaces.LoadingUI;
-import UserInterfaces.NetworkSettingsUI;
+import UserInterfaces.Other.LoadingUI;
+import UserInterfaces.Other.NetworkSettingsUI;
 
 import javax.swing.*;
 
