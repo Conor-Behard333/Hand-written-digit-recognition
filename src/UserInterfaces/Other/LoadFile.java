@@ -1,13 +1,11 @@
 package UserInterfaces.Other;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class SaveOrLoad {
-    public double[] loadFile(String fileName) {
+public class LoadFile {
+    public double[] load(String fileName) {
         double[] weights = new double[0];
         int index = -1;
         try {
@@ -30,22 +28,4 @@ public class SaveOrLoad {
         return weights;
     }
 
-   public void saveFile(String fileName, double[] weights) {
-        FileWriter write;
-        try {
-            write = new FileWriter(fileName + ".txt");
-            try (PrintWriter printLine = new PrintWriter(write)) {
-                for (int i = -1; i < weights.length; i++) {
-                    if (i == -1) {
-                        printLine.println(weights.length);
-                    } else {
-                        printLine.println(weights[i]);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            System.err.println(e);
-        }
-    }
 }
-
