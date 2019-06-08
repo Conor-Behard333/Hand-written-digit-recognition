@@ -2,7 +2,9 @@ package UserInterfaces.GuessUI;
 
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
+import ProcessingData.SaveFile;
 import UserInterfaces.Other.ConfidenceUI;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -83,27 +85,24 @@ public class GuessUI extends JFrame {
         JPanel centre = newPanel(0, 500, 900, 100, Color.gray);
         getContentPane().add(centre);
 
-        JButton clearCanvas = getClearButton();
+        JButton clearCanvas = getButton("Clear", 0, 300, 250, 50);
+        clearCanvas.addActionListener(new ClearButtonActionListener());
         centre.add(clearCanvas);
 
-        JButton buttonGuess = getGuessButton();
+        JButton save = getButton("Save", 300, 600, 250, 50);
+        save.addActionListener(new ButtonSaveActionListener());
+        centre.add(save);
+
+        JButton buttonGuess = getButton("Guess", 600, 900, 250, 50);
+        buttonGuess.addActionListener(new ButtonGuessActionListener());
         centre.add(buttonGuess);
     }
 
-    private JButton getGuessButton() {
-        JButton buttonGuess = new JButton("Guess");
-        buttonGuess.setLocation(450, 600);
-        buttonGuess.setPreferredSize(new Dimension(425, 50));
-        buttonGuess.addActionListener(new ButtonGuessActionListener());
+    private JButton getButton(String name, int x, int y, int width, int height) {
+        JButton buttonGuess = new JButton(name);
+        buttonGuess.setLocation(x, y);
+        buttonGuess.setPreferredSize(new Dimension(width, height));
         return buttonGuess;
-    }
-
-    private JButton getClearButton() {
-        JButton clearCanvas = new JButton("Clear");
-        clearCanvas.setLocation(0, 600);
-        clearCanvas.setPreferredSize(new Dimension(425, 50));
-        clearCanvas.addActionListener(new ButtonClearActionListener());
-        return clearCanvas;
     }
 
     /*
@@ -188,15 +187,20 @@ public class GuessUI extends JFrame {
         }
     }
 
-    /*
-     * ActionListener for the clear button
-     */
-    private class ButtonClearActionListener implements ActionListener {
+    private class ButtonSaveActionListener implements ActionListener {
         @Override
-        /*
-         * When the button is pressed both the canvas panel and predict panel is
-         * reset to its original state (just a black background)
-         */
+        public void actionPerformed(ActionEvent e) {
+            int saveReply = JOptionPane.showConfirmDialog(null, "Do you want to save the current configuration", "Save File?", JOptionPane.YES_NO_OPTION);
+            if (saveReply == JOptionPane.YES_OPTION) {
+                double[] weights = network.getWeights();
+                new SaveFile().save("Resources\\SaveFiles\\" + network.getConfig(), weights);
+                JOptionPane.showMessageDialog(null, "The file has been saved and named: \n" + network.getConfig(), "File saved", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
+    private class ClearButtonActionListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             filePath = "Resources\\Number0-9\\None.png";
             getContentPane().remove(canvas);//removes current drawing
@@ -208,3 +212,4 @@ public class GuessUI extends JFrame {
         }
     }
 }
+

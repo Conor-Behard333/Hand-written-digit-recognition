@@ -2,11 +2,12 @@ import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
 import ProcessingData.LoadFile;
-import ProcessingData.SaveFile;
 import UserInterfaces.Other.LoadingUI;
 import UserInterfaces.Other.NetworkSettingsUI;
 
 import javax.swing.*;
+import java.io.File;
+import java.util.Arrays;
 
 class Start {
 
@@ -32,9 +33,12 @@ class Start {
         int loadReply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
         boolean loadFile = (loadReply == (JOptionPane.YES_OPTION));
         if (loadFile) {
+            String[] fileNames = getFileNames();
+            String saveFile = (String) JOptionPane.showInputDialog(null, "Select a save file", "Save file", JOptionPane.QUESTION_MESSAGE, null, fileNames, fileNames[0]);
+            int[] hiddenNeurons = getNumOfHiddenNeurons(saveFile);
             //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
-            Network network = new Network(784, 10, 50, 50);
-            double[] weights = new LoadFile().load("784-50-50-10");
+            Network network = new Network(784, 10, hiddenNeurons);
+            double[] weights = new LoadFile().load("Resources\\SaveFiles\\" + saveFile);
             network.setWeights(weights);
 
             //Display the guess user interface
@@ -62,16 +66,46 @@ class Start {
                 trainingData.randomiseTrainingData();
             }
 
-            int saveReply = JOptionPane.showConfirmDialog(null, "Do you want to save the current configuration", "Save File?", JOptionPane.YES_NO_OPTION);
-            if (saveReply == JOptionPane.YES_OPTION) {
-                double[] weights = network.getWeights();
-                new SaveFile().save(network.getConfig(), weights);
-            }
             //close loading GUI
             load.setVisible(false);
 
             //Display the guess user interface
             new GuessUI(network);
         }
+    }
+
+    private int[] getNumOfHiddenNeurons(String saveFile) {
+        int count = 0;
+        for (int i = 0; i < saveFile.length(); i++) {
+            if (saveFile.charAt(i) == '-') {
+                count++;
+            }
+        }
+        int numOfHiddenLayers = count - 1;
+        int[] numOfHiddenNeurons = new int[numOfHiddenLayers];
+        int start = 4;
+        int end = 0;
+        for (int i = 0; i < numOfHiddenLayers; i++) {
+            for (int j = start; j < saveFile.length(); j++) {
+                if (saveFile.charAt(j) == '-') {
+                    end = j;
+                    System.out.println(end);
+                    break;
+                }
+            }
+            numOfHiddenNeurons[i] = Integer.parseInt(saveFile.substring(start, end));
+            start = end + 1;
+        }
+        return numOfHiddenNeurons;
+    }
+
+    private String[] getFileNames() {
+        File folder = new File("Resources\\SaveFiles");
+        File[] files = folder.listFiles();
+        String[] fileNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            fileNames[i] = files[i].getName();
+        }
+        return fileNames;
     }
 }

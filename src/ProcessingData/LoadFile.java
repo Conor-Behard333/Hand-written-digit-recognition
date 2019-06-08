@@ -9,7 +9,7 @@ public class LoadFile {
         double[] weights = new double[0];
         int index = -1;
         try {
-            try (Scanner sc = new Scanner(new File(fileName + ".txt"))) {
+            try (Scanner sc = new Scanner(new File(fileName))) {
                 while ((sc.hasNext())) {
                     if (index == -1) {
                         int size = Integer.parseInt(sc.nextLine());
