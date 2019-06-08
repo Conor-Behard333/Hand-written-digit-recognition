@@ -1,4 +1,4 @@
-package UserInterfaces.Other;
+package ProcessingData;
 
 import java.io.FileWriter;
 import java.io.IOException;

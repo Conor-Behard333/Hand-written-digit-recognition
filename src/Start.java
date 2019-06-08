@@ -1,8 +1,8 @@
 import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
-import UserInterfaces.Other.LoadFile;
-import UserInterfaces.Other.SaveFile;
+import ProcessingData.LoadFile;
+import ProcessingData.SaveFile;
 import UserInterfaces.Other.LoadingUI;
 import UserInterfaces.Other.NetworkSettingsUI;
 
