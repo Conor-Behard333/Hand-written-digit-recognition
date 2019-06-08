@@ -17,10 +17,10 @@ public class LoadingUI extends JFrame {
 
     private void addLoadingBar() {
         JPanel panel = new JPanel();
-        panel.setSize(getWidth(), getHeight());
+        panel.setSize(getSize());
 
         JProgressBar load = new JProgressBar();
-        load.setSize(getWidth(), getHeight());
+        load.setSize(getSize());
         load.setLocation(0, 0);
         load.setIndeterminate(true);
 

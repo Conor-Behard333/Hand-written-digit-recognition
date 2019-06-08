@@ -28,15 +28,14 @@ class Start {
 
     void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        int reply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
         SaveOrLoad saveOrLoad = new SaveOrLoad();
-        boolean loadFile = reply == (JOptionPane.YES_OPTION);
-
+        int loadReply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
+        boolean loadFile = (loadReply == (JOptionPane.YES_OPTION));
         if (loadFile) {
             //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
-            Network network = new Network(784, 10, 100);
+            Network network = new Network(784, 10, 50, 50);
 
-            double[] weights = saveOrLoad.loadFile("784-100-10");
+            double[] weights = saveOrLoad.loadFile("784-50-50-10");
             network.setWeights(weights);
 
             //Display the guess user interface
@@ -64,9 +63,11 @@ class Start {
                 trainingData.randomiseTrainingData();
             }
 
-            // double[] weights = network.getWeights();
-            // saveOrLoad.saveFile(network.getConfig(), weights);
-
+            int saveReply = JOptionPane.showConfirmDialog(null, "Do you want to save the current configuration", "Save File?", JOptionPane.YES_NO_OPTION);
+            if (saveReply == JOptionPane.YES_OPTION) {
+                double[] weights = network.getWeights();
+                saveOrLoad.saveFile(network.getConfig(), weights);
+            }
             //close loading GUI
             load.setVisible(false);
 
