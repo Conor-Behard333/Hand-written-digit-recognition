@@ -1,6 +1,5 @@
 package NeuralNetwork;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Network {
@@ -244,5 +243,41 @@ public class Network {
             }
         }
         return weights;
+    }
+
+    public void setWeights(double[] weights) {
+        int lastIndex = 0;
+        int[] layersOrder = new int[2 + numOfHiddenLayers];
+        layersOrder[0] = numOfInputNeurons;
+        layersOrder[layersOrder.length - 1] = numOfOutputNeurons;
+        for (int i = 1; i < layersOrder.length - 1; i++) {
+            layersOrder[i] = numOfHiddenNeurons[i - 1];
+        }
+        for (int i = 0; i < layersOrder.length - 1; i++) {
+            if (i == layersOrder.length - 2) {
+                lastIndex = setWeights(weights, lastIndex, layersOrder[i], i, layersOrder[i + 1], true);
+            } else {
+                lastIndex = setWeights(weights, lastIndex, layersOrder[i], i, layersOrder[i + 1], false);
+            }
+        }
+    }
+
+    private int setWeights(double[] weights, int lastIndex, int prevLayer, int layer, int totalNeurons, boolean output) {
+        int index = 0;
+        for (int neuron = 0; neuron < totalNeurons; neuron++) {
+            double[] temp = new double[prevLayer];
+            for (int j = 0; j < temp.length; j++) {
+                temp[index] = weights[lastIndex];
+                index++;
+                lastIndex++;
+            }
+            if (output) {
+                outputNeurons[neuron].setWeights(temp);
+            } else {
+                hiddenLayer[layer][neuron].setWeights(temp);
+            }
+            index = 0;
+        }
+        return lastIndex;
     }
 }

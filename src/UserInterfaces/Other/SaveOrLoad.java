@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class SaveOrLoad {
-    double[] readFile(String fileName) {
+    public double[] loadFile(String fileName) {
         double[] weights = new double[0];
         int index = -1;
         try {
@@ -30,7 +30,7 @@ public class SaveOrLoad {
         return weights;
     }
 
-    public void writeFile(String fileName, double[] weights) {
+   public void saveFile(String fileName, double[] weights) {
         FileWriter write;
         try {
             write = new FileWriter(fileName + ".txt");

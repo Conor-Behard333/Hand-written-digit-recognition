@@ -1,7 +1,5 @@
 package NeuralNetwork;
 
-import java.util.ArrayList;
-
 class Hidden_Neuron extends Function {
     private double output;
     private double[] weights;
@@ -57,5 +55,9 @@ class Hidden_Neuron extends Function {
             weights[i] = this.weights[i];
         }
         return weights;
+    }
+
+    void setWeights(double[] weights) {
+        this.weights = weights;
     }
 }
