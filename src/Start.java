@@ -84,7 +84,7 @@ class Start {
         }
         int numOfHiddenLayers = count - 1;
         int[] numOfHiddenNeurons = new int[numOfHiddenLayers];
-        int start = 4;
+        int start = getStart(saveFile);
         int end = 0;
         for (int i = 0; i < numOfHiddenLayers; i++) {
             for (int j = start; j < saveFile.length(); j++) {
@@ -97,6 +97,15 @@ class Start {
             start = end + 1;
         }
         return numOfHiddenNeurons;
+    }
+
+    private int getStart(String saveFile) {
+        for (int i = 0; i < saveFile.length(); i++) {
+            if (saveFile.charAt(i) == '-') {
+                return i + 1;
+            }
+        }
+        return 0;
     }
 
     private String[] getFileNames() {

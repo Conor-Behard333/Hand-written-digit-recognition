@@ -192,8 +192,9 @@ public class GuessUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             int saveReply = JOptionPane.showConfirmDialog(null, "Do you want to save the current configuration", "Save File?", JOptionPane.YES_NO_OPTION);
             if (saveReply == JOptionPane.YES_OPTION) {
+                File folder = new File("Resources\\SaveFiles");
                 double[] weights = network.getWeights();
-                new SaveFile().save("Resources\\SaveFiles\\" + network.getConfig(), weights);
+                new SaveFile().save("Resources\\SaveFiles\\" + "(" + (folder.listFiles().length + 1) + ")" + network.getConfig(), weights);
                 JOptionPane.showMessageDialog(null, "The file has been saved and named: \n" + network.getConfig(), "File saved", JOptionPane.INFORMATION_MESSAGE);
             }
         }
