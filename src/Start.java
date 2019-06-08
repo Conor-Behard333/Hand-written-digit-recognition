@@ -12,7 +12,6 @@ class Start {
     /*
      * Based on the label this method returns the target values for the network
      */
-
     private double[] getTarget(int label) {
         double[][] targets = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
                 {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -29,8 +28,9 @@ class Start {
 
     void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        int reply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
         SaveOrLoad saveOrLoad = new SaveOrLoad();
-        boolean loadFile = false;
+        boolean loadFile = reply == (JOptionPane.YES_OPTION);
 
         if (loadFile) {
             //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
@@ -40,8 +40,7 @@ class Start {
             network.setWeights(weights);
 
             //Display the guess user interface
-            GuessUI guessUI = new GuessUI(network);
-            guessUI.setVisible(true);
+            new GuessUI(network);
         } else {
             NetworkSettingsUI settings = new NetworkSettingsUI();
             int batchSize = settings.getBatchSize();//How many values are trained by the network
@@ -53,7 +52,6 @@ class Start {
 
             //display loading GUI
             LoadingUI load = new LoadingUI();
-            load.setVisible(true);
 
             //Load the training data
             LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\mnist_train.csv");
@@ -67,14 +65,13 @@ class Start {
             }
 
             // double[] weights = network.getWeights();
-            // saveOrLoad.saveFile("784-100-10", weights);
+            // saveOrLoad.saveFile(network.getConfig(), weights);
 
             //close loading GUI
             load.setVisible(false);
 
             //Display the guess user interface
-            GuessUI guessUI = new GuessUI(network);
-            guessUI.setVisible(true);
+            new GuessUI(network);
         }
     }
 }

@@ -32,6 +32,7 @@ public class GuessUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        setVisible(true);
     }
 
     /*

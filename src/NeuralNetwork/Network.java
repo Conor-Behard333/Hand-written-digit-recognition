@@ -1,7 +1,5 @@
 package NeuralNetwork;
 
-import java.util.Arrays;
-
 public class Network {
     private final double LR = 0.07;
     private int numOfInputNeurons;
@@ -10,11 +8,13 @@ public class Network {
     private int numOfHiddenLayers;
     private Hidden_Neuron[][] hiddenLayer;
     private Output_Neuron[] outputNeurons;
+    private String config = "";
 
     /*
      * initialises all the global variables used and creates all the necessary neurons
      */
     public Network(int inputNeurons, int outputNeurons, int... hiddenNeurons) {
+
         this.numOfHiddenLayers = hiddenNeurons.length;
         this.numOfInputNeurons = inputNeurons;
         this.numOfOutputNeurons = outputNeurons;
@@ -31,9 +31,21 @@ public class Network {
         for (int i = 0; i < numOfHiddenLayers; i++) {
             hiddenLayer[i] = new Hidden_Neuron[hiddenNeurons[i]];
         }
-
+        setConfig();
         createHiddenNeurons();//creates all the hidden neurons
         createOutputNeurons();//creates all the output neurons
+    }
+
+    public void setConfig() {
+        config += numOfInputNeurons + "-";
+        for (int i = 0; i < numOfHiddenLayers; i++) {
+            config += numOfHiddenNeurons[i] + "-";
+        }
+        config += numOfOutputNeurons + "";
+    }
+
+    public String getConfig() {
+        return config;
     }
 
     /*
