@@ -40,7 +40,6 @@ class Start {
             Network network = new Network(784, 10, hiddenNeurons);
             double[] weights = new LoadFile().load("Resources\\SaveFiles\\" + saveFile);
             network.setWeights(weights);
-
             //Display the guess user interface
             new GuessUI(network);
         } else {
@@ -89,7 +88,6 @@ class Start {
             for (int j = start; j < saveFile.length(); j++) {
                 if (saveFile.charAt(j) == '-') {
                     end = j;
-                    System.out.println(end);
                     break;
                 }
             }

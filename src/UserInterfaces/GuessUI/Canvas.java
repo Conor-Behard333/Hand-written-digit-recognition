@@ -3,24 +3,29 @@ package UserInterfaces.GuessUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
 
 public class Canvas extends JPanel {
     private int[] x, y;
     private int points = 0;
 
+
     Canvas() {
-        x = new int[10000];
-        y = new int[10000];
-        addMouseMotionListener(new MList());
+        x = new int[1920];
+        y = new int[1080];
+        addMouseMotionListener(new MouseMA());
     }
 
     /*
      * Paints a circle at the location of the mouse
      */
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setStroke(new BasicStroke(37, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setPaint(Color.white);
         g.drawPolyline(x, y, points);
@@ -29,7 +34,7 @@ public class Canvas extends JPanel {
     /*
      * Action Listener for the mouse
      */
-    class MList extends MouseMotionAdapter {
+    class MouseMA extends MouseMotionAdapter {
         /*
          * Updates the mouse's x and y position
          */
