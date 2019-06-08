@@ -16,7 +16,7 @@ public class ConfidenceUI extends JFrame {
         setTitle("Neural Network - Digit Classifier - Confidence");
         setSize(500, 600);
         setBackground(Color.black);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocation(1410, 220);
         setResizable(false);
         createUI();

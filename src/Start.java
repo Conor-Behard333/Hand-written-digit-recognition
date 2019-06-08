@@ -7,7 +7,6 @@ import UserInterfaces.Other.NetworkSettingsUI;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
 
 class Start {
 
@@ -31,6 +30,9 @@ class Start {
     void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         int loadReply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
+        if (loadReply == -1) {
+            System.exit(0);
+        }
         boolean loadFile = (loadReply == (JOptionPane.YES_OPTION));
         if (loadFile) {
             String[] fileNames = getFileNames();
