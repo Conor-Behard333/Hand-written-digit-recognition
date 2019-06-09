@@ -1,7 +1,5 @@
 package UserInterfaces.Other;
 
-import jdk.nashorn.internal.scripts.JO;
-
 import javax.swing.*;
 
 public class NetworkSettingsUI {
@@ -48,7 +46,7 @@ public class NetworkSettingsUI {
 
     private void displayOption(JComponent[] batchSizeInput) {
         int response = JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
-        if (response == -1){
+        if (response == -1) {
             System.exit(0);
         }
     }

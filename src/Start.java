@@ -1,3 +1,4 @@
+import NeuralNetwork.Function;
 import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import UserInterfaces.GuessUI.GuessUI;
@@ -8,24 +9,11 @@ import UserInterfaces.Other.NetworkSettingsUI;
 import javax.swing.*;
 import java.io.File;
 
-class Start {
+class Start extends Function {
 
     /*
      * Based on the label this method returns the target values for the network
      */
-    private double[] getTarget(int label) {
-        double[][] targets = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
-        return targets[label];
-    }
 
     void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -62,7 +50,7 @@ class Start {
             //Trains the network
             for (int j = 0; j < epochs; j++) {
                 for (int i = 0; i < batchSize; i++) {
-                    network.train(trainingData.getInputData(i), getTarget(trainingData.getLabel(i)));
+                    network.train(trainingData.getInputData(i), network.getTarget(trainingData.getLabel(i)));
                 }
                 trainingData.randomiseTrainingData();
             }

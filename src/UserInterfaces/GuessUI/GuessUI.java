@@ -21,6 +21,7 @@ public class GuessUI extends JFrame {
     private ImagePanel predict;
     private String filePath = "Resources\\Number0-9\\None.png";
     private ConfidenceUI predictionUI = new ConfidenceUI();
+    private boolean toggleButtonPressed = false;
 
     /*
      * Creates the window for the guess UI
@@ -84,25 +85,27 @@ public class GuessUI extends JFrame {
     private void addCenterPanel() {
         JPanel centre = newPanel(0, 500, 900, 100, Color.gray);
         getContentPane().add(centre);
+        int width = 210, height = 50;
 
-        JButton clearCanvas = getButton("Clear", 0, 300, 250, 50);
+        JToggleButton toggleButton = new JToggleButton("Train");
+        toggleButton.setPreferredSize(new Dimension(width, height));
+        toggleButton.addActionListener(new TrainButtonActionListener());
+        centre.add(toggleButton);
+
+        JButton clearCanvas = new JButton("Clear");
+        clearCanvas.setPreferredSize(new Dimension(width, height));
         clearCanvas.addActionListener(new ClearButtonActionListener());
         centre.add(clearCanvas);
 
-        JButton save = getButton("Save", 300, 600, 250, 50);
+        JButton save = new JButton("Save");
+        save.setPreferredSize(new Dimension(width, height));
         save.addActionListener(new ButtonSaveActionListener());
         centre.add(save);
 
-        JButton buttonGuess = getButton("Guess", 600, 900, 250, 50);
+        JButton buttonGuess = new JButton("Guess");
+        buttonGuess.setPreferredSize(new Dimension(width, height));
         buttonGuess.addActionListener(new ButtonGuessActionListener());
         centre.add(buttonGuess);
-    }
-
-    private JButton getButton(String name, int x, int y, int width, int height) {
-        JButton buttonGuess = new JButton(name);
-        buttonGuess.setLocation(x, y);
-        buttonGuess.setPreferredSize(new Dimension(width, height));
-        return buttonGuess;
     }
 
     /*
@@ -162,6 +165,18 @@ public class GuessUI extends JFrame {
 
             //load input image into predict panel
             loadPredictPanel();
+            if (toggleButtonPressed) {
+                int reply = JOptionPane.showConfirmDialog(null, "Did it guess right?", "", JOptionPane.YES_NO_OPTION);
+                if (reply == 0) {
+                    //if it got it right train with current values
+                    network.train(input, network.getTarget(guess));
+                } else {
+                    //else ask for what it actually was and train with that value
+                    String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//available epoch values
+                    String target = (String) JOptionPane.showInputDialog(null, "What number did you draw?", "Train", JOptionPane.QUESTION_MESSAGE, null, targetValues, targetValues[0]);
+                    network.train(input, network.getTarget(Integer.parseInt(target)));
+                }
+            }
         }
 
         private void loadPredictPanel() {
@@ -212,5 +227,11 @@ public class GuessUI extends JFrame {
             revalidate();
         }
     }
-}
 
+    private class TrainButtonActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            toggleButtonPressed = !toggleButtonPressed;
+        }
+    }
+}
