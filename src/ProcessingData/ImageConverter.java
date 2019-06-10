@@ -7,10 +7,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
-public class ImageConverter {
+public class ImageConverter extends Function {
     private BufferedImage image;
-    private Function f = new Function();
 
     /*
      * Reads the image that the user drew and scales the image
@@ -28,7 +28,7 @@ public class ImageConverter {
             image = getCenteredImage();//centres the image onto a 28 by 28 image
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
-                    input[i] = getBrightness(x, y);//stores the brightness of each pixel into a double array
+                    input[i] = image.getRGB(x, y) & 0xff;//stores the brightness of each pixel into a double array
                     i++;
                 }
             }
@@ -40,8 +40,7 @@ public class ImageConverter {
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
 //        }
-        input = f.normalise(input);//normalises the input data
-        return input;
+        return normalise(input);//normalises the input data
     }
 
     /*
@@ -101,18 +100,5 @@ public class ImageConverter {
         centreOfMass[1] = (int) (ySum / n);
 
         return centreOfMass;
-    }
-
-    /*
-     * Returns the brightness of an individual pixel
-     */
-    private double getBrightness(int x, int y) {
-        int color = image.getRGB(x, y);
-
-        double red = (color >>> 16) & 0xFF;
-        double green = (color >>> 8) & 0xFF;
-        double blue = (color) & 0xFF;
-
-        return (red * 0.2126d + green * 0.7152d + blue * 0.0722d);
     }
 }
