@@ -106,7 +106,7 @@ public class ConfidenceUI extends JFrame {
             return Color.pink;
         } else if (value >= 40 && value < 80) {
             return Color.yellow;
-        } else if (value >= 80 && value < 100) {
+        } else if (value >= 80 && value <= 100) {
             return Color.green;
         }
         return null;

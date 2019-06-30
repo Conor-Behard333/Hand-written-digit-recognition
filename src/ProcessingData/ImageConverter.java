@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class ImageConverter extends Function {
     private BufferedImage image;
@@ -24,8 +23,8 @@ public class ImageConverter extends Function {
         int i = 0;
         try {
             image = ImageIO.read(new File("Resources\\image.png"));//reads the image the user drew
-            image = getScaledImage();//scales the image to a 20 by 20 png
-            image = getCenteredImage();//centres the image onto a 28 by 28 image
+            image = getScaledImage(20, 20);//scales the image to a 20 by 20 png
+            image = getCenteredImage(28, 28);//centres the image onto a 28 by 28 image
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
                     input[i] = image.getRGB(x, y) & 0xff;//stores the brightness of each pixel into a double array
@@ -35,11 +34,11 @@ public class ImageConverter extends Function {
         } catch (IOException e) {
             System.out.println(e);
         }
-//        try {
-//            ImageIO.write(image, "png", new File("Resources\\Test_Image.png"));
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
+        try {
+            ImageIO.write(image, "png", new File("Resources\\ImageTest.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
         return normalise(input);//normalises the input data
     }
 
@@ -47,9 +46,9 @@ public class ImageConverter extends Function {
      * Scales the drawing into a 20 by 20 image by drawing the scaled image
      * into a buffered image and then returning it
      */
-    private BufferedImage getScaledImage() {
-        Image scaledImg = image.getScaledInstance(20, 20, image.SCALE_SMOOTH);
-        BufferedImage img = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage getScaledImage(int width, int height) {
+        Image scaledImg = image.getScaledInstance(width, height, image.SCALE_AREA_AVERAGING);
+        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
         g2.drawImage(scaledImg, 0, 0, null);
         g2.dispose();
@@ -62,13 +61,13 @@ public class ImageConverter extends Function {
      * and calculating the center of mass of the image to ensure that
      * the new image is centered
      */
-    private BufferedImage getCenteredImage() {
-        BufferedImage centeredImage = new BufferedImage(28, 28, BufferedImage.TYPE_INT_ARGB);
+    private BufferedImage getCenteredImage(int width, int height) {
+        BufferedImage centeredImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = centeredImage.createGraphics();
         g2.setColor(Color.black);
         g2.fillRect(0, 0, centeredImage.getWidth(), centeredImage.getHeight());
         int[] centerOfMass = getCenterOfMass(image);//calculates the center of mass
-        g2.drawImage(image, 28 / 2 - centerOfMass[0], 28 / 2 - centerOfMass[1], null);
+        g2.drawImage(image, width / 2 - centerOfMass[0], height / 2 - centerOfMass[1], null);
         g2.dispose();
         return centeredImage;
     }
