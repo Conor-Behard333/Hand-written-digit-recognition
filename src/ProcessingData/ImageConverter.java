@@ -23,7 +23,7 @@ public class ImageConverter extends Function {
         int i = 0;
         try {
             image = ImageIO.read(new File("Resources\\image.png"));//reads the image the user drew
-            image = getScaledImage(20, 20);//scales the image to a 20 by 20 png
+            image = getScaledImage(30, 33);//scales the image to a 20 by 20 png
             image = getCenteredImage(28, 28);//centres the image onto a 28 by 28 image
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
