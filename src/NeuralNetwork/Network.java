@@ -1,8 +1,5 @@
 package NeuralNetwork;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-
 public class Network {
     private final double LR = 0.07;
     private int numOfInputNeurons;
@@ -39,7 +36,7 @@ public class Network {
         createOutputNeurons();//creates all the output neurons
     }
 
-    private void setConfig() {
+    public void setConfig() {
         config += numOfInputNeurons + "-";
         for (int i = 0; i < numOfHiddenLayers; i++) {
             config += numOfHiddenNeurons[i] + "-";
@@ -71,24 +68,15 @@ public class Network {
         calculateOutputWeightedSum(weightedSum, hiddenLayer_outputs[numOfHiddenLayers - 1]);
 
         //3. Calculate the output for each output neuron in the output layer using the second hidden layer outputs
-
-        getOutputLayerOutputs(outputLayer_Outputs, weightedSum);
+        GetOutputLayerOutputs(outputLayer_Outputs, weightedSum);
         return outputLayer_Outputs;
     }
 
-    private void getOutputLayerOutputs(double[] outputLayer_Outputs, double[] weightedSum) {
-        if (numOfOutputNeurons > 1) {
-            for (int i = 0; i < numOfOutputNeurons; i++) {
-                outputNeurons[i].calculateOutput(weightedSum, i);
-                outputLayer_Outputs[i] = outputNeurons[i].getOutput();
-            }
-        } else {
-            for (int i = 0; i < numOfOutputNeurons; i++) {
-                outputNeurons[i].calculateOutput(weightedSum);
-                outputLayer_Outputs[i] = outputNeurons[i].getOutput();
-            }
+    private void GetOutputLayerOutputs(double[] outputLayer_Outputs, double[] weightedSum) {
+        for (int i = 0; i < numOfOutputNeurons; i++) {
+            outputNeurons[i].calculateOutput(weightedSum, i);
+            outputLayer_Outputs[i] = outputNeurons[i].getOutput();
         }
-
     }
 
     private void calculateOutputWeightedSum(double[] weightedSum, double[] hiddenLayer_output) {
@@ -116,7 +104,7 @@ public class Network {
         //1. Feeds the inputs through the network
         feedForward(inputs);
 
-        //get hidden outputs for each hidden layer
+        //get hidden outputs for each layer
         getHiddenLayerOutputs(hidden_outputs);
 
         //2. Tunes the output weights
