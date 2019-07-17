@@ -68,11 +68,11 @@ public class Network {
         calculateOutputWeightedSum(weightedSum, hiddenLayer_outputs[numOfHiddenLayers - 1]);
 
         //3. Calculate the output for each output neuron in the output layer using the second hidden layer outputs
-        GetOutputLayerOutputs(outputLayer_Outputs, weightedSum);
+        getOutputLayerOutputs(outputLayer_Outputs, weightedSum);
         return outputLayer_Outputs;
     }
 
-    private void GetOutputLayerOutputs(double[] outputLayer_Outputs, double[] weightedSum) {
+    private void getOutputLayerOutputs(double[] outputLayer_Outputs, double[] weightedSum) {
         for (int i = 0; i < numOfOutputNeurons; i++) {
             outputNeurons[i].calculateOutput(weightedSum, i);
             outputLayer_Outputs[i] = outputNeurons[i].getOutput();
