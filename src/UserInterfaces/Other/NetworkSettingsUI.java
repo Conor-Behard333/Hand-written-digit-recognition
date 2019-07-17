@@ -33,7 +33,7 @@ public class NetworkSettingsUI {
                     continue;
                 }
             } catch (Exception e) {
-                if (batchSizeValue.getText() == "") {
+                if (batchSizeValue.getText().equals("")) {
                     System.exit(0);
                 } else {
                     showInvalidInput("Invalid Input!");

@@ -38,6 +38,10 @@ class Output_Neuron extends Function {
         output = softMax(weightedSums, i);
     }
 
+    void calculateOutput(double[] weightedSums) {
+        output = sigmoid(getSumOfWeightedSum(weightedSums));
+    }
+
     /*
      * Calculates the weighted sum and assigns it to the variable 'weightedSum'
      */

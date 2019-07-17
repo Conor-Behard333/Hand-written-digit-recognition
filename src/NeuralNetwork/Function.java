@@ -44,7 +44,7 @@ public class Function {
         return output;
     }
 
-    private double getSumOfWeightedSum(double[] weightedSums) {
+    double getSumOfWeightedSum(double[] weightedSums) {
         double sum = 0;
         for (double weightedSum : weightedSums) {
             sum += Math.exp(weightedSum);
