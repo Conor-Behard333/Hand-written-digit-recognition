@@ -23,12 +23,13 @@ class Output_Neuron extends Function {
      * Also, the gradient is multiplied by each weight and stored in a variable called deltaSum
      * this is used to tune the weights of the next layer
      */
-    void tuneWeights(double LR, double[] prevOutputs, double target) {
+    void tuneWeights(double LR, double[] prevOutputs, double target, Bias_Neuron bias) {
         double gradient = (target - output) * derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += LR * prevOutputs[i] * gradient;
             deltaSum[i] = gradient * weights[i];
         }
+        bias.setWeight(LR * 1 * gradient);
     }
 
     /*
@@ -41,8 +42,8 @@ class Output_Neuron extends Function {
     /*
      * Calculates the weighted sum and assigns it to the variable 'weightedSum'
      */
-    void calculateWeightedSum(double[] hiddenInputs) {
-        weightedSum = getWeightedSum(hiddenInputs, weights);
+    void calculateWeightedSum(double[] hiddenInputs, double bias) {
+        weightedSum = getWeightedSum(hiddenInputs, weights) + bias;
     }
 
     double getOutput() {
