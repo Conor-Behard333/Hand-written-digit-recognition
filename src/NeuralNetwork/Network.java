@@ -253,7 +253,6 @@ public class Network {
         }
         return largest;
     }
-}
 
     public double[] getWeights() {
         int[] numOfLayers = new int[2 + numOfHiddenLayers];
