@@ -25,19 +25,21 @@ class Hidden_Neuron extends Function {
      * deltaSumTotal is the sum of all the deltaSums from the previous layer
      */
 
-    void tuneWeights(double LR, double[] prevOutputs, double deltaSumTotal) {
+    void tuneWeights(double LR, double[] prevOutputs, double deltaSumTotal, Bias_Neuron bias) {
         double gradient = deltaSumTotal * derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += LR * prevOutputs[i] * gradient;
             deltaSum[i] = gradient * weights[i];
         }
+        bias.setWeight(LR * 1 * gradient);
     }
 
     /*
      * Calculates the output and assigns it to the variable 'output'
      */
-    void calculateOutput(double[] inputs) {
+    void calculateOutput(double[] inputs, double bias) {
         double weightedSum = getWeightedSum(inputs, weights);
+        weightedSum += bias;
         this.output = sigmoid(weightedSum);
     }
 
