@@ -14,7 +14,6 @@ class Start extends Function {
     /*
      * Based on the label this method returns the target values for the network
      */
-
     void run() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         int loadReply = JOptionPane.showConfirmDialog(null, "Do you want to load a preset configuration", "Load File?", JOptionPane.YES_NO_OPTION);
@@ -34,9 +33,12 @@ class Start extends Function {
             new GuessUI(network);
         } else {
             NetworkSettingsUI settings = new NetworkSettingsUI();
-            int batchSize = settings.getBatchSize();//How many values are trained by the network
-            int epochs = settings.getEpochs();//How many times the network trains an entire batch
-            int[] hiddenNeurons = settings.getHiddenNeurons();//An array containing the number of neurons in each hidden layer
+            //How many values are trained by the network
+            int batchSize = settings.getBatchSize();
+            //How many times the network trains an entire batch
+            int epochs = settings.getEpochs();
+            //An array containing the number of neurons in each hidden layer
+            int[] hiddenNeurons = settings.getHiddenNeurons();
 
             //Create the network with 784 input neurons,  10 output neurons and x amount of hidden neurons with x amount of hidden layers
             Network network = new Network(784, 10, hiddenNeurons);

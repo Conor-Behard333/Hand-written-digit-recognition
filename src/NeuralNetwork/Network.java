@@ -14,7 +14,7 @@ public class Network {
     /*
      * initialises all the global variables used and creates all the necessary neurons
      */
-    public Network(int inputNeurons, int outputNeurons, int... hiddenNeurons) {
+    public Network(int inputNeurons, int outputNeurons, int[] hiddenNeurons) {
         this.numOfHiddenLayers = hiddenNeurons.length;
         this.numOfInputNeurons = inputNeurons;
         this.numOfOutputNeurons = outputNeurons;
