@@ -56,7 +56,7 @@ public class LoadDataSet extends Function {
      * (the number in which the values equal)
      */
     public double[] getInputData(int n) {
-        double[] x = new double[columns];
+        double[] x = new double[columns - 1];
         int index = 0;
         for (int i = 1; i < columns; i++) {
             x[index] = trainingData[n][i];
