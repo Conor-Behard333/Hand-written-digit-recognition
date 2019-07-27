@@ -311,7 +311,7 @@ public class Network {
         }
     }
 
-    private int setWeights(double[] weights, int lastIndex, int prevLayer, int layer, int totalNeurons, boolean output) {
+    private int setWeights(double[] weights, int lastIndex, int prevLayer, int layer, int totalNeurons, boolean outputLayer) {
         int index = 0;
         for (int neuron = 0; neuron < totalNeurons; neuron++) {
             double[] temp = new double[prevLayer];
@@ -320,7 +320,7 @@ public class Network {
                 index++;
                 lastIndex++;
             }
-            if (output) {
+            if (outputLayer) {
                 outputNeurons[neuron].setWeights(temp);
             } else {
                 hiddenLayer[layer][neuron].setWeights(temp);
@@ -328,19 +328,5 @@ public class Network {
             index = 0;
         }
         return lastIndex;
-    }
-
-    public double[] getTarget(int label) {
-        double[][] targets = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
-        return targets[label];
     }
 }

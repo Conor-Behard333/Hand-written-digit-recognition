@@ -50,7 +50,7 @@ class Start extends Function {
             //Trains the network
             for (int j = 0; j < epochs; j++) {
                 for (int i = 0; i < batchSize; i++) {
-                    network.train(trainingData.getInputData(i), network.getTarget(trainingData.getLabel(i)));
+                    network.train(trainingData.getInputData(i), trainingData.getLabel(i));
                 }
                 trainingData.randomiseTrainingData();
             }

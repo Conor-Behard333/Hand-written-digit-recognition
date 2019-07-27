@@ -5,10 +5,9 @@ import NeuralNetwork.Function;
 import java.io.*;
 import java.util.Scanner;
 
-public class LoadDataSet {
+public class LoadDataSet extends Function {
     private final int imageSize = 784;
     private int[][] trainingData;
-    private Function f = new Function();
     private int batchSize;
 
     /*
@@ -61,14 +60,14 @@ public class LoadDataSet {
         for (int i = 1; i < imageSize; i++) {
             x[i] = trainingData[n][i];
         }
-        x = f.normalise(x);
+        x = normalise(x);
         return x;
     }
 
     /*
      * Returns the label of the values at a specified line
      */
-    public int getLabel(int n) {
-        return trainingData[n][0];
+    public double[] getLabel(int n) {
+        return getTarget(trainingData[n][0]);
     }
 }

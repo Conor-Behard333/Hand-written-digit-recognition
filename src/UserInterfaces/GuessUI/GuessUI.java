@@ -1,5 +1,6 @@
 package UserInterfaces.GuessUI;
 
+import NeuralNetwork.Function;
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
 import ProcessingData.SaveFile;
@@ -169,7 +170,7 @@ public class GuessUI extends JFrame {
                 if (reply == 0) {
                     //if it got it right train with current values
                     for (int i = 0; i < 10; i++) {
-                        network.train(input, network.getTarget(guess));
+                        network.train(input, new Function().getTarget(guess));
                     }
                 } else if (reply == 1) {
                     //else ask for what it actually was and train with that value
@@ -177,7 +178,7 @@ public class GuessUI extends JFrame {
                     String target = (String) JOptionPane.showInputDialog(null, "What number did you draw?", "Train", JOptionPane.QUESTION_MESSAGE, null, targetValues, targetValues[0]);
                     if (target != null) {
                         for (int i = 0; i < 10; i++) {
-                            network.train(input, network.getTarget(Integer.parseInt(target)));
+                            network.train(input, new Function().getTarget(Integer.parseInt(target)));
                         }
                     }
                 }
