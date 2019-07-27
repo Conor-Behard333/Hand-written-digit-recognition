@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class LoadDataSet extends Function {
-    private final int imageSize = 784;
+    private final int columns = 785;
     private int[][] trainingData;
     private int batchSize;
 
@@ -16,7 +16,6 @@ public class LoadDataSet extends Function {
     public LoadDataSet(int batchSize, String filePath) throws IOException {
         this.batchSize = batchSize;
         trainingData = loadData(filePath);
-
     }
 
     /*
@@ -26,12 +25,12 @@ public class LoadDataSet extends Function {
      * Each row is a different image
      */
     private int[][] loadData(String fileName) throws IOException {
-        int[][] trainingData = new int[batchSize][imageSize];
+        int[][] trainingData = new int[batchSize][columns];
         int row = 0;
         Scanner n = new Scanner(new File(fileName));
         n.useDelimiter(",");
         while (row < batchSize) {
-            for (int i = 0; i < imageSize; i++) {
+            for (int i = 0; i < columns; i++) {
                 trainingData[row][i] = (Integer.parseInt(n.next()));
             }
             row++;
@@ -47,6 +46,7 @@ public class LoadDataSet extends Function {
             trainingData[i] = trainingData[rand];
             trainingData[rand] = temp;
         }
+
     }
 
     /*
@@ -56,9 +56,11 @@ public class LoadDataSet extends Function {
      * (the number in which the values equal)
      */
     public double[] getInputData(int n) {
-        double[] x = new double[imageSize];
-        for (int i = 1; i < imageSize; i++) {
-            x[i] = trainingData[n][i];
+        double[] x = new double[columns];
+        int index = 0;
+        for (int i = 1; i < columns; i++) {
+            x[index] = trainingData[n][i];
+            index++;
         }
         x = normalise(x);
         return x;
