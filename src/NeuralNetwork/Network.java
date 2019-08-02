@@ -278,21 +278,9 @@ public class Network {
     }
 
     public double[] getWeights() {
-        int[] numOfLayers = new int[2 + NUM_OF_HIDDEN_LAYERS];
-        int layer = 0;
-        for (int i = 0; i < numOfLayers.length; i++) {
-            if (i == 0) {
-                numOfLayers[i] = NUM_OF_INPUT_NEURONS;
-            } else if (i == numOfLayers.length - 1) {
-                numOfLayers[i] = NUM_OF_OUTPUT_NEURONS;
-            } else {
-                numOfLayers[i] = NUM_OF_HIDDEN_NEURONS[layer];
-                layer++;
-            }
-        }
         int size = 0;
-        for (int i = 0; i < numOfLayers.length - 1; i++) {
-            size += numOfLayers[i] * numOfLayers[i + 1];
+        for (int i = 0; i < NETWORK_CONFIG.length - 1; i++) {
+            size += (NETWORK_CONFIG[i] * NETWORK_CONFIG[i + 1]) + NETWORK_CONFIG[i + 1];
         }
 
         double[] weights = new double[size];
