@@ -8,10 +8,10 @@ class Hidden_Neuron extends Function {
     /*
      * Initialises global variables
      */
-    Hidden_Neuron(int previousLayer) {
-        this.weights = new double[previousLayer];
+    Hidden_Neuron(int previousLayerSize) {
+        this.weights = new double[previousLayerSize];
         this.weights = randomiseWeights(weights.length);
-        this.deltaSum = new double[previousLayer];
+        this.deltaSum = new double[previousLayerSize];
     }
 
     /*
@@ -25,13 +25,13 @@ class Hidden_Neuron extends Function {
      * deltaSumTotal is the sum of all the deltaSums from the previous layer
      */
 
-    void tuneWeights(double LR, double[] prevOutputs, double deltaSumTotal, Bias_Neuron bias) {
+    void tuneWeights(double learningRate, double[] prevOutputs, double deltaSumTotal, Bias_Neuron bias, int numOfHiddenNeurons) {
         double gradient = deltaSumTotal * derivative(output);
         for (int i = 0; i < weights.length; i++) {
-            weights[i] += LR * prevOutputs[i] * gradient;
+            weights[i] += learningRate * prevOutputs[i] * gradient;
             deltaSum[i] = gradient * weights[i];
         }
-        bias.setWeight(LR * 1 * gradient);
+        tuneBias(numOfHiddenNeurons, bias, learningRate, gradient);
     }
 
     /*

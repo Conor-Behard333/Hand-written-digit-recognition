@@ -21,7 +21,7 @@ public class Function {
     double[] randomiseWeights(int size) {
         double[] arr = new double[size];
         for (int i = 0; i < size; i++) {
-            arr[i] = Math.random() * 2 - 1;
+            arr[i] = (Math.random() * 1 - 1) / Math.sqrt(size);
         }
         return arr;
     }
@@ -44,7 +44,7 @@ public class Function {
         return output;
     }
 
-    double getSumOfWeightedSum(double[] weightedSums) {
+    private double getSumOfWeightedSum(double[] weightedSums) {
         double sum = 0;
         for (double weightedSum : weightedSums) {
             sum += Math.exp(weightedSum);
@@ -58,7 +58,7 @@ public class Function {
      * Normalisation function:
      * normalised number = (number - minimum)/(maximum - minimum)
      */
-    public double[] normalise(double[] inputs) {
+    protected double[] normalise(double[] inputs) {
         int min = 0;
         double max = getMax(inputs);
         double[] y = new double[inputs.length];
@@ -79,6 +79,12 @@ public class Function {
             }
         }
         return max;
+    }
+
+    void tuneBias(int numOfNeurons, Bias_Neuron bias, double learningRate, double gradient) {
+        for (int i = 0; i < numOfNeurons; i++) {
+            bias.setWeight(learningRate * 1 * gradient, i);
+        }
     }
 
     public double[] getTarget(int label) {

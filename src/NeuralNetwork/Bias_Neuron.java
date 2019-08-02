@@ -1,15 +1,26 @@
 package NeuralNetwork;
 
-public class Bias_Neuron {
-    private final int input = 1;
-    private double weight = Math.random() * 2 - 1;
-    private double output = input * weight;
+class Bias_Neuron extends Function {
+    private double[] weights;
 
-    void setWeight(double delta) {
-        weight += delta;
+    Bias_Neuron(int neuronsInNextLayer) {
+        this.weights = new double[neuronsInNextLayer];
+        weights = randomiseWeights(neuronsInNextLayer);
     }
 
-    double getOutput() {
-        return output;
+    void setWeight(double delta, int index) {
+        weights[index] += delta;
+    }
+
+    double getOutput(int index) {
+        return weights[index];
+    }
+
+    double[] getWeights() {
+        return weights;
+    }
+
+    void setWeights(double[] weights) {
+        this.weights = weights;
     }
 }

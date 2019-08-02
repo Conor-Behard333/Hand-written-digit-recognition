@@ -9,10 +9,10 @@ class Output_Neuron extends Function {
     /*
      * Initialises global variables
      */
-    Output_Neuron(int hiddenNeurons) {
-        this.weights = new double[hiddenNeurons];
+    Output_Neuron(int previousLayerSize) {
+        this.weights = new double[previousLayerSize];
         this.weights = randomiseWeights(weights.length);
-        this.deltaSum = new double[hiddenNeurons];
+        this.deltaSum = new double[previousLayerSize];
     }
 
     /*
@@ -23,15 +23,28 @@ class Output_Neuron extends Function {
      * Also, the gradient is multiplied by each weight and stored in a variable called deltaSum
      * this is used to tune the weights of the next layer
      */
-    void tuneWeights(double LR, double[] prevOutputs, double target, Bias_Neuron bias) {
+    void tuneWeights(double learningRate, double[] prevOutputs, double target, Bias_Neuron bias, int numOfOutputNeurons) {
         double gradient = (target - output) * derivative(output);
         for (int i = 0; i < weights.length; i++) {
-            weights[i] += LR * prevOutputs[i] * gradient;
+            weights[i] += learningRate * prevOutputs[i] * gradient;
             deltaSum[i] = gradient * weights[i];
         }
-        bias.setWeight(LR * 1 * gradient);
+        tuneBias(numOfOutputNeurons, bias, learningRate, gradient);
     }
 
+    /*
+     * Calculates the output and assigns it to the variable 'output'
+     */
+    void calculateOutput(double[] weightedSums) {
+        for (int i = 0; i < weightedSums.length; i++) {
+            output += weightedSums[i];
+        }
+        output = sigmoid(output);
+    }
+
+    /*
+     * Calculates the output and assigns it to the variable 'output'
+     */
     void calculateOutput(double[] weightedSums, int i) {
         output = softMax(weightedSums, i);
     }
@@ -41,6 +54,18 @@ class Output_Neuron extends Function {
      */
     void calculateWeightedSum(double[] hiddenInputs, double bias) {
         weightedSum = getWeightedSum(hiddenInputs, weights) + bias;
+    }
+
+    double[] getWeights() {
+        double[] weights = new double[this.weights.length];
+        for (int i = 0; i < this.weights.length; i++) {
+            weights[i] = this.weights[i];
+        }
+        return weights;
+    }
+
+    void setWeights(double[] weights) {
+        this.weights = weights;
     }
 
     double getOutput() {
@@ -53,17 +78,5 @@ class Output_Neuron extends Function {
 
     double[] getDeltaSum() {
         return deltaSum;
-    }
-
-    double[] getWeights() {
-        double[] weights = new double[this.weights.length];
-        for (int i = 0; i < this.weights.length; i++) {
-            weights[i] = this.weights[i];
-        }
-        return weights;
-    }
-
-    public void setWeights(double[] weights) {
-        this.weights = weights;
     }
 }
