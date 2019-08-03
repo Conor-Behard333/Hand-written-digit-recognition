@@ -80,7 +80,9 @@ public class ConfidenceUI extends JFrame {
     }
 
     private void setValuesOfProgressBar() {
-        String[] guess = {"0: " + confidence[0] + "%", "1: " + confidence[1] + "%", "2: " + confidence[2] + "%", "3: " + confidence[3] + "%", "4: " + confidence[4] + "%", "5: " + confidence[5] + "%", "6: " + confidence[6] + "%", "7: " + confidence[7] + "%", "8: " + confidence[8] + "%", "9: " + confidence[9] + "%"};
+        String[] guess = {"0: " + confidence[0] + "%", "1: " + confidence[1] + "%", "2: " + confidence[2] + "%", "3: "
+                + confidence[3] + "%", "4: " + confidence[4] + "%", "5: " + confidence[5] + "%", "6: " + confidence[6]
+                + "%", "7: " + confidence[7] + "%", "8: " + confidence[8] + "%", "9: " + confidence[9] + "%"};
         for (int i = 0; i < 10; i++) {
             int value = (int) (Double.parseDouble(confidence[i]));
             progressBars[i].setForeground(getPbColour(value));
@@ -101,13 +103,13 @@ public class ConfidenceUI extends JFrame {
      */
     private Color getPbColour(int value) {
         if (value >= 0 && value < 20) {
-            return Color.red;
+            return new Color(0xFF1000);//red
         } else if (value >= 20 && value < 40) {
-            return Color.pink;
+            return new Color(0xFF941E);//orange
         } else if (value >= 40 && value < 80) {
-            return Color.yellow;
+            return new Color(0xFFF41F);//yellow
         } else if (value >= 80 && value <= 100) {
-            return Color.green;
+            return new Color(0x36FF00);//green
         }
         return null;
     }

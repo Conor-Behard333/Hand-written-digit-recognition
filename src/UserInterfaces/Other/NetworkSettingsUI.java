@@ -45,7 +45,7 @@ public class NetworkSettingsUI {
     }
 
     private void displayOption(JComponent[] batchSizeInput) {
-        int response = JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
+        int response = JOptionPane.showConfirmDialog(frame, batchSizeInput, "Neural Network Settings", JOptionPane.DEFAULT_OPTION);
         if (response == -1) {
             System.exit(0);
         }
@@ -72,8 +72,8 @@ public class NetworkSettingsUI {
             try {
                 displayOption(hiddenLayerInput);
                 numOfHiddenLayers = Integer.parseInt(hiddenLayerValues.getText());
-                if (numOfHiddenLayers < 1) {
-                    showInvalidInput("Invalid Input! Requires a number greater than 0 ");
+                if (numOfHiddenLayers < 1 || numOfHiddenLayers > 5) {
+                    showInvalidInput("Invalid Input! Requires a number between 1 and 5 ");
                     continue;
                 }
             } catch (Exception e) {
@@ -91,8 +91,8 @@ public class NetworkSettingsUI {
                 try {
                     displayOption(hiddenNeuronInput);
                     numOfHiddenNeurons[i] = Integer.parseInt(hiddenNeuronValues.getText());
-                    if (numOfHiddenNeurons[i] < 1) {
-                        showInvalidInput("Invalid Input! Requires a number greater than 0 ");
+                    if (numOfHiddenNeurons[i] < 1 || numOfHiddenNeurons[i] > 150) {
+                        showInvalidInput("Invalid Input! Requires a number between 1 and 150 ");
                         continue;
                     }
                 } catch (Exception e) {
@@ -105,7 +105,7 @@ public class NetworkSettingsUI {
     }
 
     private void showInvalidInput(String errorMessage) {
-        JOptionPane.showConfirmDialog(frame, errorMessage, "Neural Network Settings", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showConfirmDialog(frame, errorMessage, "Neural Network Settings", JOptionPane.DEFAULT_OPTION);
     }
 
     private JComponent[] getJComponent(String text, JTextField textField) {
