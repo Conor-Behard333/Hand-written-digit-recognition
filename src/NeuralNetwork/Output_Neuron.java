@@ -35,16 +35,6 @@ class Output_Neuron extends Function {
     /*
      * Calculates the output and assigns it to the variable 'output'
      */
-    void calculateOutput(double[] weightedSums) {
-        for (int i = 0; i < weightedSums.length; i++) {
-            output += weightedSums[i];
-        }
-        output = sigmoid(output);
-    }
-
-    /*
-     * Calculates the output and assigns it to the variable 'output'
-     */
     void calculateOutput(double[] weightedSums, int i) {
         output = softMax(weightedSums, i);
     }
@@ -57,10 +47,6 @@ class Output_Neuron extends Function {
     }
 
     double[] getWeights() {
-        double[] weights = new double[this.weights.length];
-        for (int i = 0; i < this.weights.length; i++) {
-            weights[i] = this.weights[i];
-        }
         return weights;
     }
 

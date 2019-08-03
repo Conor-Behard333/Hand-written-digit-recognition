@@ -23,9 +23,7 @@ public class Network {
         this.NUM_OF_BIAS_NEURONS = NUM_OF_HIDDEN_LAYERS + 1;
         //stores how many neurons are in each hidden layer
         this.NUM_OF_HIDDEN_NEURONS = new int[NUM_OF_HIDDEN_LAYERS];
-        for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
-            NUM_OF_HIDDEN_NEURONS[i] = hiddenNeurons[i];
-        }
+        System.arraycopy(hiddenNeurons, 0, NUM_OF_HIDDEN_NEURONS, 0, NUM_OF_HIDDEN_LAYERS);
 
         this.outputNeurons = new Output_Neuron[outputNeurons];
         //stores all the hidden neurons for each hidden layer
@@ -63,7 +61,7 @@ public class Network {
         }
     }
 
-    public void setConfig() {
+    private void setConfig() {
         config += NUM_OF_INPUT_NEURONS + "-";
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
             config += NUM_OF_HIDDEN_NEURONS[i] + "-";
@@ -288,8 +286,8 @@ public class Network {
         for (int i = 0; i < NUM_OF_HIDDEN_NEURONS.length; i++) {
             for (int j = 0; j < NUM_OF_HIDDEN_NEURONS[i]; j++) {
                 double[] temp = hiddenLayer[i][j].getWeights();
-                for (int k = 0; k < temp.length; k++) {
-                    weights[index] = temp[k];
+                for (double weight : temp) {
+                    weights[index] = weight;
                     index++;
                 }
             }
@@ -297,8 +295,8 @@ public class Network {
 
         for (int i = 0; i < NUM_OF_OUTPUT_NEURONS; i++) {
             double[] temp = outputNeurons[i].getWeights();
-            for (int j = 0; j < temp.length; j++) {
-                weights[index] = temp[j];
+            for (double weight : temp) {
+                weights[index] = weight;
                 index++;
             }
         }

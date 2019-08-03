@@ -52,10 +52,6 @@ class Hidden_Neuron extends Function {
     }
 
     double[] getWeights() {
-        double[] weights = new double[this.weights.length];
-        for (int i = 0; i < this.weights.length; i++) {
-            weights[i] = this.weights[i];
-        }
         return weights;
     }
 
