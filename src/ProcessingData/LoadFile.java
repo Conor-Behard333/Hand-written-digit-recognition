@@ -23,7 +23,7 @@ public class LoadFile {
                 }
             }
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return weights;
     }

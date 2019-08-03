@@ -47,7 +47,7 @@ public class ImageConverter extends Function {
      * into a buffered image and then returning it
      */
     private BufferedImage getScaledImage(int width, int height) {
-        Image scaledImg = image.getScaledInstance(width, height, image.SCALE_AREA_AVERAGING);
+        Image scaledImg = image.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING);
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
         g2.drawImage(scaledImg, 0, 0, null);

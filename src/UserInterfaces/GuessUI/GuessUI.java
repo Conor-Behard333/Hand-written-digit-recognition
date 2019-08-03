@@ -5,7 +5,6 @@ import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
 import ProcessingData.SaveFile;
 import UserInterfaces.Other.ConfidenceUI;
-import jdk.nashorn.internal.scripts.JO;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -53,17 +52,16 @@ public class GuessUI extends JFrame {
      * Adds borders to the image panels
      */
     private void addBoarders() {
-        Color color = Color.gray;
-        JPanel dividerMiddle = newPanel(435, 0, 30, 500, color);
+        JPanel dividerMiddle = newPanel(435, 0, 30, 500);
         getContentPane().add(dividerMiddle);
 
-        JPanel dividerLeft = newPanel(0, 0, 30, 500, color);
+        JPanel dividerLeft = newPanel(0, 0, 30, 500);
         getContentPane().add(dividerLeft);
 
-        JPanel dividerTop = newPanel(0, 0, 900, 30, color);
+        JPanel dividerTop = newPanel(0, 0, 900, 30);
         getContentPane().add(dividerTop);
 
-        JPanel dividerRight = newPanel(870, 0, 30, 500, color);
+        JPanel dividerRight = newPanel(870, 0, 30, 500);
         getContentPane().add(dividerRight);
     }
 
@@ -84,7 +82,7 @@ public class GuessUI extends JFrame {
      * the current drawing
      */
     private void addCenterPanel() {
-        JPanel centre = newPanel(0, 500, 900, 100, Color.gray);
+        JPanel centre = newPanel(0, 500, 900, 100);
         getContentPane().add(centre);
         int width = 210, height = 50;
 
@@ -120,11 +118,11 @@ public class GuessUI extends JFrame {
     /*
      * Template to create a new JPanel
      */
-    private JPanel newPanel(int x, int y, int width, int height, Color color) {
+    private JPanel newPanel(int x, int y, int width, int height) {
         JPanel temp = new JPanel();
         temp.setLocation(x, y);
         temp.setSize(width, height);
-        temp.setBackground(color);
+        temp.setBackground(Color.GRAY);
         return temp;
     }
 
@@ -147,13 +145,14 @@ public class GuessUI extends JFrame {
             //Writes the drawn image and stores it as a png at the src directory
             try {
                 createImageFile();
-            } catch (Exception error) {
-                System.out.println(error);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            //Converts the image the user drew into a 28 by 28 png and stores
-            //the grey scale values of each pixel in a double array which are
-            //then put into the network and the largest output is the guess which
-            //is then used to display the image associated with the guess
+            /*Converts the image the user drew into a 28 by 28 png and stores
+             *the grey scale values of each pixel in a double array which are
+             *then put into the network and the largest output is the guess which
+             *is then used to display the image associated with the guess
+             */
             ImageConverter imageConverter = new ImageConverter();
             double[] input = imageConverter.getInput();
             double[] output = network.feedForward(input);

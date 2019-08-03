@@ -3,15 +3,11 @@ package UserInterfaces.GuessUI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Line2D;
 
 public class Canvas extends JPanel {
     private int[] x, y;
     private int points = 0;
-
 
     Canvas() {
         x = new int[1920];

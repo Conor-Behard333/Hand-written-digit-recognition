@@ -19,7 +19,7 @@ public class SaveFile {
                 }
             }
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }
