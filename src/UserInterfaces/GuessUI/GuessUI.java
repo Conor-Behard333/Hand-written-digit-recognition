@@ -53,16 +53,16 @@ public class GuessUI extends JFrame {
      */
     private void addBoarders() {
         JPanel dividerMiddle = newPanel(435, 0, 30, 500);
-        getContentPane().add(dividerMiddle);
+        add(dividerMiddle);
 
         JPanel dividerLeft = newPanel(0, 0, 30, 500);
-        getContentPane().add(dividerLeft);
+        add(dividerLeft);
 
         JPanel dividerTop = newPanel(0, 0, 900, 30);
-        getContentPane().add(dividerTop);
+        add(dividerTop);
 
         JPanel dividerRight = newPanel(870, 0, 30, 500);
-        getContentPane().add(dividerRight);
+        add(dividerRight);
     }
 
     /*
@@ -73,7 +73,7 @@ public class GuessUI extends JFrame {
         canvas.setLocation(30, 30);
         canvas.setSize(400, 470);
         canvas.setBackground(Color.black);
-        getContentPane().add(canvas);
+        add(canvas);
     }
 
     /*
@@ -83,7 +83,7 @@ public class GuessUI extends JFrame {
      */
     private void addCenterPanel() {
         JPanel centre = newPanel(0, 500, 900, 100);
-        getContentPane().add(centre);
+        add(centre);
         int width = 210, height = 50;
 
         JToggleButton toggleButton = new JToggleButton("Train");
@@ -112,7 +112,7 @@ public class GuessUI extends JFrame {
      */
     private void addPredictPanel() {
         predict = new ImagePanel(filePath);
-        getContentPane().add(predict);
+        add(predict);
     }
 
     /*
@@ -185,7 +185,7 @@ public class GuessUI extends JFrame {
         }
 
         private void loadPredictPanel() {
-            getContentPane().remove(predict);//removes current prediction
+            remove(predict);//removes current prediction
             addPredictPanel();//adds the new panel
             repaint();//draws the image onto the panel
             revalidate();
@@ -224,8 +224,8 @@ public class GuessUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             filePath = "Resources\\Number0-9\\None.png";
-            getContentPane().remove(canvas);//removes current drawing
-            getContentPane().remove(predict);//removes current prediction
+            remove(canvas);//removes current drawing
+            remove(predict);//removes current prediction
             addCanvasPanel();//adds the new canvas panel
             addPredictPanel();//adds the new predict panel
             repaint();//redraws the panels
