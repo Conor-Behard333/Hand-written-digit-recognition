@@ -14,10 +14,9 @@ public class ConfidenceUI extends JFrame {
      */
     public ConfidenceUI() {
         setTitle("Neural Network - Digit Classifier - Confidence");
-        setSize(500, 600);
+        setBounds(1410, 220, 500, 600);
         setBackground(Color.black);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocation(1410, 220);
         setResizable(false);
         createUI();
         setVisible(true);
@@ -43,8 +42,7 @@ public class ConfidenceUI extends JFrame {
      */
     private JProgressBar createProgressBar(int yPos) {
         JProgressBar progressBar = new JProgressBar();
-        progressBar.setSize(200, 20);
-        progressBar.setLocation(140, yPos);
+        progressBar.setBounds(140, yPos, 200, 20);
         progressBar.setMinimum(0);
         progressBar.setMaximum(100);
         progressBar.setStringPainted(true);
@@ -56,9 +54,8 @@ public class ConfidenceUI extends JFrame {
      */
     private JLabel createLabel(int yPos, int i) {
         JLabel label = new JLabel(i + ": 0.00%");
-        label.setSize(100, 20);
+        label.setBounds(10, yPos, 100, 20);
         label.setFont(new Font(getName(), Font.PLAIN, 20));
-        label.setLocation(10, yPos);
         return label;
     }
 

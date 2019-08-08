@@ -27,8 +27,7 @@ public class InfoUI extends JFrame {
 
     private void addOkButton() {
         JButton button = new JButton("Ok");
-        button.setSize(150, 30);
-        button.setLocation(375, 970);
+        button.setBounds(375, 970, 150, 30);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -102,6 +101,7 @@ public class InfoUI extends JFrame {
                 "\t\t\t\t  percentage will be larger for the number 3 than the other numbers.");
         textArea.setLocation(0, 0);
         textArea.setSize(x, y - 70);
+        textArea.setBounds(0, 0, x, y - 70);
         getContentPane().add(textArea);
     }
 

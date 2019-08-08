@@ -70,8 +70,7 @@ public class GuessUI extends JFrame {
      */
     private void addCanvasPanel() {
         canvas = new Canvas();
-        canvas.setLocation(30, 30);
-        canvas.setSize(400, 470);
+        canvas.setBounds(30,30,400,470);
         canvas.setBackground(Color.black);
         add(canvas);
     }
@@ -120,8 +119,7 @@ public class GuessUI extends JFrame {
      */
     private JPanel newPanel(int x, int y, int width, int height) {
         JPanel temp = new JPanel();
-        temp.setLocation(x, y);
-        temp.setSize(width, height);
+        temp.setBounds(x, y, width, height);
         temp.setBackground(Color.GRAY);
         return temp;
     }
