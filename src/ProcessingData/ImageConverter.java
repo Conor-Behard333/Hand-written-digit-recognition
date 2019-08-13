@@ -80,20 +80,21 @@ public class ImageConverter extends Function {
 
         int height = (downMost - upMost) + 1;
         int width = (rightMost - leftMost) + 1;
-        int borderSize = 10;
-        int[][] newImage = new int[height + borderSize][width + borderSize];
+        int padding_x = 10;
+        int padding_y = 8;
+        int[][] newImage = new int[height + padding_x][width + padding_y];
 
         fillMatrix(newImage);
 
-        int x = borderSize / 2;
-        int y = borderSize / 2;
+        int x = padding_x / 2;
+        int y = padding_y / 2;
         for (int i = upMost; i <= downMost; i++) {
             for (int j = leftMost; j <= rightMost; j++) {
                 newImage[x][y] = temp[i][j];
                 y++;
             }
             x++;
-            y = borderSize / 2;
+            y = padding_y / 2;
         }
         return newImage;
     }
