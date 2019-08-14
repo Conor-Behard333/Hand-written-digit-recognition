@@ -1,5 +1,12 @@
 package NeuralNetwork;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+
+import java.util.Optional;
+
 public class Function {
     /*
      * Calculates and returns the weighted sum for a neuron
@@ -115,5 +122,29 @@ public class Function {
      */
     double derivative(double x) {
         return x * (1 - x);
+    }
+
+    public String getChoiceAlert(String[] options, String title, String contentText) {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(options[0], options);
+        dialog.setTitle(title);
+        dialog.setContentText(contentText);
+        Optional<String> response = dialog.showAndWait();
+        if (response.isPresent()) {
+            return response.get();
+        } else {
+            System.exit(0);
+        }
+        return null;
+    }
+
+    public Alert conformationAlert(String title, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setContentText(contentText);
+        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+        return alert;
     }
 }

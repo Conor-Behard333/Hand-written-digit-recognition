@@ -80,8 +80,8 @@ public class ImageConverter extends Function {
 
         int height = (downMost - upMost) + 1;
         int width = (rightMost - leftMost) + 1;
-        int padding_x = 10;
-        int padding_y = 8;
+        int padding_x = 8;
+        int padding_y = 6;
         int[][] newImage = new int[height + padding_x][width + padding_y];
 
         fillMatrix(newImage);
