@@ -1,0 +1,5 @@
+.canvas {
+    -fx-background-color: gray, white;
+    -fx-background-insets: 0, 20;
+    -fx-padding: 20;
+}
