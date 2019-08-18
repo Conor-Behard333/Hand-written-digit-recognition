@@ -4,13 +4,8 @@ import NeuralNetwork.Function;
 import NeuralNetwork.Network;
 import ProcessingData.LoadDataSet;
 import ProcessingData.LoadFile;
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 import javafx.application.Application;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -18,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 public class Run extends Application {
@@ -56,6 +50,11 @@ public class Run extends Application {
                 loading.progressProperty().bind(train.progressProperty());
                 new Thread(train).start();
                 loadingStage.show();
+                train.setOnSucceeded(closeEvent -> {
+                    loadingStage.close();
+                    train.cancel();
+                    new GuessUI(network);
+                });
                 loadingStage.setOnCloseRequest(closeEvent -> {
                     System.exit(0);
                 });
@@ -66,7 +65,7 @@ public class Run extends Application {
     }
 
     private ProgressBar getLoadingBar(Stage loadingStage) {
-        loadingStage.setTitle("Loading Please Wait...");
+        loadingStage.setTitle("Training Please Wait...");
         ProgressBar loading = new ProgressBar(0);
         loading.setPrefSize(400, 60);
         Label label = new Label("Progress: ");
@@ -100,11 +99,6 @@ public class Run extends Application {
         return new Task() {
             @Override
             protected Object call() throws Exception {
-                this.setOnSucceeded(closeEvent -> {
-                    loadingStage.close();
-                    this.cancel();
-                    new GuessUI(network);
-                });
                 int max = batchSize * epochs;
                 int current = 0;
                 //Load the training data

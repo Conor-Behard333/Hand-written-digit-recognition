@@ -42,13 +42,9 @@ public class ImageConverter extends Function {
             testImage = getScaledImage(28, 28, testImage);
 
             getPixelValues(input, testImage);
+            ImageIO.write(testImage, "png", new File("Resources\\ImageTest.png"));
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        try {
-            ImageIO.write(testImage, "png", new File("Resources\\ImageTest.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
         double[] inputDouble = new double[input.length];
         for (int i = 0; i < input.length; i++) {
@@ -78,23 +74,23 @@ public class ImageConverter extends Function {
         int leftMost = getLeftAndUpMost(temp, false);
         int rightMost = getRightAndDownMost(temp, false);
 
-        int height = (downMost - upMost) + 1;
-        int width = (rightMost - leftMost) + 1;
+        int height = (downMost - upMost);
+        int width = (rightMost - leftMost);
+        int padding_y = 8;
         int padding_x = 8;
-        int padding_y = 6;
-        int[][] newImage = new int[height + padding_x][width + padding_y];
+        int[][] newImage = new int[height + 1 + padding_y][width + 1 + padding_x];
 
         fillMatrix(newImage);
 
-        int x = padding_x / 2;
-        int y = padding_y / 2;
+        int row = padding_y / 2;
+        int column = padding_x / 2;
         for (int i = upMost; i <= downMost; i++) {
             for (int j = leftMost; j <= rightMost; j++) {
-                newImage[x][y] = temp[i][j];
-                y++;
+                newImage[row][column] = temp[i][j];
+                column++;
             }
-            x++;
-            y = padding_y / 2;
+            row++;
+            column = padding_x / 2;
         }
         return newImage;
     }

@@ -1,6 +1,6 @@
 									How to use the program
     Saving and loading files:
-		saving:
+		Saving:
 				  To save the configurations of a network on the centre window there is a save button which
 				  when pressed will store the configuration of the network in a text `file.
 							
@@ -43,7 +43,7 @@
 		Canvas (Panel on the left):
 				  This is where you can draw the number you want the network to guess. 
 				 
-		prediction (Panel on the right):
+		Prediction (Panel on the right):
 				  Once the guess button is pressed the prediction panel will display the number that the network
 				  thinks you drew.
 		
@@ -68,3 +68,5 @@
 				  is yellow, a value between 40-80 is orange and a value between 80-100 is green.
 				  
 				  
+
+
