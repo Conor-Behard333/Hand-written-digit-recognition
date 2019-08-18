@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class LoadFile {
-    public double[] load(String fileName) {
+    public double[] loadWeights(String fileName) {
         double[] weights = new double[0];
         int index = -1;
         try {
@@ -28,4 +28,17 @@ public class LoadFile {
         return weights;
     }
 
+    public String loadTextFile(String fileDir) {
+        String text = "";
+        try {
+            try (Scanner sc = new Scanner(new File(fileDir))) {
+                while ((sc.hasNext())) {
+                    text += sc.nextLine() + "\n";
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return text;
+    }
 }

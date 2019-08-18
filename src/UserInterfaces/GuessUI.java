@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
-public class GuessUI {
+ class GuessUI {
     GuessUI(Network network) {
         ConfidenceUI confidenceUI = new ConfidenceUI();
         Stage prediction = new Stage();
@@ -160,8 +160,6 @@ public class GuessUI {
                     for (int i = 0; i < 10; i++) {
                         network.train(input, new Function().getTarget(Integer.parseInt(target)));
                     }
-                }else {
-                    System.exit(0);
                 }
             }
         });

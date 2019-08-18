@@ -5,29 +5,28 @@ import javafx.scene.control.TextInputDialog;
 
 import java.util.Optional;
 
-public class SettingsUI {
+class SettingsUI {
     private int batchSize;
     private int epochs;
     private int[] hiddenNeurons;
 
-    public int getBatchSize() {
+    SettingsUI() {
+        int hiddenLayers = getAlert("Hidden Layers", "Enter number of hidden layers: ", 5);
+        this.hiddenNeurons = setHiddenNeurons(hiddenLayers);
+        this.batchSize = getAlert("Batch Size", "Enter Batch size: ", 60000);
+        this.epochs = getAlert("Epochs", "Enter number of epochs: ", 10);
+    }
+
+    int getBatchSize() {
         return batchSize;
     }
 
-    public int getEpochs() {
+    int getEpochs() {
         return epochs;
     }
 
-    public int[] getHiddenNeurons() {
+    int[] getHiddenNeurons() {
         return hiddenNeurons;
-    }
-
-
-    public SettingsUI() {
-        int hiddenLayers = getAlert("Hidden Neurons", "Enter number of hidden layers: ", 5);
-        this.hiddenNeurons = setHiddenNeurons(hiddenLayers);
-        this.batchSize = getAlert("Batch Size", "Enter Batch size: ", 6000);
-        this.epochs = getAlert("Epochs", "Enter number of epochs: ", 10);
     }
 
     private int getAlert(String title, String contentText, int upperBound) {
@@ -38,9 +37,9 @@ public class SettingsUI {
         while (true) {
             try {
                 Optional<String> result = dialog.showAndWait();
-                if (result.isPresent()){
+                if (result.isPresent()) {
                     variable[0] = Integer.parseInt(result.get());
-                }else {
+                } else {
                     System.exit(0);
                 }
                 if (variable[0] < 1 || variable[0] > upperBound) {
