@@ -9,12 +9,14 @@ class SettingsUI {
     private int batchSize;
     private int epochs;
     private int[] hiddenNeurons;
+    private double learningRate;
 
     SettingsUI() {
-        int hiddenLayers = getAlert("Hidden Layers", "Enter number of hidden layers: ", 5);
-        this.hiddenNeurons = setHiddenNeurons(hiddenLayers);
-        this.batchSize = getAlert("Batch Size", "Enter Batch size: ", 60000);
-        this.epochs = getAlert("Epochs", "Enter number of epochs: ", 10);
+        int hiddenLayers = (int) getAlert("Hidden Layers", "Enter number of hidden layers: ", 5, false);
+        hiddenNeurons = setHiddenNeurons(hiddenLayers);
+        batchSize = (int) getAlert("Batch Size", "Enter Batch size: ", 60000, false);
+        epochs = (int) getAlert("Epochs", "Enter number of epochs: ", 10, false);
+        learningRate = getAlert("Learning Rate", "Enter the learning rate: ", 1, true);
     }
 
     int getBatchSize() {
@@ -29,8 +31,12 @@ class SettingsUI {
         return hiddenNeurons;
     }
 
-    private int getAlert(String title, String contentText, int upperBound) {
-        final int[] variable = {0};
+    double getLearningRate() {
+        return learningRate;
+    }
+
+    private double getAlert(String title, String contentText, double upperBound, boolean learningRate) {
+        final double[] variable = {0};
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
         dialog.setContentText(contentText);
@@ -38,12 +44,15 @@ class SettingsUI {
             try {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
-                    variable[0] = Integer.parseInt(result.get());
+                    variable[0] = Double.parseDouble(result.get());
                 } else {
                     System.exit(0);
                 }
-                if (variable[0] < 1 || variable[0] > upperBound) {
+                if ((variable[0] < 1 || variable[0] > upperBound) && !learningRate) {
                     showInvalidInput("Invalid Input! Requires a number between 1 and " + upperBound);
+                    continue;
+                } else if ((variable[0] < 0 || variable[0] > upperBound) && learningRate) {
+                    showInvalidInput("Invalid Input! Requires a number between 0 and " + upperBound);
                     continue;
                 }
             } catch (Exception e) {
@@ -57,7 +66,7 @@ class SettingsUI {
     private int[] setHiddenNeurons(int hiddenLayers) {
         int[] hiddenNeurons = new int[hiddenLayers];
         for (int i = 0; i < hiddenLayers; i++) {
-            hiddenNeurons[i] = getAlert("Hidden Neurons", "Enter number of hidden neurons in layer " + (i + 1) + ": ", 150);
+            hiddenNeurons[i] = (int) getAlert("Hidden Neurons", "Enter number of hidden neurons in layer " + (i + 1) + ": ", 150, false);
         }
         return hiddenNeurons;
     }

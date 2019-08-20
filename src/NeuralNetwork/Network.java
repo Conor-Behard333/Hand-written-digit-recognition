@@ -1,12 +1,12 @@
 package NeuralNetwork;
 
 public class Network {
-    private final double LEARNING_RATE = 0.14;
     private final int NUM_OF_INPUT_NEURONS;
     private final int NUM_OF_OUTPUT_NEURONS;
     private final int[] NUM_OF_HIDDEN_NEURONS;
     private final int NUM_OF_HIDDEN_LAYERS;
     private final int NUM_OF_BIAS_NEURONS;
+    private final double LEARNING_RATE;
     private int[] NETWORK_CONFIG;
     private Hidden_Neuron[][] hiddenLayer;
     private Output_Neuron[] outputNeurons;
@@ -16,18 +16,19 @@ public class Network {
     /*
      * initialises all the global variables used and creates all the necessary neurons
      */
-    public Network(int inputNeurons, int outputNeurons, int[] hiddenNeurons) {
-        this.NUM_OF_HIDDEN_LAYERS = hiddenNeurons.length;
-        this.NUM_OF_INPUT_NEURONS = inputNeurons;
-        this.NUM_OF_OUTPUT_NEURONS = outputNeurons;
-        this.NUM_OF_BIAS_NEURONS = NUM_OF_HIDDEN_LAYERS + 1;
+    public Network(double LEARNING_RATE, int inputNeurons, int outputNeurons, int[] hiddenNeurons) {
+        this.LEARNING_RATE = LEARNING_RATE;
+        NUM_OF_HIDDEN_LAYERS = hiddenNeurons.length;
+        NUM_OF_INPUT_NEURONS = inputNeurons;
+        NUM_OF_OUTPUT_NEURONS = outputNeurons;
+        NUM_OF_BIAS_NEURONS = NUM_OF_HIDDEN_LAYERS + 1;
         //stores how many neurons are in each hidden layer
-        this.NUM_OF_HIDDEN_NEURONS = new int[NUM_OF_HIDDEN_LAYERS];
+        NUM_OF_HIDDEN_NEURONS = new int[NUM_OF_HIDDEN_LAYERS];
         System.arraycopy(hiddenNeurons, 0, NUM_OF_HIDDEN_NEURONS, 0, NUM_OF_HIDDEN_LAYERS);
 
         this.outputNeurons = new Output_Neuron[outputNeurons];
         //stores all the hidden neurons for each hidden layer
-        this.hiddenLayer = new Hidden_Neuron[NUM_OF_HIDDEN_LAYERS][];
+        hiddenLayer = new Hidden_Neuron[NUM_OF_HIDDEN_LAYERS][];
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
             hiddenLayer[i] = new Hidden_Neuron[hiddenNeurons[i]];
         }
@@ -40,7 +41,7 @@ public class Network {
     }
 
     private void createBiasNeurons() {
-        biasNeurons = new Bias_Neuron[NUM_OF_BIAS_NEURONS];//+1 is the output layer
+        biasNeurons = new Bias_Neuron[NUM_OF_BIAS_NEURONS];
         for (int i = 0; i < NUM_OF_BIAS_NEURONS; i++) {
             biasNeurons[i] = new Bias_Neuron(NETWORK_CONFIG[i + 1]);
         }
@@ -62,11 +63,11 @@ public class Network {
     }
 
     private void setConfig() {
-        config += NUM_OF_INPUT_NEURONS + "-";
+        config += NUM_OF_INPUT_NEURONS;
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
-            config += NUM_OF_HIDDEN_NEURONS[i] + "-";
+            config += "_" + NUM_OF_HIDDEN_NEURONS[i] + "_";
         }
-        config += NUM_OF_OUTPUT_NEURONS + "";
+        config += NUM_OF_OUTPUT_NEURONS + "[" + LEARNING_RATE + "]";
     }
 
     public String getConfig() {

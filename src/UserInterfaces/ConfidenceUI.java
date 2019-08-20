@@ -19,12 +19,12 @@ class ConfidenceUI {
         prediction.setScene(getScene());
     }
 
-    void updateValues(double[] outputs) {
+    void updateValues(double[] output) {
         DecimalFormat df = new DecimalFormat("#.##");
-        for (int i = 0; i < outputs.length; i++) {
-            progressBars[i].setProgress(outputs[i]);
-            labels[i].setText(i + ": " + df.format((outputs[i]) * 100) + "%");
-            progressBars[i].setStyle(getStyle(Double.parseDouble(df.format(outputs[i] * 100))));
+        for (int i = 0; i < output.length; i++) {
+            progressBars[i].setProgress(output[i]);
+            labels[i].setText(i + ": " + df.format((output[i]) * 100) + "%");
+            progressBars[i].setStyle(getStyle(Double.parseDouble(df.format(output[i] * 100))));
         }
     }
 

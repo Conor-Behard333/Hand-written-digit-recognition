@@ -15,12 +15,12 @@
 		Number of hidden layers:  
 				  The network can have a minimum of 1 hidden layer. The more layers you add the longer it will take
 				  for the network to train. A recommended number of layers to get the maximum accuracy of the
-				  network is 2. You can not have any more than 5 hidden layers!
+				  network is just 1-2. You can not have any more than 5 hidden layers!
 				  
 		Number of hidden neurons: 
 				  The more neurons you add into each hidden layer the longer it will take for the network to
-				  train and will become less accurate. The recommended number of neurons in a 2 layer network 
-				  is 50 in each layer.
+				  train and will become less accurate. The recommended number of neurons in a single layered
+				  network is 50-100.
 				  
 		Batch size:				
 				  The batch size is the total amount of training data that the network will use to train itself.
@@ -33,6 +33,11 @@
 				  pieces of training data fully 3 times. The epochs is limited to a maximum of 10 as any more
 				  will take too long and wont effect the accuracy much. The recommended number of epochs for a
 				  network with 2 hidden layers, 50 neurons in each layer, a batch size of 60000 is 5 epochs.
+				  
+		Learning rate: 
+				  The learning rate determines how much the network learns when updating the weights. The 
+				  learning rate typically ranges between 0.0 and 1.0. A recommended configuration is a 
+				  single hidden layer network with 50 hidden neurons and a learning rate of 0.14.
 	
     Using the interface
 	Centre window:

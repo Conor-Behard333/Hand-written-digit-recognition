@@ -32,7 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
- class GuessUI {
+class GuessUI {
     GuessUI(Network network) {
         ConfidenceUI confidenceUI = new ConfidenceUI();
         Stage prediction = new Stage();
@@ -119,7 +119,7 @@ import java.util.Optional;
             if (response.get().getText().equalsIgnoreCase("yes")) {
                 File folder = new File("Resources\\SaveFiles");
                 double[] weights = network.getWeights();
-                new SaveFile().save("Resources\\SaveFiles\\" + "(" + (folder.listFiles().length + 1) + ")" + network.getConfig(), weights);
+                new SaveFile().save("Resources\\SaveFiles\\" + network.getConfig(), weights);
                 Alert done = new Alert(Alert.AlertType.INFORMATION);
                 done.setTitle("File saved!");
                 done.setContentText("The file has been saved and named: " + network.getConfig());
@@ -150,11 +150,11 @@ import java.util.Optional;
             if (train.isSelected()) {
                 Alert alert = new Function().conformationAlert(null, "Did it guess right?");
                 Optional<ButtonType> response = alert.showAndWait();
-                if (response.get().getText().equalsIgnoreCase("Yes")){
+                if (response.get().getText().equalsIgnoreCase("Yes")) {
                     for (int i = 0; i < 10; i++) {
                         network.train(input, new Function().getTarget(guess));
                     }
-                }else if (response.get().getText().equalsIgnoreCase("no")){
+                } else if (response.get().getText().equalsIgnoreCase("no")) {
                     String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//available epoch values
                     String target = new Function().getChoiceAlert(targetValues, "Train", "Which number did you draw");
                     for (int i = 0; i < 10; i++) {
@@ -168,7 +168,6 @@ import java.util.Optional;
         flowPane.getChildren().addAll(train, clearCanvas, save, guessButton);
         return flowPane;
     }
-
 
 
     private void invertPixelValues(WritableImage writableImage, Canvas draw) {
