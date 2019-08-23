@@ -7,9 +7,9 @@
 		Loading:
 				  You will be given the option to load a file, if you decide to do so, you will be given a
 				  list of all the available save files. The name of the file will show the settings of the
-				  network that the weights belong to, for example, the name '(1)784-50-20-10' is the save
+				  network that the weights belong to, for example, the name '(784_50_20_10)[0.13]' is the save
 				  file for a network with 784 input neurons, 50 hidden neurons in layer 1, 20 hidden neurons
-				  in layer 2 and 10 neurons in the output layer.
+				  in layer 2, 10 neurons in the output layer and a learning rate of 0.13.
 							
     Setting the network configurations
 		Number of hidden layers:  

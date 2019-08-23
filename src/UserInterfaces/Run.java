@@ -88,7 +88,7 @@ public class Run extends Application {
         loadingStage.setTitle("Training Please Wait...");
         ProgressBar loading = new ProgressBar(0);
         loading.setPrefSize(400, 60);
-        loading.setStyle("-fx-accent: #1e9c21");
+        loading.setStyle("-fx-accent: #5ac2e7");
         Label progress = new Label("Progress: ");
         progress.setTranslateX(10);
         progress.setTranslateY(10);
