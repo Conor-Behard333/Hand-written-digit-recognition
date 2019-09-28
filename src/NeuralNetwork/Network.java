@@ -63,11 +63,11 @@ public class Network {
     }
 
     private void setConfig() {
-        config += NUM_OF_INPUT_NEURONS;
+        config += "(" + NUM_OF_INPUT_NEURONS + "_";
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
-            config += "_" + NUM_OF_HIDDEN_NEURONS[i] + "_";
+            config += NUM_OF_HIDDEN_NEURONS[i] + "_";
         }
-        config += NUM_OF_OUTPUT_NEURONS + "[" + LEARNING_RATE + "]";
+        config += NUM_OF_OUTPUT_NEURONS + ")[" + LEARNING_RATE + "]";
     }
 
     public String getConfig() {

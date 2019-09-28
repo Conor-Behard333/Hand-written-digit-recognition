@@ -25,17 +25,17 @@ public class ImageConverter extends Function {
             image = getScaledImage(20, 20, image);//scales the image to a 20 by 20 png
             image = getCenteredImage(image);//centres the image onto a 28 by 28 image
             //temporary
-            int[][] temp = new int[28][28];
+            int[][] imageCopy = new int[28][28];
             getPixelValues(input, image);
             int k = 0;
             for (int i = 0; i < 28; i++) {
                 for (int j = 0; j < 28; j++) {
-                    temp[i][j] = input[k];
+                    imageCopy[i][j] = input[k];
                     k++;
                 }
             }
 
-            int[][] newImage = createNewImage(temp);
+            int[][] newImage = createNewImage(imageCopy);
 
             testImage = setPixelValues(newImage);
 
@@ -68,14 +68,13 @@ public class ImageConverter extends Function {
         return testImage;
     }
 
-    private int[][] createNewImage(int[][] temp) {
-        int upMost = getLeftAndUpMost(temp, true);
-        int downMost = getRightAndDownMost(temp, true);
-        int leftMost = getLeftAndUpMost(temp, false);
-        int rightMost = getRightAndDownMost(temp, false);
+    private int[][] createNewImage(int[][] imageCopy) {
+        int[] upAndLeftMost = getUpAndLeftMost(imageCopy);
+        int[] downAndRightMost = getDownAndRightMost(imageCopy);
 
-        int height = (downMost - upMost);
-        int width = (rightMost - leftMost);
+        int height = (downAndRightMost[0] - upAndLeftMost[0]);// down - up
+        int width = (downAndRightMost[1] - upAndLeftMost[1]);// right - left
+
         int padding_y = 8;
         int padding_x = 8;
         int[][] newImage = new int[height + 1 + padding_y][width + 1 + padding_x];
@@ -84,9 +83,9 @@ public class ImageConverter extends Function {
 
         int row = padding_y / 2;
         int column = padding_x / 2;
-        for (int i = upMost; i <= downMost; i++) {
-            for (int j = leftMost; j <= rightMost; j++) {
-                newImage[row][column] = temp[i][j];
+        for (int i = upAndLeftMost[0]; i <= downAndRightMost[0]; i++) {
+            for (int j = upAndLeftMost[1]; j <= downAndRightMost[1]; j++) {
+                newImage[row][column] = imageCopy[i][j];
                 column++;
             }
             row++;
@@ -103,34 +102,44 @@ public class ImageConverter extends Function {
         }
     }
 
-    private int getRightAndDownMost(int[][] temp2, boolean downMost) {
-        for (int i = temp2.length - 1; i >= 0; i--) {
-            for (int j = temp2.length - 1; j >= 0; j--) {
-                if (temp2[i][j] > 0 && downMost) {
-                    return i;
+    private int[] getDownAndRightMost(int[][] imageCopy) {
+        boolean downMost = true;
+        boolean rightMost = true;
+        int[] points = new int[2];
+        for (int i = imageCopy.length - 1; i >= 0; i--) {
+            for (int j = imageCopy.length - 1; j >= 0; j--) {
+                if (imageCopy[i][j] > 0 && downMost) {
+                    points[0] = i;
+                    downMost = false;
                 } else {
-                    if (temp2[j][i] > 0) {
-                        return i;
+                    if (imageCopy[j][i] > 0 && rightMost) {
+                        points[1] = i;
+                        rightMost = false;
                     }
                 }
             }
         }
-        return 0;
+        return points;
     }
 
-    private int getLeftAndUpMost(int[][] temp2, boolean upMost) {
-        for (int i = 0; i < temp2.length; i++) {
-            for (int j = 0; j < temp2.length; j++) {
-                if (temp2[i][j] > 0 && upMost) {
-                    return i;
+    private int[] getUpAndLeftMost(int[][] imageCopy) {
+        boolean leftMost = true;
+        boolean upMost = true;
+        int[] points = new int[2];
+        for (int i = 0; i < imageCopy.length; i++) {
+            for (int j = 0; j < imageCopy.length; j++) {
+                if (imageCopy[i][j] > 0 && upMost) {
+                    points[1] = i;
+                    upMost = false;
                 } else {
-                    if (temp2[j][i] > 0) {
-                        return i;
+                    if (imageCopy[j][i] > 0 && leftMost) {
+                        points[0] = i;
+                        leftMost = false;
                     }
                 }
             }
         }
-        return 0;
+        return points;
     }
 
     private void getPixelValues(int[] input, BufferedImage image) {
