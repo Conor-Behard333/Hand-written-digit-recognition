@@ -31,6 +31,7 @@ public class Run extends Application {
         //display info
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.seOnCloseRequest(close -> System.exit(0));
         primaryStage.setOnHidden(onHiddenEvent -> {
             //load or train option
             Alert alert = new Function().conformationAlert("Load File?", "Do you want to load a preset configuration?");
