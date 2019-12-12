@@ -4,6 +4,7 @@ import NeuralNetwork.Function;
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
 import ProcessingData.LoadDataSet;
+import ProcessingData.LoadFile;
 import ProcessingData.SaveFile;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
@@ -34,13 +35,16 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class GuessUI {
     private Network network;
 
-    GuessUI(Network network) {
-        this.network = network;
+    GuessUI() {
+        loadFile(true);
         ConfidenceUI confidenceUI = new ConfidenceUI();
         Stage prediction = new Stage();
         prediction.setTitle("Neural Network - Confidence");
@@ -85,7 +89,7 @@ class GuessUI {
 
     private Pane addDrawCanvas(Canvas draw, GraphicsContext gc) {
         Pane pane = new Pane();
-        int brushSize = 20;
+        int brushSize = 30;
         gc.setLineWidth(brushSize);//Brush size
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);
@@ -176,14 +180,13 @@ class GuessUI {
         loadButton.setPrefSize(width, height);
         loadButton.setOnAction(event -> {
             // TODO: 09/12/2019 add load network function
-
+            loadFile(false);
         });
-
         Button createButton = new Button("Create new Network");
         createButton.setPrefSize(width, height);
         createButton.setOnAction(event -> {
-            // TODO: 09/12/2019 add create network function
             //train network
+            // TODO: 12-Dec-19  Redesign settings UI
             SettingsUI settings = new SettingsUI();
             int[] hiddenNeurons = settings.getHiddenNeurons();
             int batchSize = settings.getBatchSize();
@@ -191,10 +194,9 @@ class GuessUI {
             double learningRate = settings.getLearningRate();
 
             Stage loadingStage = new Stage();
+            network = new Network(learningRate, 784, 10, hiddenNeurons);
             Task train = train(batchSize, epochs);
             ProgressBar loading = getLoadingBar(loadingStage);
-
-            network = new Network(learningRate, 784, 10, hiddenNeurons);
             loading.progressProperty().bind(train.progressProperty());
             new Thread(train).start();
             loadingStage.show();
@@ -209,6 +211,65 @@ class GuessUI {
         FlowPane flowPane = new FlowPane();
         flowPane.getChildren().addAll(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
         return flowPane;
+    }
+
+    private void loadFile(boolean startUp) {
+        String saveFile;
+        if (startUp) {
+            saveFile = "(784_100_10)[0.14].txt";
+        } else {
+            String[] files = getFileNames();
+            saveFile = new Function().getChoiceAlert(files, "Choose config file", "Choose your preset:");
+        }
+        int[] hiddenNeurons = getNumOfHiddenNeurons(saveFile);
+        double learningRate = getLearningRate(saveFile);
+        network = new Network(learningRate, 784, 10, hiddenNeurons);
+        double[] weights = new LoadFile().loadWeights("Resources\\SaveFiles\\" + saveFile);
+        network.setWeights(weights);
+    }
+
+    private double getLearningRate(String saveFile) {
+        int pos = 0;
+        for (int i = 0; i < saveFile.length(); i++) {
+            if (saveFile.charAt(i) == '[') {
+                pos = i;
+                break;
+            }
+        }
+        return Double.parseDouble(saveFile.substring(pos + 1, saveFile.length() - 5));
+    }
+
+    private String[] getFileNames() {
+        File folder = new File("Resources\\SaveFiles");
+        File[] files = folder.listFiles();
+        String[] fileNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            fileNames[i] = files[i].getName();
+        }
+        return fileNames;
+    }
+
+    private int[] getNumOfHiddenNeurons(String saveFile) {
+        ArrayList<Integer> temp = new ArrayList<>();
+        saveFile = getTopology(saveFile);
+        Pattern pattern = Pattern.compile("_(\\d+)_");
+        Matcher matcher = pattern.matcher(saveFile);
+        while (matcher.find()) {
+            String num = saveFile.substring(matcher.start() + 1, matcher.end() - 1);
+            temp.add(Integer.parseInt(num));
+        }
+        return temp.stream().mapToInt(i -> i).toArray();
+    }
+
+    private String getTopology(String saveFile) {
+        int end = 0;
+        for (int i = 0; i < saveFile.length(); i++) {
+            if (saveFile.charAt(i) == ')') {
+                end = i;
+            }
+        }
+        saveFile = saveFile.substring(1, end);
+        return saveFile;
     }
 
 
