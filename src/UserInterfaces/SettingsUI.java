@@ -35,7 +35,7 @@ class SettingsUI {
         return learningRate;
     }
 
-    private double getAlert(String title, String contentText, int upperBound, boolean learningRate) {
+    private double getAlert(String title, String contentText, double upperBound, boolean learningRate) {
         final double[] variable = {0};
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
@@ -44,29 +44,19 @@ class SettingsUI {
             try {
                 Optional<String> result = dialog.showAndWait();
                 if (result.isPresent()) {
-                    if (learningRate) {
-                        variable[0] = Double.parseDouble(result.get());
-                    } else {
-                        variable[0] = Integer.parseInt(result.get());
-                    }
+                    variable[0] = Double.parseDouble(result.get());
                 } else {
                     System.exit(0);
                 }
                 if ((variable[0] < 1 || variable[0] > upperBound) && !learningRate) {
-                    showInvalidInput("Invalid Input! Requires an integer between 1 and " + upperBound);
+                    showInvalidInput("Invalid Input! Requires a number between 1 and " + upperBound);
                     continue;
-                } else if ((variable[0] <= 0 || variable[0] > upperBound) && learningRate) {
-                    showInvalidInput("Invalid Input! Requires an number between 0 and " + upperBound);
+                } else if ((variable[0] < 0 || variable[0] > upperBound) && learningRate) {
+                    showInvalidInput("Invalid Input! Requires a number between 0 and " + upperBound);
                     continue;
                 }
             } catch (Exception e) {
-                if (learningRate){
-                    showInvalidInput("Invalid Input! Requires a number between 0 and " + upperBound);
-                    continue;
-                }else {
-                    showInvalidInput("Invalid Input! Requires an integer between 1 and " + upperBound);
-                    continue;
-                }
+                continue;
             }
             break;
         }

@@ -7,7 +7,7 @@ public class Network {
     private final int NUM_OF_HIDDEN_LAYERS;
     private final int NUM_OF_BIAS_NEURONS;
     private final double LEARNING_RATE;
-    private int[] NETWORK_CONFIG;
+    private int[] networkConfig;
     private Hidden_Neuron[][] hiddenLayer;
     private Output_Neuron[] outputNeurons;
     private Bias_Neuron[] biasNeurons;
@@ -43,29 +43,29 @@ public class Network {
     private void createBiasNeurons() {
         biasNeurons = new Bias_Neuron[NUM_OF_BIAS_NEURONS];
         for (int i = 0; i < NUM_OF_BIAS_NEURONS; i++) {
-            biasNeurons[i] = new Bias_Neuron(NETWORK_CONFIG[i + 1]);
+            biasNeurons[i] = new Bias_Neuron(networkConfig[i + 1]);
         }
     }
 
     private void setNetworkConfig() {
-        NETWORK_CONFIG = new int[NUM_OF_HIDDEN_LAYERS + 2];
+        networkConfig = new int[NUM_OF_HIDDEN_LAYERS + 2];
         int layer = 0;
-        for (int i = 0; i < NETWORK_CONFIG.length; i++) {
+        for (int i = 0; i < networkConfig.length; i++) {
             if (i == 0) {
-                NETWORK_CONFIG[i] = NUM_OF_INPUT_NEURONS;
-            } else if (i == NETWORK_CONFIG.length - 1) {
-                NETWORK_CONFIG[i] = NUM_OF_OUTPUT_NEURONS;
+                networkConfig[i] = NUM_OF_INPUT_NEURONS;
+            } else if (i == networkConfig.length - 1) {
+                networkConfig[i] = NUM_OF_OUTPUT_NEURONS;
             } else {
-                NETWORK_CONFIG[i] = NUM_OF_HIDDEN_NEURONS[layer];
+                networkConfig[i] = NUM_OF_HIDDEN_NEURONS[layer];
                 layer++;
             }
         }
     }
 
     private void setConfig() {
-        config += "(" + NUM_OF_INPUT_NEURONS + "_";
+        config += "(" + NUM_OF_INPUT_NEURONS;
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
-            config += NUM_OF_HIDDEN_NEURONS[i] + "_";
+            config += "_" + NUM_OF_HIDDEN_NEURONS[i] + "_";
         }
         config += NUM_OF_OUTPUT_NEURONS + ")[" + LEARNING_RATE + "]";
     }
@@ -278,8 +278,8 @@ public class Network {
 
     public double[] getWeights() {
         int size = 0;
-        for (int i = 0; i < NETWORK_CONFIG.length - 1; i++) {
-            size += (NETWORK_CONFIG[i] * NETWORK_CONFIG[i + 1]) + NETWORK_CONFIG[i + 1];
+        for (int i = 0; i < networkConfig.length - 1; i++) {
+            size += (networkConfig[i] * networkConfig[i + 1]) + networkConfig[i + 1];
         }
 
         double[] weights = new double[size];
@@ -314,11 +314,11 @@ public class Network {
 
     public void setWeights(double[] weights) {
         int lastIndex = 0;
-        for (int i = 0; i < NETWORK_CONFIG.length - 1; i++) {
-            if (i == NETWORK_CONFIG.length - 2) {
-                lastIndex = setWeights(weights, lastIndex, NETWORK_CONFIG[i], i, NETWORK_CONFIG[i + 1], true);
+        for (int i = 0; i < networkConfig.length - 1; i++) {
+            if (i == networkConfig.length - 2) {
+                lastIndex = setWeights(weights, lastIndex, networkConfig[i], i, networkConfig[i + 1], true);
             } else {
-                lastIndex = setWeights(weights, lastIndex, NETWORK_CONFIG[i], i, NETWORK_CONFIG[i + 1], false);
+                lastIndex = setWeights(weights, lastIndex, networkConfig[i], i, networkConfig[i + 1], false);
             }
         }
         setBiasWeights(weights, lastIndex);
@@ -326,7 +326,7 @@ public class Network {
 
     private void setBiasWeights(double[] weights, int lastIndex) {
         for (int i = 0; i < biasNeurons.length; i++) {
-            double[] temp = new double[NETWORK_CONFIG[i + 1]];
+            double[] temp = new double[networkConfig[i + 1]];
             for (int j = 0; j < temp.length; j++) {
                 temp[j] = weights[lastIndex];
                 lastIndex++;

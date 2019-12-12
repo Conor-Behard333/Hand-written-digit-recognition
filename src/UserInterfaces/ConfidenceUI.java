@@ -6,18 +6,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 import java.text.DecimalFormat;
 
 class ConfidenceUI {
     private ProgressBar[] progressBars = new ProgressBar[10];
     private Label[] labels = new Label[10];
-
-    ConfidenceUI() {
-        Stage prediction = new Stage();
-        prediction.setScene(getScene());
-    }
 
     void updateValues(double[] output) {
         DecimalFormat df = new DecimalFormat("#.##");
@@ -27,6 +21,7 @@ class ConfidenceUI {
             progressBars[i].setStyle(getStyle(Double.parseDouble(df.format(output[i] * 100))));
         }
     }
+
 
     private String getStyle(double output) {
         if (output >= 0 && output < 20) {
@@ -42,10 +37,6 @@ class ConfidenceUI {
     }
 
     Scene getScene() {
-        Stage primaryStage = new Stage();
-        primaryStage.setTitle("Neural Network - Hand Written Digit Recognition - Prediction");
-        primaryStage.setResizable(false);
-
         for (int i = 0; i < progressBars.length; i++) {
             labels[i] = new Label(i + ": ");
             labels[i].setFont(new Font(30));

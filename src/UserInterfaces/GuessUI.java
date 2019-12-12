@@ -3,7 +3,9 @@ package UserInterfaces;
 import NeuralNetwork.Function;
 import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
+import ProcessingData.LoadDataSet;
 import ProcessingData.SaveFile;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -15,6 +17,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -25,6 +28,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import sun.nio.ch.Net;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,9 +37,13 @@ import java.io.IOException;
 import java.util.Optional;
 
 class GuessUI {
+    private Network network;
+
     GuessUI(Network network) {
+        this.network = network;
         ConfidenceUI confidenceUI = new ConfidenceUI();
         Stage prediction = new Stage();
+        prediction.setTitle("Neural Network - Confidence");
         prediction.setResizable(false);
         prediction.setScene(confidenceUI.getScene());
         prediction.setX(1415);
@@ -58,7 +66,7 @@ class GuessUI {
         number.setY(450);
 
         BorderPane borderPane = new BorderPane();
-        FlowPane flowPane = addButtons(draw, draw_gc, number, network, confidenceUI);
+        FlowPane flowPane = addButtons(draw, draw_gc, number, confidenceUI);
         Pane drawPane = addDrawCanvas(draw, draw_gc);
         Pane imagePane = new Pane(number);
 
@@ -67,7 +75,7 @@ class GuessUI {
         borderPane.setRight(imagePane);
         imagePane.setPrefSize(465, 520);
 
-        Scene scene = new Scene(borderPane, 900, 600);
+        Scene scene = new Scene(borderPane, 895, 600);
         drawPane.getStyleClass().add("canvas");
         imagePane.getStyleClass().add("canvas");
         scene.getStylesheets().add("Styles.css");
@@ -77,7 +85,8 @@ class GuessUI {
 
     private Pane addDrawCanvas(Canvas draw, GraphicsContext gc) {
         Pane pane = new Pane();
-        gc.setLineWidth(30);
+        int brushSize = 20;
+        gc.setLineWidth(brushSize);//Brush size
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);
         Line line = new Line();
@@ -98,26 +107,25 @@ class GuessUI {
         return pane;
     }
 
-    private FlowPane addButtons(Canvas draw, GraphicsContext draw_gc, Text number, Network network, ConfidenceUI confidenceUI) {
-        int width = 227, height = 50;
+    private FlowPane addButtons(Canvas draw, GraphicsContext draw_gc, Text number, ConfidenceUI confidenceUI) {
+        int width = 151, height = 50;
 
-        ToggleButton train = new ToggleButton("Train");
-        train.setPrefSize(width, height);
+        ToggleButton trainButton = new ToggleButton("Train");
+        trainButton.setPrefSize(width, height);
 
-        Button clearCanvas = new Button("Clear");
-        clearCanvas.setPrefSize(width, height);
-        clearCanvas.setOnAction(event -> {
+        Button clearCanvasButton = new Button("Clear Canvas");
+        clearCanvasButton.setPrefSize(width, height);
+        clearCanvasButton.setOnAction(event -> {
             draw_gc.clearRect(0, 0, draw.getWidth(), draw.getHeight());
             number.setText("");
         });
 
-        Button save = new Button("Save");
-        save.setPrefSize(width, height);
-        save.setOnAction(event -> {
-            Alert alert = new Function().conformationAlert("Save File?", "Do you want to save the current configuration?");
+        Button saveButton = new Button("Save Network");
+        saveButton.setPrefSize(width, height);
+        saveButton.setOnAction(event -> {
+            Alert alert = new Function().conformationAlert("Save File?", "Do you want to saveButton the current configuration?");
             Optional<ButtonType> response = alert.showAndWait();
             if (response.get().getText().equalsIgnoreCase("yes")) {
-                File folder = new File("Resources\\SaveFiles");
                 double[] weights = network.getWeights();
                 new SaveFile().save("Resources\\SaveFiles\\" + network.getConfig(), weights);
                 Alert done = new Alert(Alert.AlertType.INFORMATION);
@@ -147,7 +155,7 @@ class GuessUI {
             confidenceUI.updateValues(output);
             number.setText(Integer.toString(guess));
 
-            if (train.isSelected()) {
+            if (trainButton.isSelected()) {
                 Alert alert = new Function().conformationAlert(null, "Did it guess right?");
                 Optional<ButtonType> response = alert.showAndWait();
                 if (response.get().getText().equalsIgnoreCase("Yes")) {
@@ -164,8 +172,42 @@ class GuessUI {
             }
         });
 
+        Button loadButton = new Button("Load saved Network");
+        loadButton.setPrefSize(width, height);
+        loadButton.setOnAction(event -> {
+            // TODO: 09/12/2019 add load network function
+
+        });
+
+        Button createButton = new Button("Create new Network");
+        createButton.setPrefSize(width, height);
+        createButton.setOnAction(event -> {
+            // TODO: 09/12/2019 add create network function
+            //train network
+            SettingsUI settings = new SettingsUI();
+            int[] hiddenNeurons = settings.getHiddenNeurons();
+            int batchSize = settings.getBatchSize();
+            int epochs = settings.getEpochs();
+            double learningRate = settings.getLearningRate();
+
+            Stage loadingStage = new Stage();
+            Task train = train(batchSize, epochs);
+            ProgressBar loading = getLoadingBar(loadingStage);
+
+            network = new Network(learningRate, 784, 10, hiddenNeurons);
+            loading.progressProperty().bind(train.progressProperty());
+            new Thread(train).start();
+            loadingStage.show();
+            train.setOnSucceeded(closeEvent -> {
+                loadingStage.close();
+                train.cancel();
+            });
+            loadingStage.setOnCloseRequest(closeEvent -> {
+                System.exit(0);
+            });
+        });
         FlowPane flowPane = new FlowPane();
-        flowPane.getChildren().addAll(train, clearCanvas, save, guessButton);
+        flowPane.getChildren().addAll(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
         return flowPane;
     }
 
@@ -182,5 +224,43 @@ class GuessUI {
                 writer.setArgb(x, y, p);
             }
         }
+    }
+
+    private Task train(int batchSize, int epochs) {
+        return new Task() {
+            @Override
+            protected Object call() throws Exception {
+                double max = batchSize * epochs;
+                double current = 0;
+                //Load the training data
+                LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\mnist_train.csv");
+                //Trains the network
+                for (int j = 0; j < epochs; j++) {
+                    for (int i = 0; i < batchSize; i++) {
+                        network.train(trainingData.getInputData(i), trainingData.getLabel(i));
+                        current++;
+                        updateProgress(current, max);
+                    }
+                    trainingData.randomiseTrainingData();
+                }
+                return null;
+            }
+        };
+    }
+
+    private ProgressBar getLoadingBar(Stage loadingStage) {
+        loadingStage.setTitle("Training Please Wait...");
+        ProgressBar loading = new ProgressBar(0);
+        loading.setPrefSize(400, 60);
+        loading.setStyle("-fx-accent: #5bc2e7");
+        Label progress = new Label("Progress: ");
+        progress.setTranslateX(10);
+        progress.setTranslateY(10);
+        progress.setStyle("-fx-font-size: 25");
+        HBox hBox = new HBox(progress, loading);
+        hBox.setSpacing(20);
+        Scene loadingScene = new Scene(hBox, 530, 60);
+        loadingStage.setScene(loadingScene);
+        return loading;
     }
 }
