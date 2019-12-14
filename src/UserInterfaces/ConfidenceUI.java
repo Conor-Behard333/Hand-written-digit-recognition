@@ -53,7 +53,6 @@ class ConfidenceUI {
 
         HBox panel = new HBox(labelBox, barsBox);
         panel.setSpacing(50);
-        Scene scene = new Scene(panel, 400, 600);
-        return scene;
+        return new Scene(panel, 400, 600);
     }
 }

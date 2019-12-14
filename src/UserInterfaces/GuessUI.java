@@ -182,35 +182,40 @@ class GuessUI {
             // TODO: 09/12/2019 add load network function
             loadFile(false);
         });
+
         Button createButton = new Button("Create new Network");
         createButton.setPrefSize(width, height);
         createButton.setOnAction(event -> {
             //train network
             // TODO: 12-Dec-19  Redesign settings UI
-            SettingsUI settings = new SettingsUI();
-            int[] hiddenNeurons = settings.getHiddenNeurons();
-            int batchSize = settings.getBatchSize();
-            int epochs = settings.getEpochs();
-            double learningRate = settings.getLearningRate();
+            Stage settingsStage = new Stage();
+            SettingsUI settings = new SettingsUI(settingsStage);
+            settingsStage.showAndWait();
+            if (!settingsStage.isShowing()) {
+                trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(), settings.getLearningRate());
+            }
 
-            Stage loadingStage = new Stage();
-            network = new Network(learningRate, 784, 10, hiddenNeurons);
-            Task train = train(batchSize, epochs);
-            ProgressBar loading = getLoadingBar(loadingStage);
-            loading.progressProperty().bind(train.progressProperty());
-            new Thread(train).start();
-            loadingStage.show();
-            train.setOnSucceeded(closeEvent -> {
-                loadingStage.close();
-                train.cancel();
-            });
-            loadingStage.setOnCloseRequest(closeEvent -> {
-                System.exit(0);
-            });
         });
         FlowPane flowPane = new FlowPane();
         flowPane.getChildren().addAll(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
         return flowPane;
+    }
+
+    private void trainNetwork(int[] hiddenNeurons, int batchSize, int epochs, double learningRate) {
+        Stage loadingStage = new Stage();
+        network = new Network(learningRate, 784, 10, hiddenNeurons);
+        Task train = train(batchSize, epochs);
+        ProgressBar loading = getLoadingBar(loadingStage);
+        loading.progressProperty().bind(train.progressProperty());
+        new Thread(train).start();
+        loadingStage.show();
+        train.setOnSucceeded(closeEvent -> {
+            loadingStage.close();
+            train.cancel();
+        });
+        loadingStage.setOnCloseRequest(closeEvent -> {
+            System.exit(0);
+        });
     }
 
     private void loadFile(boolean startUp) {
