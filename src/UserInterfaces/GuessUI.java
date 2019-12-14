@@ -55,7 +55,7 @@ class GuessUI {
         prediction.show();
 
         guess = new Stage();
-        guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100_10)[0.14]");
+        guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
         guess.setResizable(false);
 
         Canvas draw = new Canvas(405, 520);
@@ -126,7 +126,7 @@ class GuessUI {
         Button saveButton = new Button("Save Network");
         saveButton.setPrefSize(width, height);
         saveButton.setOnAction(event -> {
-            Alert alert = new Function().conformationAlert("Save File?", "Do you want to saveButton the current configuration?");
+            Alert alert = new Function().conformationAlert("Save File?", "Do you want to save the current configuration?");
             Optional<ButtonType> response = alert.showAndWait();
             if (response.get().getText().equalsIgnoreCase("yes")) {
                 double[] weights = network.getWeights();
@@ -225,7 +225,7 @@ class GuessUI {
     private void loadFile(boolean startUp) {
         String saveFile;
         if (startUp) {
-            saveFile = "(784_100_10)[0.14].txt";
+            saveFile = "(784_100H_10)[0.14].txt";
         } else {
             String[] files = getFileNames();
             saveFile = new Function().getChoiceAlert(files, "Choose config file", "Choose your preset:");
@@ -261,10 +261,10 @@ class GuessUI {
     private int[] getNumOfHiddenNeurons(String saveFile) {
         ArrayList<Integer> temp = new ArrayList<>();
         saveFile = getTopology(saveFile);
-        Pattern pattern = Pattern.compile("_(\\d+)_");
+        Pattern pattern = Pattern.compile("(\\d+H)");
         Matcher matcher = pattern.matcher(saveFile);
         while (matcher.find()) {
-            String num = saveFile.substring(matcher.start() + 1, matcher.end() - 1);
+            String num = saveFile.substring(matcher.start(), matcher.end() - 1);
             temp.add(Integer.parseInt(num));
         }
         return temp.stream().mapToInt(i -> i).toArray();
