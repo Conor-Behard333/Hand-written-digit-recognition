@@ -16,10 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
@@ -58,6 +55,13 @@ class GuessUI {
         guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
         guess.setResizable(false);
 
+
+        Menu menu = new Menu("Tips");
+        MenuItem instructions = new MenuItem("Instructions");
+        instructions.setOnAction(event -> showInstruction());
+        menu.getItems().add(instructions);
+        MenuBar menuBar = new MenuBar(menu);
+
         Canvas draw = new Canvas(405, 520);
         GraphicsContext draw_gc = draw.getGraphicsContext2D();
         draw.setTranslateX(20);
@@ -76,6 +80,7 @@ class GuessUI {
         borderPane.setLeft(drawPane);
         borderPane.setBottom(flowPane);
         borderPane.setRight(imagePane);
+        borderPane.setTop(menuBar);
         imagePane.setPrefSize(465, 520);
 
         Scene scene = new Scene(borderPane, 895, 600);
@@ -332,5 +337,23 @@ class GuessUI {
         Scene loadingScene = new Scene(hBox, 530, 60);
         loadingStage.setScene(loadingScene);
         return loading;
+    }
+
+    private void showInstruction() {
+        Stage stage = new Stage();
+        int width = 1000, height = 1000;
+        TextArea textArea = new TextArea();
+        textArea.setPrefSize(width, height);
+        textArea.setEditable(false);
+        textArea.setText(new LoadFile().loadTextFile("Resources\\Instructions.txt"));
+        textArea.setStyle("-fx-font-size: 1.5em;");
+        Button ok = new Button("Ok");
+        ok.setTranslateX(350);
+        ok.setPrefWidth(300);
+        ok.setPrefHeight(100);
+        ok.setOnAction(actionEvent -> stage.hide());
+        VBox v = new VBox(textArea, ok);
+        stage.setScene(new Scene(v,width,height));
+        stage.show();
     }
 }

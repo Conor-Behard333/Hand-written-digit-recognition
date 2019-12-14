@@ -25,23 +25,7 @@ public class Run extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage){
         new GuessUI();
-    }
-
-    private Scene getInstructionScene(Stage primaryStage) {
-        int width = 1000, height = 1000;
-        TextArea textArea = new TextArea();
-        textArea.setPrefSize(width, height);
-        textArea.setEditable(false);
-        textArea.setText(new LoadFile().loadTextFile("Resources\\Instructions.txt"));
-        textArea.setStyle("-fx-font-size: 1.5em;");
-        Button ok = new Button("Ok");
-        ok.setTranslateX(350);
-        ok.setPrefWidth(300);
-        ok.setPrefHeight(100);
-        ok.setOnAction(actionEvent -> primaryStage.hide());
-        VBox v = new VBox(textArea, ok);
-        return new Scene(v, width, height);
     }
 }
