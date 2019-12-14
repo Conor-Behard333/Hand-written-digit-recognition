@@ -29,7 +29,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sun.nio.ch.Net;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -42,6 +41,7 @@ import java.util.regex.Pattern;
 
 class GuessUI {
     private Network network;
+    private Stage guess;
 
     GuessUI() {
         loadFile(true);
@@ -54,9 +54,8 @@ class GuessUI {
         prediction.setY(135);
         prediction.show();
 
-        Stage guess = new Stage();
-
-        guess.setTitle("Neural Network - Hand Written Digit Recognition");
+        guess = new Stage();
+        guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100_10)[0.14]");
         guess.setResizable(false);
 
         Canvas draw = new Canvas(405, 520);
@@ -181,6 +180,7 @@ class GuessUI {
         loadButton.setOnAction(event -> {
             // TODO: 09/12/2019 add load network function
             loadFile(false);
+            guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
         });
 
         Button createButton = new Button("Create new Network");
@@ -191,8 +191,12 @@ class GuessUI {
             Stage settingsStage = new Stage();
             SettingsUI settings = new SettingsUI(settingsStage);
             settingsStage.showAndWait();
-            if (!settingsStage.isShowing()) {
-                trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(), settings.getLearningRate());
+            try {
+                if (!settingsStage.isShowing()) {
+                    trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(), settings.getLearningRate());
+                    guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
+                }
+            } catch (NullPointerException ignored) {
             }
 
         });
