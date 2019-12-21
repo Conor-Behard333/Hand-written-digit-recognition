@@ -55,14 +55,13 @@ class GuessUI {
         guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
         guess.setResizable(false);
 
-
         Menu menu = new Menu("Tips");
         MenuItem instructions = new MenuItem("Instructions");
         instructions.setOnAction(event -> showInstruction());
         menu.getItems().add(instructions);
         MenuBar menuBar = new MenuBar(menu);
 
-        Canvas draw = new Canvas(405, 520);
+        Canvas draw = new Canvas(405,520);
         GraphicsContext draw_gc = draw.getGraphicsContext2D();
         draw.setTranslateX(20);
         draw.setTranslateY(20);
@@ -70,7 +69,7 @@ class GuessUI {
         Text number = new Text("");
         number.setFont(Font.font("Dialog", FontWeight.NORMAL, FontPosture.REGULAR, 500));
         number.setX(100);
-        number.setY(450);
+        number.setY(430);
 
         BorderPane borderPane = new BorderPane();
         FlowPane flowPane = addButtons(draw, draw_gc, number, confidenceUI);
@@ -81,7 +80,7 @@ class GuessUI {
         borderPane.setBottom(flowPane);
         borderPane.setRight(imagePane);
         borderPane.setTop(menuBar);
-        imagePane.setPrefSize(465, 520);
+        imagePane.setPrefWidth(465);
 
         Scene scene = new Scene(borderPane, 895, 600);
         drawPane.getStyleClass().add("canvas");
@@ -93,8 +92,7 @@ class GuessUI {
 
     private Pane addDrawCanvas(Canvas draw, GraphicsContext gc) {
         Pane pane = new Pane();
-        int brushSize = 30;
-        gc.setLineWidth(brushSize);//Brush size
+        gc.setLineWidth(25);//Brush size
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);
         Line line = new Line();
@@ -117,7 +115,6 @@ class GuessUI {
 
     private FlowPane addButtons(Canvas draw, GraphicsContext draw_gc, Text number, ConfidenceUI confidenceUI) {
         int width = 151, height = 50;
-
         ToggleButton trainButton = new ToggleButton("Train");
         trainButton.setPrefSize(width, height);
 
@@ -183,7 +180,6 @@ class GuessUI {
         Button loadButton = new Button("Load saved Network");
         loadButton.setPrefSize(width, height);
         loadButton.setOnAction(event -> {
-            // TODO: 09/12/2019 add load network function
             loadFile(false);
             guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
         });
@@ -192,7 +188,6 @@ class GuessUI {
         createButton.setPrefSize(width, height);
         createButton.setOnAction(event -> {
             //train network
-            // TODO: 12-Dec-19  Redesign settings UI
             Stage settingsStage = new Stage();
             SettingsUI settings = new SettingsUI(settingsStage);
             settingsStage.showAndWait();
@@ -205,8 +200,7 @@ class GuessUI {
             }
 
         });
-        FlowPane flowPane = new FlowPane();
-        flowPane.getChildren().addAll(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
+        FlowPane flowPane = new FlowPane(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
         return flowPane;
     }
 
@@ -353,7 +347,7 @@ class GuessUI {
         ok.setPrefHeight(100);
         ok.setOnAction(actionEvent -> stage.hide());
         VBox v = new VBox(textArea, ok);
-        stage.setScene(new Scene(v,width,height));
+        stage.setScene(new Scene(v, width, height));
         stage.show();
     }
 }
