@@ -5,21 +5,23 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class LoadFile {
+    /*
+     * Reads the weight values from a text file and stores them in an array
+     */
     public double[] loadWeights(String fileName) {
         double[] weights = new double[0];
         int index = -1;
         try {
             try (Scanner sc = new Scanner(new File(fileName))) {
                 while ((sc.hasNext())) {
-                    if (index == -1) {
+                    if (index == -1) {          /*The first value is the number of weights in the network*/
                         int size = Integer.parseInt(sc.nextLine());
                         weights = new double[size];
-                        index++;
                     } else {
                         double weight = Double.parseDouble(sc.nextLine());
                         weights[index] = weight;
-                        index++;
                     }
+                    index++;
                 }
             }
         } catch (IOException e) {
@@ -28,6 +30,9 @@ public class LoadFile {
         return weights;
     }
 
+    /*
+     * Reads a text file and stores it as a single string
+     */
     public String loadTextFile(String fileDir) {
         String text = "";
         try {

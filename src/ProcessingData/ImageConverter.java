@@ -17,26 +17,24 @@ public class ImageConverter extends NeuralNetwork.Function {
     public double[] getInput() {
         int[] input = new int[784];
         try {
-            BufferedImage image = ImageIO.read(new File("Resources\\image.png"));//reads the image the user drew
-            image = getScaledImage(20, 20, image);//scales the image to a 20 by 20 png
-            image = getCenteredImage(image);//centres the image onto a 28 by 28 image
-            //temporary
-            int[][] copyOfImage = new int[28][28];
-            getPixelValues(input, image);
-            int k = 0;
-            for (int i = 0; i < 28; i++) {
-                for (int j = 0; j < 28; j++) {
-                    copyOfImage[i][j] = input[k];
-                    k++;
-                }
-            }
+            //Stage 1
+            BufferedImage image = ImageIO.read(new File("Resources\\image.png"));   /*reads the image the user drew*/
+            image = getScaledImage(20, 20, image);         /*scales the image to 20 by 20*/
+            image = getCenteredImage(image);        /*centres the image onto a 28 by 28 image*/
 
+            //Stage 2
+            int[][] copyOfImage = convertImageInto2dArray(input, image);
+
+            //Stage 3
             int[][] newImage = createNewImage(copyOfImage);
 
+            //Stage 4
             BufferedImage convertedImage = setPixelValues(newImage);
 
-            convertedImage = getScaledImage(28, 28, convertedImage);
+            //Stage 5
+            convertedImage = getScaledImage(28, 28, convertedImage);    /*scales the image to 28 by 28*/
 
+            //Stage 6
             getPixelValues(input, convertedImage);
             ImageIO.write(convertedImage, "png", new File("Resources\\ConvertedImage.png"));
         } catch (IOException e) {
@@ -47,6 +45,23 @@ public class ImageConverter extends NeuralNetwork.Function {
             inputDouble[i] = input[i];
         }
         return normalise(inputDouble);//normalises the input data
+    }
+
+    /*
+     * Converts a 1 dimensional array into a 2d array containing the pixel values
+     * of the image
+     */
+    private int[][] convertImageInto2dArray(int[] input, BufferedImage image) {
+        int[][] copyOfImage = new int[28][28];
+        getPixelValues(input, image);
+        int k = 0;
+        for (int i = 0; i < 28; i++) {
+            for (int j = 0; j < 28; j++) {
+                copyOfImage[i][j] = input[k];
+                k++;
+            }
+        }
+        return copyOfImage;
     }
 
     private BufferedImage setPixelValues(int[][] newImage) {
@@ -64,13 +79,17 @@ public class ImageConverter extends NeuralNetwork.Function {
         return convertedImage;
     }
 
+    /*
+     * Finds the up-most, left-most, right-most and down-most pixel of the image that the user
+     * drew and crops the image down
+     */
     private int[][] createNewImage(int[][] temp) {
         int upMost = getLeftAndUpMost(temp, true);
         int downMost = getRightAndDownMost(temp, true);
         int leftMost = getLeftAndUpMost(temp, false);
         int rightMost = getRightAndDownMost(temp, false);
 
-        int height = (downMost - upMost );
+        int height = (downMost - upMost);
         int width = (rightMost - leftMost);
         int padding_y = 8;
         int padding_x = 8;
@@ -91,6 +110,9 @@ public class ImageConverter extends NeuralNetwork.Function {
         return newImage;
     }
 
+    /*
+     * Fills a 2d array with 0's
+     */
     private void fillMatrix(int[][] newImage) {
         for (int i = 0; i < newImage.length; i++) {
             for (int j = 0; j < newImage[0].length; j++) {
@@ -99,6 +121,9 @@ public class ImageConverter extends NeuralNetwork.Function {
         }
     }
 
+    /*
+     * Return the right and down most pixel of the image drawn by the user
+     */
     private int getRightAndDownMost(int[][] temp2, boolean downMost) {
         for (int i = temp2.length - 1; i >= 0; i--) {
             for (int j = temp2.length - 1; j >= 0; j--) {
@@ -114,6 +139,9 @@ public class ImageConverter extends NeuralNetwork.Function {
         return 0;
     }
 
+    /*
+     * Return the left and up most pixel of the image drawn by the user
+     */
     private int getLeftAndUpMost(int[][] temp2, boolean upMost) {
         for (int i = 0; i < temp2.length; i++) {
             for (int j = 0; j < temp2.length; j++) {
@@ -129,6 +157,9 @@ public class ImageConverter extends NeuralNetwork.Function {
         return 0;
     }
 
+    /*
+     * Obtains the brightness of each pixel and stores it in the array 'input'
+     */
     private void getPixelValues(int[] input, BufferedImage image) {
         int i = 0;
         for (int y = 0; y < image.getHeight(); y++) {
@@ -140,7 +171,9 @@ public class ImageConverter extends NeuralNetwork.Function {
         }
     }
 
-
+    /*
+     * Scales an image to the given width and height
+     */
     private BufferedImage getScaledImage(int width, int height, BufferedImage image) {
         Image scaledImg = image.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING);
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

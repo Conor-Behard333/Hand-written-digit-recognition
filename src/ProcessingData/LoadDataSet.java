@@ -39,6 +39,9 @@ public class LoadDataSet extends Function {
         return trainingData;
     }
 
+    /*
+     * Shuffles the data set to improve the accuracy
+     */
     public void randomiseTrainingData() {
         for (int i = 0; i < batchSize; i++) {
             int rand = (int) (Math.random() * batchSize);
