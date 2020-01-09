@@ -3,6 +3,7 @@ package NeuralNetwork;
 class Bias_Neuron extends Function {
     private double[] weights;
 
+    /*Initialise the neuron*/
     Bias_Neuron(int neuronsInNextLayer) {
         this.weights = new double[neuronsInNextLayer];
         weights = randomiseWeights(neuronsInNextLayer);

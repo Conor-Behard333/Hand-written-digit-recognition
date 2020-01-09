@@ -61,7 +61,7 @@ class GuessUI {
         menu.getItems().add(instructions);
         MenuBar menuBar = new MenuBar(menu);
 
-        Canvas draw = new Canvas(405,520);
+        Canvas draw = new Canvas(405, 520);
         GraphicsContext draw_gc = draw.getGraphicsContext2D();
         draw.setTranslateX(20);
         draw.setTranslateY(20);
@@ -128,7 +128,7 @@ class GuessUI {
         Button saveButton = new Button("Save Network");
         saveButton.setPrefSize(width, height);
         saveButton.setOnAction(event -> {
-            Alert alert = new Function().conformationAlert("Save File?", "Do you want to save the current configuration?");
+            Alert alert = conformationAlert("Save File?", "Do you want to save the current configuration?");
             Optional<ButtonType> response = alert.showAndWait();
             if (response.get().getText().equalsIgnoreCase("yes")) {
                 double[] weights = network.getWeights();
@@ -161,7 +161,7 @@ class GuessUI {
             number.setText(Integer.toString(guess));
 
             if (trainButton.isSelected()) {
-                Alert alert = new Function().conformationAlert(null, "Did it guess right?");
+                Alert alert = conformationAlert(null, "Did it guess right?");
                 Optional<ButtonType> response = alert.showAndWait();
                 if (response.get().getText().equalsIgnoreCase("Yes")) {
                     for (int i = 0; i < 10; i++) {
@@ -169,9 +169,11 @@ class GuessUI {
                     }
                 } else if (response.get().getText().equalsIgnoreCase("no")) {
                     String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//available epoch values
-                    String target = new Function().getChoiceAlert(targetValues, "Train", "Which number did you draw");
-                    for (int i = 0; i < 10; i++) {
-                        network.train(input, new Function().getTarget(Integer.parseInt(target)));
+                    String target = getChoiceAlert(targetValues, "Train", "Which number did you draw");
+                    if (target != null) {
+                        for (int i = 0; i < 10; i++) {
+                            network.train(input, new Function().getTarget(Integer.parseInt(target)));
+                        }
                     }
                 }
             }
@@ -227,13 +229,15 @@ class GuessUI {
             saveFile = "(784_100H_10)[0.14].txt";
         } else {
             String[] files = getFileNames();
-            saveFile = new Function().getChoiceAlert(files, "Choose config file", "Choose your preset:");
+            saveFile = getChoiceAlert(files, "Choose config file", "Choose your preset:");
         }
-        int[] hiddenNeurons = getNumOfHiddenNeurons(saveFile);
-        double learningRate = getLearningRate(saveFile);
-        network = new Network(learningRate, 784, 10, hiddenNeurons);
-        double[] weights = new LoadFile().loadWeights("Resources\\SaveFiles\\" + saveFile);
-        network.setWeights(weights);
+        if (saveFile != null) {
+            int[] hiddenNeurons = getNumOfHiddenNeurons(saveFile);
+            double learningRate = getLearningRate(saveFile);
+            network = new Network(learningRate, 784, 10, hiddenNeurons);
+            double[] weights = new LoadFile().loadWeights("Resources\\SaveFiles\\" + saveFile);
+            network.setWeights(weights);
+        }
     }
 
     private double getLearningRate(String saveFile) {
@@ -349,5 +353,34 @@ class GuessUI {
         VBox v = new VBox(textArea, ok);
         stage.setScene(new Scene(v, width, height));
         stage.show();
+    }
+
+
+    /*
+     * Creates a pop up message giving the user options on what to pick.
+     * It returns the option chosen by the user, if they close the window it
+     * returns null.
+     */
+    private String getChoiceAlert(String[] options, String title, String contentText) {
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(options[0], options);
+        dialog.setTitle(title);
+        dialog.setContentText(contentText);
+        Optional<String> response = dialog.showAndWait();
+        return response.orElse(null);
+    }
+
+    /*
+     * Creates a pop up message giving the user information stored in
+     * the string contentText
+     */
+    private Alert conformationAlert(String title, String contentText) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setContentText(contentText);
+        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+        return alert;
     }
 }

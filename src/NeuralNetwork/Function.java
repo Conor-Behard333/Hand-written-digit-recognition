@@ -26,7 +26,7 @@ public class Function {
     }
 
     /*
-     * Returns a double array filled with random decimals
+     * Returns a double array filled with random decimal numbers
      * between -1 and 1
      */
     double[] randomiseWeights(int size) {
@@ -39,7 +39,7 @@ public class Function {
 
     /*
      * Returns the output of the softMax function for a specific neuron:
-     * output = (e^weightedSum[i]) / Σ(e^weightedSum[i])
+     * output of softmax = (e^weightedSum[i]) / Σ(e^weightedSum[i])
      */
     double softMax(double[] weightedSums, int neuron) {
         double sum = getSumOfWeightedSum(weightedSums);
@@ -47,6 +47,10 @@ public class Function {
         return output[neuron];
     }
 
+    /*
+     * Returns a double array which contains the final outputs for
+     * each output neuron calculated by e^weightedSum / sum of weightedSums
+     */
     private double[] getOutputArray(double[] weightedSums, double sum) {
         double[] output = new double[weightedSums.length];
         for (int i = 0; i < output.length; i++) {
@@ -55,6 +59,9 @@ public class Function {
         return output;
     }
 
+    /*
+     * Returns the sum of the double array weightedSums
+     */
     private double getSumOfWeightedSum(double[] weightedSums) {
         double sum = 0;
         for (double weightedSum : weightedSums) {
@@ -92,24 +99,23 @@ public class Function {
         return max;
     }
 
+    /*
+     * Tunes the weights for the bias neuron
+     */
     void tuneBias(int numOfNeurons, Bias_Neuron bias, double learningRate, double gradient) {
         for (int i = 0; i < numOfNeurons; i++) {
             bias.setWeight(learningRate * 1 * gradient, i);
         }
     }
 
+    /*
+     * Returns the target values for the output neurons depending
+     * on the label it is given
+     */
     public double[] getTarget(int label) {
-        double[][] targets = {{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 1, 0, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 1, 0},
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}};
-        return targets[label];
+        double[] target = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        target[label] = 1;
+        return target;
     }
 
     /*
@@ -126,29 +132,5 @@ public class Function {
      */
     double derivative(double x) {
         return x * (1 - x);
-    }
-
-    public String getChoiceAlert(String[] options, String title, String contentText) {
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(options[0], options);
-        dialog.setTitle(title);
-        dialog.setContentText(contentText);
-        Optional<String> response = dialog.showAndWait();
-        if (response.isPresent()) {
-            return response.get();
-        } else {
-            System.exit(0);
-        }
-        return null;
-    }
-
-    public Alert conformationAlert(String title, String contentText) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setContentText(contentText);
-        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
-        return alert;
     }
 }
