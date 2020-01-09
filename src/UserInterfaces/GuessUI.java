@@ -41,7 +41,79 @@ class GuessUI {
     private Stage guess;
 
     GuessUI() {
-        loadFile(true);
+        guess = new Stage();
+        guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
+        guess.setResizable(false);
+
+        loadFile(true); /*Load the default network config*/
+
+        //set up user interface
+        ConfidenceUI confidenceUI = setUpConfidenceWindow();
+
+        BorderPane mainWindow = getMainWindow(confidenceUI);
+
+        Scene scene = new Scene(mainWindow, 895, 600);
+        scene.getStylesheets().add("Styles.css");
+
+
+        guess.setScene(scene);
+        guess.show();
+    }
+
+    private BorderPane getMainWindow(ConfidenceUI confidenceUI) {
+        BorderPane borderPane = new BorderPane();
+
+        //Create menubar
+        MenuBar menuBar = getMenuBar();
+
+        //Create canvas
+        Canvas draw = new Canvas(405, 520);
+        GraphicsContext draw_gc = draw.getGraphicsContext2D();
+        draw.setTranslateX(20);
+        draw.setTranslateY(20);
+
+        //Create image pane
+        Text number = getNumber();
+        Pane imagePane = getImagePane(number);
+
+        //Create draw pane
+        Pane drawPane = addDrawCanvas(draw, draw_gc);
+
+        //Add buttons
+        FlowPane buttons = addButtons(draw, draw_gc, number, confidenceUI);
+
+        //Set the layout for each pane
+        borderPane.setTop(menuBar);
+        borderPane.setLeft(drawPane);
+        borderPane.setRight(imagePane);
+        borderPane.setBottom(buttons);
+        return borderPane;
+    }
+
+    private MenuBar getMenuBar() {
+        Menu menu = new Menu("Tips");
+        MenuItem instructions = new MenuItem("Instructions");
+        instructions.setOnAction(event -> showInstruction());
+        menu.getItems().add(instructions);
+        return new MenuBar(menu);
+    }
+
+    private Text getNumber() {
+        Text number = new Text("");
+        number.setFont(Font.font("Dialog", FontWeight.NORMAL, FontPosture.REGULAR, 500));
+        number.setX(100);
+        number.setY(430);
+        return number;
+    }
+
+    private Pane getImagePane(Text number) {
+        Pane pane = new Pane(number);
+        pane.getStyleClass().add("canvas");
+        pane.setPrefWidth(465);
+        return pane;
+    }
+
+    private ConfidenceUI setUpConfidenceWindow() {
         ConfidenceUI confidenceUI = new ConfidenceUI();
         Stage prediction = new Stage();
         prediction.setTitle("Neural Network - Confidence");
@@ -50,44 +122,7 @@ class GuessUI {
         prediction.setX(1415);
         prediction.setY(135);
         prediction.show();
-
-        guess = new Stage();
-        guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
-        guess.setResizable(false);
-
-        Menu menu = new Menu("Tips");
-        MenuItem instructions = new MenuItem("Instructions");
-        instructions.setOnAction(event -> showInstruction());
-        menu.getItems().add(instructions);
-        MenuBar menuBar = new MenuBar(menu);
-
-        Canvas draw = new Canvas(405, 520);
-        GraphicsContext draw_gc = draw.getGraphicsContext2D();
-        draw.setTranslateX(20);
-        draw.setTranslateY(20);
-
-        Text number = new Text("");
-        number.setFont(Font.font("Dialog", FontWeight.NORMAL, FontPosture.REGULAR, 500));
-        number.setX(100);
-        number.setY(430);
-
-        BorderPane borderPane = new BorderPane();
-        FlowPane flowPane = addButtons(draw, draw_gc, number, confidenceUI);
-        Pane drawPane = addDrawCanvas(draw, draw_gc);
-        Pane imagePane = new Pane(number);
-
-        borderPane.setLeft(drawPane);
-        borderPane.setBottom(flowPane);
-        borderPane.setRight(imagePane);
-        borderPane.setTop(menuBar);
-        imagePane.setPrefWidth(465);
-
-        Scene scene = new Scene(borderPane, 895, 600);
-        drawPane.getStyleClass().add("canvas");
-        imagePane.getStyleClass().add("canvas");
-        scene.getStylesheets().add("Styles.css");
-        guess.setScene(scene);
-        guess.show();
+        return confidenceUI;
     }
 
     private Pane addDrawCanvas(Canvas draw, GraphicsContext gc) {
@@ -110,6 +145,7 @@ class GuessUI {
             gc.stroke();
         });
         pane.getChildren().addAll(draw);
+        pane.getStyleClass().add("canvas");
         return pane;
     }
 
@@ -118,17 +154,118 @@ class GuessUI {
         ToggleButton trainButton = new ToggleButton("Train");
         trainButton.setPrefSize(width, height);
 
-        Button clearCanvasButton = new Button("Clear Canvas");
-        clearCanvasButton.setPrefSize(width, height);
-        clearCanvasButton.setOnAction(event -> {
-            draw_gc.clearRect(0, 0, draw.getWidth(), draw.getHeight());
-            number.setText("");
-        });
+        Button clearButton = getClearButton(draw, draw_gc, number, width, height);
 
+        Button saveButton = getSaveButton(width, height);
+
+        Button guessButton = getGuessButton(draw, number, confidenceUI, width, height, trainButton);
+
+        Button loadButton = getLoadButton(width, height);
+
+        Button createButton = getCreateButton(width, height);
+
+        return new FlowPane(trainButton, clearButton, saveButton, loadButton, createButton, guessButton);
+    }
+
+    private Button getCreateButton(int width, int height) {
+        Button createButton = new Button("Create new Network");
+        createButton.setPrefSize(width, height);
+        createButton.setOnAction(event -> {
+            //train network
+            Stage settingsStage = new Stage();
+            SettingsUI settings = new SettingsUI(settingsStage);
+            settingsStage.showAndWait();
+            try {
+                if (!settingsStage.isShowing()) {
+                    trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(),
+                            settings.getLearningRate());
+                    guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
+                }
+            } catch (NullPointerException ignored) {
+            }
+
+        });
+        return createButton;
+    }
+
+    private Button getLoadButton(int width, int height) {
+        Button loadButton = new Button("Load saved Network");
+        loadButton.setPrefSize(width, height);
+        loadButton.setOnAction(event -> {
+            loadFile(false);
+            guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
+        });
+        return loadButton;
+    }
+
+    private Button getGuessButton(Canvas draw, Text number, ConfidenceUI confidenceUI, int width, int height,
+                                  ToggleButton trainButton) {
+        Button guessButton = new Button("Guess");
+        guessButton.setPrefSize(width, height);
+        guessButton.setOnAction(event -> {
+            File file = new File("Resources\\image.png");
+            getDrawing(draw, file);
+
+            ImageConverter imageConverter = new ImageConverter();
+            double[] input = imageConverter.getInput();
+            int guess = inputImage(number, confidenceUI, input);        /*Inputs image into neural network*/
+
+            if (trainButton.isSelected()) {
+                Alert alert = conformationAlert(null, "Did it guess right?");
+                Optional<ButtonType> response = alert.showAndWait();
+                if (response.get().getText().equalsIgnoreCase("Yes")) {
+                    retrain(true, input, guess);
+                } else if (response.get().getText().equalsIgnoreCase("no")) {
+                    retrain(false, input, guess);
+                }
+            }
+        });
+        return guessButton;
+    }
+
+    private int inputImage(Text number, ConfidenceUI confidenceUI, double[] input) {
+        double[] output = network.feedForward(input);
+        int guess = network.getGuess(output);
+        confidenceUI.updateValues(output);
+        number.setText(Integer.toString(guess));
+        return guess;
+    }
+
+    private void getDrawing(Canvas draw, File file) {
+        try {
+            WritableImage writableImage = new WritableImage((int) Math.round(draw.getWidth()),
+                    (int) Math.round(draw.getHeight()));
+            draw.snapshot(null, writableImage);
+            invertPixelValues(writableImage, draw);
+            BufferedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+            ImageIO.write(renderedImage, "png", file);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void retrain(boolean correct, double[] input, int guess) {
+        if (correct) {
+            for (int i = 0; i < 10; i++) {
+                network.train(input, new Function().getTarget(guess));
+            }
+        } else {
+            String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};     /*available epoch values*/
+            String target = getChoiceAlert(targetValues, "Train", "Which number did you draw");
+            if (target != null) {
+                for (int i = 0; i < 10; i++) {
+                    network.train(input, new Function().getTarget(Integer.parseInt(target)));
+                }
+            }
+        }
+    }
+
+    private Button getSaveButton(int width, int height) {
         Button saveButton = new Button("Save Network");
         saveButton.setPrefSize(width, height);
         saveButton.setOnAction(event -> {
-            Alert alert = conformationAlert("Save File?", "Do you want to save the current configuration?");
+            Alert alert = conformationAlert("Save File?",
+                    "Do you want to save the current configuration?");
             Optional<ButtonType> response = alert.showAndWait();
             if (response.get().getText().equalsIgnoreCase("yes")) {
                 double[] weights = network.getWeights();
@@ -139,71 +276,17 @@ class GuessUI {
                 done.showAndWait();
             }
         });
+        return saveButton;
+    }
 
-        Button guessButton = new Button("Guess");
-        guessButton.setPrefSize(width, height);
-        guessButton.setOnAction(event -> {
-            File file = new File("Resources\\image.png");
-            try {
-                WritableImage writableImage = new WritableImage((int) Math.round(draw.getWidth()), (int) Math.round(draw.getHeight()));
-                draw.snapshot(null, writableImage);
-                invertPixelValues(writableImage, draw);
-                BufferedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-                ImageIO.write(renderedImage, "png", file);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-            ImageConverter imageConverter = new ImageConverter();
-            double[] input = imageConverter.getInput();
-            double[] output = network.feedForward(input);
-            int guess = network.getGuess(output);
-            confidenceUI.updateValues(output);
-            number.setText(Integer.toString(guess));
-
-            if (trainButton.isSelected()) {
-                Alert alert = conformationAlert(null, "Did it guess right?");
-                Optional<ButtonType> response = alert.showAndWait();
-                if (response.get().getText().equalsIgnoreCase("Yes")) {
-                    for (int i = 0; i < 10; i++) {
-                        network.train(input, new Function().getTarget(guess));
-                    }
-                } else if (response.get().getText().equalsIgnoreCase("no")) {
-                    String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};//available epoch values
-                    String target = getChoiceAlert(targetValues, "Train", "Which number did you draw");
-                    if (target != null) {
-                        for (int i = 0; i < 10; i++) {
-                            network.train(input, new Function().getTarget(Integer.parseInt(target)));
-                        }
-                    }
-                }
-            }
+    private Button getClearButton(Canvas draw, GraphicsContext draw_gc, Text number, int width, int height) {
+        Button clearCanvasButton = new Button("Clear Canvas");
+        clearCanvasButton.setPrefSize(width, height);
+        clearCanvasButton.setOnAction(event -> {
+            draw_gc.clearRect(0, 0, draw.getWidth(), draw.getHeight());
+            number.setText("");
         });
-
-        Button loadButton = new Button("Load saved Network");
-        loadButton.setPrefSize(width, height);
-        loadButton.setOnAction(event -> {
-            loadFile(false);
-            guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
-        });
-
-        Button createButton = new Button("Create new Network");
-        createButton.setPrefSize(width, height);
-        createButton.setOnAction(event -> {
-            //train network
-            Stage settingsStage = new Stage();
-            SettingsUI settings = new SettingsUI(settingsStage);
-            settingsStage.showAndWait();
-            try {
-                if (!settingsStage.isShowing()) {
-                    trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(), settings.getLearningRate());
-                    guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
-                }
-            } catch (NullPointerException ignored) {
-            }
-
-        });
-        FlowPane flowPane = new FlowPane(trainButton, clearCanvasButton, saveButton, loadButton, createButton, guessButton);
-        return flowPane;
+        return clearCanvasButton;
     }
 
     private void trainNetwork(int[] hiddenNeurons, int batchSize, int epochs, double learningRate) {

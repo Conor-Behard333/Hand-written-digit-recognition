@@ -13,6 +13,9 @@ class ConfidenceUI {
     private ProgressBar[] progressBars = new ProgressBar[10];
     private Label[] labels = new Label[10];
 
+    /*
+     * Updates the prediction values shown by the progress bars for the output neurons
+     */
     void updateValues(double[] output) {
         DecimalFormat df = new DecimalFormat("#.##");
         for (int i = 0; i < output.length; i++) {
@@ -22,7 +25,9 @@ class ConfidenceUI {
         }
     }
 
-
+    /*
+     * Sets the colour of the progress bar depending on the confidence of the network for that output value
+     */
     private String getStyle(double output) {
         if (output >= 0 && output < 20) {
             return "-fx-accent: #FF1000";
@@ -36,16 +41,15 @@ class ConfidenceUI {
         return null;
     }
 
+    /*
+     * Creates the scene for the confidence panel
+     */
     Scene getScene() {
-        for (int i = 0; i < progressBars.length; i++) {
-            labels[i] = new Label(i + ": ");
-            labels[i].setFont(new Font(30));
-            progressBars[i] = new ProgressBar(0);
-            progressBars[i].setPrefWidth(200);
-            progressBars[i].setPrefHeight(20);
-        }
+        initialiseLabelsAndProgressBars();
+
         VBox barsBox = new VBox(progressBars);
         VBox labelBox = new VBox(labels);
+
         barsBox.setTranslateY(13);
         barsBox.setSpacing(42);
         labelBox.setSpacing(17);
@@ -54,5 +58,15 @@ class ConfidenceUI {
         HBox panel = new HBox(labelBox, barsBox);
         panel.setSpacing(50);
         return new Scene(panel, 400, 600);
+    }
+
+    private void initialiseLabelsAndProgressBars() {
+        for (int i = 0; i < progressBars.length; i++) {
+            labels[i] = new Label(i + ": ");
+            labels[i].setFont(new Font(30));
+            progressBars[i] = new ProgressBar(0);
+            progressBars[i].setPrefWidth(200);
+            progressBars[i].setPrefHeight(20);
+        }
     }
 }
