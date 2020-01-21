@@ -6,8 +6,10 @@ import ProcessingData.ImageConverter;
 import ProcessingData.LoadDataSet;
 import ProcessingData.LoadFile;
 import ProcessingData.SaveFile;
+import com.sun.javafx.stage.WindowPeerListener;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,6 +28,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,51 +42,52 @@ import java.util.regex.Pattern;
 class GuessUI {
     private Network network;
     private Stage guess;
-
+    
     GuessUI() {
         guess = new Stage();
         guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
         guess.setResizable(false);
-
+        
         loadFile(true); /*Load the default network config*/
-
+        
         //set up user interface
         ConfidenceUI confidenceUI = setUpConfidenceWindow();
-
+        
         BorderPane mainWindow = getMainWindow(confidenceUI);
-
+        
         Scene scene = new Scene(mainWindow, 895, 600);
         scene.getStylesheets().add("Styles.css");
-
+        
+        guess.setOnCloseRequest(event -> System.exit(0));//exit program is window is closed
         guess.setScene(scene);
         guess.show();
     }
-
+    
     /*
      * Creates all the components that are in the main window
      */
     private BorderPane getMainWindow(ConfidenceUI confidenceUI) {
         BorderPane borderPane = new BorderPane();
-
+        
         //Create Menu bar
         MenuBar menuBar = getMenuBar();
-
+        
         //Create canvas
         Canvas draw = new Canvas(405, 520);
         GraphicsContext draw_gc = draw.getGraphicsContext2D();
         draw.setTranslateX(20);
         draw.setTranslateY(20);
-
+        
         //Create image pane
         Text number = getNumber();
         Pane imagePane = getImagePane(number);
-
+        
         //Create draw pane
         Pane drawPane = addDrawCanvas(draw, draw_gc);
-
+        
         //Add buttons
         FlowPane buttons = addButtons(draw, draw_gc, number, confidenceUI);
-
+        
         //Set the layout for each pane
         borderPane.setTop(menuBar);
         borderPane.setLeft(drawPane);
@@ -91,7 +95,7 @@ class GuessUI {
         borderPane.setBottom(buttons);
         return borderPane;
     }
-
+    
     /*
      * Returns a MenuBar which gives
      */
@@ -102,7 +106,7 @@ class GuessUI {
         menu.getItems().add(instructions);
         return new MenuBar(menu);
     }
-
+    
     /*
      * Returns a Text object which displays the number the network has predicted
      */
@@ -113,7 +117,7 @@ class GuessUI {
         number.setY(430);
         return number;
     }
-
+    
     /*
      * Returns the pane which contains the displayed number
      */
@@ -123,7 +127,7 @@ class GuessUI {
         pane.setPrefWidth(465);
         return pane;
     }
-
+    
     /*
      * Creates the confidence window
      */
@@ -138,7 +142,7 @@ class GuessUI {
         prediction.show();
         return confidenceUI;
     }
-
+    
     /*
      * Creates a pane that the user can draw on
      */
@@ -147,7 +151,7 @@ class GuessUI {
         gc.setLineCap(StrokeLineCap.ROUND);
         gc.setLineJoin(StrokeLineJoin.ROUND);
         Line line = new Line();
-
+        
         //when the mouse is pressed create the start of the line
         draw.setOnMousePressed(event -> {
             gc.beginPath();
@@ -157,48 +161,48 @@ class GuessUI {
             line.setStartY(event.getY());
             gc.closePath();
         });
-
+        
         //when the user drags the mouse move the line to the location of the mouse
         draw.setOnMouseDragged(event -> {
             gc.lineTo(event.getX(), event.getY());
             gc.stroke();
         });
-
+        
         Pane pane = new Pane();
         pane.getChildren().addAll(draw);
         pane.getStyleClass().add("canvas");
         return pane;
     }
-
+    
     /*
      * Create all the buttons needed and add them to a FlowPane
      */
     private FlowPane addButtons(Canvas draw, GraphicsContext draw_gc, Text number, ConfidenceUI confidenceUI) {
         int width = 151, height = 50;
-
+        
         ToggleButton trainButton = new ToggleButton("Train");
         trainButton.setPrefSize(width, height);
-
+        
         Button clearButton = getClearButton(draw, draw_gc, number, width, height);
-
+        
         Button saveButton = getSaveButton(width, height);
-
+        
         Button loadButton = getLoadButton(width, height);
-
+        
         Button createButton = getCreateButton(width, height);
-
+        
         Button guessButton = getGuessButton(draw, number, confidenceUI, width, height, trainButton);
-
+        
         return new FlowPane(trainButton, clearButton, saveButton, loadButton, createButton, guessButton);
     }
-
+    
     /*
      * Creates a button that when pressed gives the user the option to create their own network
      */
     private Button getCreateButton(int width, int height) {
         Button createButton = new Button("Create new Network");
         createButton.setPrefSize(width, height);
-
+        
         createButton.setOnAction(event -> {
             Stage settingsStage = new Stage();
             SettingsUI settings = new SettingsUI(settingsStage);
@@ -212,21 +216,21 @@ class GuessUI {
         });
         return createButton;
     }
-
+    
     /*
      * Creates a button that allows the user to load any network that has been saved
      */
     private Button getLoadButton(int width, int height) {
         Button loadButton = new Button("Load saved Network");
         loadButton.setPrefSize(width, height);
-
+        
         loadButton.setOnAction(event -> {
             loadFile(false);
             guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
         });
         return loadButton;
     }
-
+    
     /*
      * Creates a button that passes the image the user drew into the network
      * and displays the networks guess to the user
@@ -235,19 +239,24 @@ class GuessUI {
                                   ToggleButton trainButton) {
         Button guessButton = new Button("Guess");
         guessButton.setPrefSize(width, height);
-
+        
         guessButton.setOnAction(event -> {
-            getDrawing(draw, new File("Resources\\image.png"));
-
+            getDrawing(draw, new File("Resources\\Images\\image.png"));
+            
             double[] input = new ImageConverter().getInput();
-            int guess = inputImageIntoNetwork(number, confidenceUI, input);
-
+            int guess = 0;
+            if (Double.isNaN(input[0])) {
+                Alert alert = conformationAlert("Please draw a number", "Please draw a number from 0 - 9", false);
+                alert.showAndWait();
+            } else {
+                guess = inputImageIntoNetwork(number, confidenceUI, input);/*Inputs image into neural network*/
+            }
             /*
              * If the train button is toggled then ask the user whether the network guessed correctly
              * if it was correct then it will retrain the network
              */
             if (trainButton.isSelected()) {
-                Alert alert = conformationAlert(null, "Did it guess right?");
+                Alert alert = conformationAlert(null, "Did it guess right?", true);
                 Optional<ButtonType> response = alert.showAndWait();
                 if (response.get().getText().equalsIgnoreCase("Yes")) {
                     retrain(true, input, guess);
@@ -258,7 +267,7 @@ class GuessUI {
         });
         return guessButton;
     }
-
+    
     /*
      * Feeds the image (stored as a double array) the user has drawn into the network
      * and returns the final guess of the network
@@ -270,7 +279,7 @@ class GuessUI {
         number.setText(Integer.toString(guess));
         return guess;
     }
-
+    
     /*
      * Screenshots the image the user has drawn, inverts the pixels as the network is trained with images with
      * black backgrounds and white ink and the user has drawn with a white background and black ink,
@@ -288,7 +297,7 @@ class GuessUI {
             ex.printStackTrace();
         }
     }
-
+    
     /*
      * Trains the network 20 times based on whether it's initial guess was correct,
      * if it was correct then the network is trained with the target value it guessed,
@@ -310,17 +319,17 @@ class GuessUI {
             }
         }
     }
-
+    
     /*
      * Creates a button that allows the user to save the current neural network that is being used
      */
     private Button getSaveButton(int width, int height) {
         Button saveButton = new Button("Save Network");
         saveButton.setPrefSize(width, height);
-
+        
         saveButton.setOnAction(event -> {
             Alert alert = conformationAlert("Save File?",
-                    "Do you want to save the current configuration?");
+                    "Do you want to save the current configuration?", true);
             Optional<ButtonType> response = alert.showAndWait();
             if (response.get().getText().equalsIgnoreCase("yes")) {
                 SaveNetwork();
@@ -328,35 +337,35 @@ class GuessUI {
         });
         return saveButton;
     }
-
+    
     /*
      * Saves the weights in a text file and names the file with the config of the network
      */
     private void SaveNetwork() {
         double[] weights = network.getWeights();
         new SaveFile().save("Resources\\SaveFiles\\" + network.getConfig(), weights);
-
+        
         //Lets the user know that the file has been saved
         Alert done = new Alert(Alert.AlertType.INFORMATION);
         done.setTitle("File saved!");
         done.setContentText("The file has been saved and named: " + network.getConfig());
         done.showAndWait();
     }
-
+    
     /*
      * Creates a button that clears the canvas and the guess display pane
      */
     private Button getClearButton(Canvas draw, GraphicsContext draw_gc, Text number, int width, int height) {
         Button clearCanvasButton = new Button("Clear Canvas");
         clearCanvasButton.setPrefSize(width, height);
-
+        
         clearCanvasButton.setOnAction(event -> {
             draw_gc.clearRect(0, 0, draw.getWidth(), draw.getHeight());
             number.setText("");
         });
         return clearCanvasButton;
     }
-
+    
     /*
      * Trains a network with hyper-parameters provided by the user
      * i.e. hidden neurons, batch size, epochs and learning rate
@@ -364,14 +373,14 @@ class GuessUI {
     private void trainNetwork(int[] hiddenNeurons, int batchSize, int epochs, double learningRate) {
         Stage loadingStage = new Stage();
         ProgressBar loading = getLoadingBar(loadingStage);
-
+        
         network = new Network(learningRate, 784, 10, hiddenNeurons);
         Task train = train(batchSize, epochs);
-
+        
         loading.progressProperty().bind(train.progressProperty());      /*Binds the two process*/
         new Thread(train).start();
         loadingStage.show();        /*Displays the loading window*/
-
+        
         //stop the training process and close the loading window once the training is complete
         train.setOnSucceeded(closeEvent -> {
             loadingStage.close();
@@ -379,7 +388,7 @@ class GuessUI {
         });
         loadingStage.setOnCloseRequest(closeEvent -> System.exit(0));
     }
-
+    
     /*
      * Creates a thread which trains the network and updates the progress bar simultaneously
      */
@@ -390,7 +399,7 @@ class GuessUI {
                 double max = batchSize * epochs;
                 double current = 0;
                 //Load the training data
-                LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\mnist_train.csv");
+                LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\Misc\\mnist_train.csv");
                 //Trains the network
                 for (int j = 0; j < epochs; j++) {
                     for (int i = 0; i < batchSize; i++) {
@@ -404,7 +413,7 @@ class GuessUI {
             }
         };
     }
-
+    
     /*
      * Creates a loading bar for the loading stage when creating a network
      */
@@ -423,7 +432,7 @@ class GuessUI {
         loadingStage.setScene(loadingScene);
         return loading;
     }
-
+    
     /*
      * Loads a network that the user chooses, if the program is first starting up then a default
      * file is loaded
@@ -446,7 +455,7 @@ class GuessUI {
             network.setWeights(weights);
         }
     }
-
+    
     /*
      * Returns the learning rate for the network chosen by the user
      */
@@ -460,7 +469,7 @@ class GuessUI {
         }
         return Double.parseDouble(saveFile.substring(pos + 1, saveFile.length() - 5));
     }
-
+    
     /*
      * Returns the names of all the files in the folder 'SaveFiles'
      */
@@ -473,7 +482,7 @@ class GuessUI {
         }
         return fileNames;
     }
-
+    
     /*
      * Returns the number of hidden neurons that are in the network chosen by the user
      */
@@ -488,7 +497,7 @@ class GuessUI {
         }
         return temp.stream().mapToInt(i -> i).toArray();
     }
-
+    
     /*
      * Returns the topology of the network (how many neurons are in each layer and how many hidden layers)
      */
@@ -502,8 +511,8 @@ class GuessUI {
         saveFile = saveFile.substring(1, end);
         return saveFile;
     }
-
-
+    
+    
     /*
      * Inverts the pixel brightness (colour) of an image
      */
@@ -520,24 +529,24 @@ class GuessUI {
             }
         }
     }
-
-
+    
+    
     /*
      * Displays the instructions to the user which are stored in a text file
      */
     private void showInstruction() {
         Stage stage = new Stage();
         int width = 1000, height = 1000;
-
+        
         TextArea instructions = getInstructions(width, height);
-
+        
         Button okButton = getOkButton(stage);
-
+        
         VBox v = new VBox(instructions, okButton);
         stage.setScene(new Scene(v, width, height));
         stage.show();
     }
-
+    
     /*
      * Creates a textArea that displays the instructions
      */
@@ -545,11 +554,11 @@ class GuessUI {
         TextArea instructions = new TextArea();
         instructions.setPrefSize(width, height);
         instructions.setEditable(false);
-        instructions.setText(new LoadFile().loadTextFile("Resources\\Instructions.txt"));
+        instructions.setText(new LoadFile().loadTextFile("Resources\\Misc\\Instructions.txt"));
         instructions.setStyle("-fx-font-size: 1.5em;");
         return instructions;
     }
-
+    
     /*
      * Creates a Button that closes the window once pressed
      */
@@ -561,8 +570,8 @@ class GuessUI {
         okButton.setOnAction(actionEvent -> stage.close());
         return okButton;
     }
-
-
+    
+    
     /*
      * Creates a pop up message giving the user options on what to pick.
      * It returns the option chosen by the user, if they close the window it
@@ -575,19 +584,24 @@ class GuessUI {
         Optional<String> response = dialog.showAndWait();
         return response.orElse(null);
     }
-
+    
     /*
      * Creates a pop up message giving the user information stored in
      * the string contentText
      */
-    private Alert conformationAlert(String title, String contentText) {
+    private Alert conformationAlert(String title, String contentText, boolean choice) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setContentText(contentText);
-        ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
-        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
-        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-        alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+        if (choice) {
+            ButtonType yesButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+            ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(yesButton, noButton, cancelButton);
+        } else {
+            ButtonType okButton = new ButtonType("Ok", ButtonBar.ButtonData.YES);
+            alert.getButtonTypes().setAll(okButton);
+        }
         return alert;
     }
 }
