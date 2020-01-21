@@ -24,10 +24,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 .idea
+out
 *.iml
-Resources/mnist_train.csv
-
-
-out/production/NEA_Project/META-INF/
-Resources/ImageTest.png
-Resources/image.png
+*.csv
+Resources/Misc/mnist_train.csv
