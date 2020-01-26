@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
 
 class SettingsUI {
     private ArrayList<TextArea> textAreas = new ArrayList<>();
-
+    
     private int batchSize = -1;
     private int epochs = -1;
     private int[] hiddenNeurons = null;
     private double learningRate = -1;
-
+    
     /*
      *
      */
@@ -30,7 +30,7 @@ class SettingsUI {
         stage.setResizable(false);
         stage.setScene(scene);
     }
-
+    
     /*
      * Creates the labels and input boxes for the interface and places them in a H box
      */
@@ -38,22 +38,22 @@ class SettingsUI {
         Label tempLabel = new Label(label);
         tempLabel.setTranslateX(5);
         tempLabel.setTranslateY(20);
-
+        
         TextArea tempText = new TextArea();
         tempText.setPrefSize(200, 25);
         tempText.setTranslateX(x);
-
+        
         Font font = new Font(22);
         tempText.setFont(font);
         tempLabel.setFont(font);
-
+        
         tempText.setTooltip(new Tooltip(tooltip));
         HBox hBox = new HBox(tempLabel, tempText);
         hBox.setTranslateY(5);
         textAreas.add(tempText);
         return hBox;
     }
-
+    
     /*
      * Creates each row of the inputs for the interface
      */
@@ -62,13 +62,13 @@ class SettingsUI {
         HBox batchSizeHBox = getHBox("Batch Size: ", "Integer between 1 and 60,000", 86);
         HBox epochsHBox = getHBox("Epochs: ", "Integer between 1 and 10", 116);
         HBox lrHBox = getHBox("Learning rate: ", "Decimal between 0.0 and 1.0", 57);
-
+        
         Button confirm = getConfirmButton(stage);
         VBox vBox = new VBox(hiddenNeuronsHBox, batchSizeHBox, epochsHBox, lrHBox, confirm);
         vBox.setSpacing(10);
         return vBox;
     }
-
+    
     /*
      * Returns a confirm button that when clicked checks if the user has entered valid inputs and then closes the window
      */
@@ -83,7 +83,7 @@ class SettingsUI {
              * Checks each input box for valid inputs and throws exceptions if the user has not
              * entered the appropriate data type with an error explaining why
              */
-
+            
             try {
                 getNeurons(textAreas.get(0).getText());
                 if (checkValid(Integer.parseInt(textAreas.get(1).getText()), 60000)) {
@@ -110,21 +110,21 @@ class SettingsUI {
         });
         return confirm;
     }
-
+    
     /*
      * Checks if the integer values are valid (in range)
      */
     private boolean checkValid(int input, int upperBound) {
         return input >= 1 && input <= upperBound;
     }
-
+    
     /*
      * Checks if the double values are valid (in range)
      */
     private boolean checkValid(double input) {
         return input > 0 && input <= 1;
     }
-
+    
     /*
      * Converts the user's input from a string into an int and adds each one into an int array
      */
@@ -144,7 +144,7 @@ class SettingsUI {
             }
         }
     }
-
+    
     private String removeWhitespace(String input) {
         StringBuilder newInput = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
@@ -154,19 +154,19 @@ class SettingsUI {
         }
         return newInput.toString();
     }
-
+    
     public int getBatchSize() {
         return batchSize;
     }
-
+    
     public int getEpochs() {
         return epochs;
     }
-
+    
     public int[] getHiddenNeurons() {
         return hiddenNeurons;
     }
-
+    
     public double getLearningRate() {
         return learningRate;
     }

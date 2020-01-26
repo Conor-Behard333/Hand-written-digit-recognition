@@ -1,6 +1,5 @@
 package UserInterfaces;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -13,7 +12,7 @@ import java.text.DecimalFormat;
 class ConfidenceUI {
     private ProgressBar[] progressBars = new ProgressBar[10];
     private Label[] labels = new Label[10];
-
+    
     /*
      * Updates the prediction values shown by the progress bars for the output neurons
      */
@@ -25,7 +24,7 @@ class ConfidenceUI {
             progressBars[i].setStyle(getStyle(Double.parseDouble(df.format(output[i] * 100))));
         }
     }
-
+    
     /*
      * Sets the colour of the progress bar depending on the confidence of the network for that output value
      */
@@ -41,26 +40,26 @@ class ConfidenceUI {
         }
         return null;
     }
-
+    
     /*
      * Creates the scene for the confidence panel
      */
     Scene getScene() {
         initialiseLabelsAndProgressBars();
-
+        
         VBox barsBox = new VBox(progressBars);
         VBox labelBox = new VBox(labels);
-
+        
         barsBox.setTranslateY(13);
         barsBox.setSpacing(42);
         labelBox.setSpacing(17);
         labelBox.setTranslateX(15);
-
+        
         HBox panel = new HBox(labelBox, barsBox);
         panel.setSpacing(50);
         return new Scene(panel, 400, 600);
     }
-
+    
     private void initialiseLabelsAndProgressBars() {
         for (int i = 0; i < progressBars.length; i++) {
             labels[i] = new Label(i + ": ");
