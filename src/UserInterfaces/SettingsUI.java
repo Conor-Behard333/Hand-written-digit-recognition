@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 class SettingsUI {
     private ArrayList<TextArea> textAreas = new ArrayList<>();
 
-    private int batchSize;
-    private int epochs;
-    private int[] hiddenNeurons;
-    private double learningRate;
+    private int batchSize = -1;
+    private int epochs = -1;
+    private int[] hiddenNeurons = null;
+    private double learningRate = -1;
 
     /*
      *

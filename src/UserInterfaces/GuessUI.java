@@ -6,10 +6,8 @@ import ProcessingData.ImageConverter;
 import ProcessingData.LoadDataSet;
 import ProcessingData.LoadFile;
 import ProcessingData.SaveFile;
-import com.sun.javafx.stage.WindowPeerListener;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -28,7 +26,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import sun.applet.AppletResourceLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -42,6 +40,7 @@ import java.util.regex.Pattern;
 class GuessUI {
     private Network network;
     private Stage guess;
+    private Stage confidence = new Stage();
     
     GuessUI() {
         guess = new Stage();
@@ -133,13 +132,12 @@ class GuessUI {
      */
     private ConfidenceUI setUpConfidenceWindow() {
         ConfidenceUI confidenceUI = new ConfidenceUI();
-        Stage prediction = new Stage();
-        prediction.setTitle("Neural Network - Confidence");
-        prediction.setResizable(false);
-        prediction.setScene(confidenceUI.getScene());
-        prediction.setX(1415);
-        prediction.setY(135);
-        prediction.show();
+        confidence.setTitle("Neural Network - Confidence");
+        confidence.setResizable(false);
+        confidence.setScene(confidenceUI.getScene());
+        confidence.setX(1415);
+        confidence.setY(135);
+        confidence.show();
         return confidenceUI;
     }
     
@@ -206,12 +204,16 @@ class GuessUI {
         createButton.setOnAction(event -> {
             Stage settingsStage = new Stage();
             SettingsUI settings = new SettingsUI(settingsStage);
-            settingsStage.showAndWait();            /*wait for the user to enter network settings*/
+            settingsStage.showAndWait();/*wait for the user to enter network settings*/
             if (!settingsStage.isShowing()) {
                 //train network and update title
-                trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(),
-                        settings.getLearningRate());
-                guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
+                if (settings.getHiddenNeurons() != null && settings.getBatchSize() != -1 && settings.getEpochs() != -1 && settings.getLearningRate() != -1) {
+                    guess.close();
+                    confidence.close();
+                    trainNetwork(settings.getHiddenNeurons(), settings.getBatchSize(), settings.getEpochs(),
+                            settings.getLearningRate());
+                    guess.setTitle("Neural Network - Hand Written Digit Recognition - " + network.getConfig());
+                }
             }
         });
         return createButton;
@@ -255,7 +257,7 @@ class GuessUI {
              * If the train button is toggled then ask the user whether the network guessed correctly
              * if it was correct then it will retrain the network
              */
-            if (trainButton.isSelected()) {
+            if (trainButton.isSelected() && !Double.isNaN(input[0])) {
                 Alert alert = conformationAlert(null, "Did it guess right?", true);
                 Optional<ButtonType> response = alert.showAndWait();
                 if (response.get().getText().equalsIgnoreCase("Yes")) {
@@ -385,6 +387,8 @@ class GuessUI {
         train.setOnSucceeded(closeEvent -> {
             loadingStage.close();
             train.cancel();
+            guess.show();
+            confidence.show();
         });
         loadingStage.setOnCloseRequest(closeEvent -> System.exit(0));
     }
