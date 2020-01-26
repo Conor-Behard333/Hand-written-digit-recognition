@@ -73,7 +73,7 @@ class GuessUI {
         MenuBar menuBar = getMenuBar();
         
         //Create canvas
-        Canvas draw = new Canvas(405, 520);
+        Canvas draw = new Canvas(405, 495);
         GraphicsContext draw_gc = draw.getGraphicsContext2D();
         draw.setTranslateX(20);
         draw.setTranslateY(20);

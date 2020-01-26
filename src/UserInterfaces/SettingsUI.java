@@ -128,14 +128,11 @@ class SettingsUI {
     /*
      * Converts the user's input from a string into an int and adds each one into an int array
      */
-    private void getNeurons(String input) throws NumberFormatException, IllegalStateException {
+    private void getNeurons(String input) throws Throwable {
         ArrayList<Integer> temp = new ArrayList<>();
         input = removeWhitespace(input) + ",";
-        Pattern pattern = Pattern.compile("\\d+,");
+        Pattern pattern = Pattern.compile("-?\\d+,");
         Matcher matcher = pattern.matcher(input);
-        if (!matcher.find()) {
-            throw new NumberFormatException();
-        }
         while (matcher.find()) {
             String num = input.substring(matcher.start(), matcher.end() - 1);
             temp.add(Integer.parseInt(num));
@@ -143,7 +140,7 @@ class SettingsUI {
         hiddenNeurons = temp.stream().mapToInt(i -> i).toArray();
         for (int hiddenNeuron : hiddenNeurons) {
             if (hiddenNeuron < 1 || hiddenNeuron > 150) {
-                throw new IllegalStateException();
+                throw new Throwable("Hidden neurons must be between 1 and 150");
             }
         }
     }
