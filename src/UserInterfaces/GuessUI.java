@@ -26,7 +26,6 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sun.applet.AppletResourceLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -258,16 +257,20 @@ class GuessUI {
              * if it was correct then it will retrain the network
              */
             if (trainButton.isSelected() && !Double.isNaN(input[0])) {
-                Alert alert = conformationAlert(null, "Did it guess right?", true);
-                Optional<ButtonType> response = alert.showAndWait();
-                if (response.get().getText().equalsIgnoreCase("Yes")) {
-                    retrain(true, input, guess);
-                } else if (response.get().getText().equalsIgnoreCase("no")) {
-                    retrain(false, input, guess);
-                }
+                askUserToTrainNetwork(input, guess);
             }
         });
         return guessButton;
+    }
+    
+    private void askUserToTrainNetwork(double[] input, int guess) {
+        Alert alert = conformationAlert("Train", "Did it guess right?", true);
+        Optional<ButtonType> response = alert.showAndWait();
+        if (response.get().getText().equalsIgnoreCase("Yes")) {
+            retrain(true, input, guess);
+        } else if (response.get().getText().equalsIgnoreCase("no")) {
+            retrain(false, input, guess);
+        }
     }
     
     /*
@@ -311,6 +314,7 @@ class GuessUI {
             for (int i = 0; i < 20; i++) {
                 network.train(input, new Function().getTarget(guess));
             }
+            conformationAlert("Trained", "Network has been trained", false).showAndWait();
         } else {
             String[] targetValues = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
             String target = getChoiceAlert(targetValues, "Train", "Which number did you draw");
@@ -318,6 +322,9 @@ class GuessUI {
                 for (int i = 0; i < 20; i++) {
                     network.train(input, new Function().getTarget(Integer.parseInt(target)));
                 }
+                conformationAlert("Trained", "Network has been trained.", false).showAndWait();
+            } else {
+                askUserToTrainNetwork(input, guess);
             }
         }
     }

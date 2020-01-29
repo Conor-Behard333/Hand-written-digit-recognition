@@ -133,14 +133,20 @@ class SettingsUI {
         input = removeWhitespace(input) + ",";
         Pattern pattern = Pattern.compile("-?\\d+,");
         Matcher matcher = pattern.matcher(input);
+        int found = 0;
         while (matcher.find()) {
+            found++;
             String num = input.substring(matcher.start(), matcher.end() - 1);
             temp.add(Integer.parseInt(num));
         }
-        hiddenNeurons = temp.stream().mapToInt(i -> i).toArray();
-        for (int hiddenNeuron : hiddenNeurons) {
-            if (hiddenNeuron < 1 || hiddenNeuron > 150) {
-                throw new Throwable("Hidden neurons must be between 1 and 150");
+        if (found == 0 || found > 5) {
+            throw new Throwable("Invalid input must be an integer between 1 and 150 more than one value should be separated with a comma. No more than 5 integer values");
+        } else {
+            hiddenNeurons = temp.stream().mapToInt(i -> i).toArray();
+            for (int hiddenNeuron : hiddenNeurons) {
+                if (hiddenNeuron < 1 || hiddenNeuron > 150) {
+                    throw new Throwable("Hidden neurons must be between 1 and 150");
+                }
             }
         }
     }
