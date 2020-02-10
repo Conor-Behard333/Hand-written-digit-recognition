@@ -44,6 +44,7 @@ class GuessUI {
     GuessUI() {
         guess = new Stage();
         guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
+        guess.getIcons().add(new Image("https://cdn4.vectorstock.com/i/1000x1000/01/68/pen-icon-vector-23190168.jpg"));
         guess.setResizable(false);
         
         loadFile(true); /*Load the default network config*/
@@ -132,6 +133,7 @@ class GuessUI {
     private ConfidenceUI setUpConfidenceWindow() {
         ConfidenceUI confidenceUI = new ConfidenceUI();
         confidence.setTitle("Neural Network - Confidence");
+        confidence.getIcons().add(new Image("https://media.istockphoto.com/vectors/magnifier-search-prediction-icon-with-name-vector-id1072898784"));
         confidence.setResizable(false);
         confidence.setScene(confidenceUI.getScene());
         confidence.setX(1415);
@@ -547,6 +549,8 @@ class GuessUI {
      */
     private void showInstruction() {
         Stage stage = new Stage();
+        stage.setTitle("Instructions");
+        stage.getIcons().add(new Image("https://static.thenounproject.com/png/660441-200.png"));
         int width = 1000, height = 1000;
         
         TextArea instructions = getInstructions(width, height);
