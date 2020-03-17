@@ -21,11 +21,11 @@ class SettingsUI {
     private double learningRate = -1;
     
     /*
-     *
+     * Constructor to create the UI for the settings window
      */
     SettingsUI(Stage stage) {
         Pane pane = new Pane(getVBox(stage));
-        Scene scene = new Scene(pane, 400, 370);
+        Scene scene = new Scene(pane, 400, 370);//width of 400 and height of 370
         stage.setTitle("Neural Network - Settings");
         stage.setResizable(false);
         stage.setScene(scene);
@@ -83,7 +83,6 @@ class SettingsUI {
              * Checks each input box for valid inputs and throws exceptions if the user has not
              * entered the appropriate data type with an error explaining why
              */
-            
             try {
                 getNeurons(textAreas.get(0).getText());
                 if (checkValid(Integer.parseInt(textAreas.get(1).getText()), 60000)) {
@@ -151,6 +150,9 @@ class SettingsUI {
         }
     }
     
+    /*
+     * Removes any whitespace from a string
+     */
     private String removeWhitespace(String input) {
         StringBuilder newInput = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
@@ -161,6 +163,7 @@ class SettingsUI {
         return newInput.toString();
     }
     
+    //Getters
     public int getBatchSize() {
         return batchSize;
     }

@@ -28,7 +28,7 @@ public class Network {
         NUM_OF_HIDDEN_NEURONS = new int[NUM_OF_HIDDEN_LAYERS];
         System.arraycopy(hiddenNeurons, 0, NUM_OF_HIDDEN_NEURONS, 0, NUM_OF_HIDDEN_LAYERS);
         
-        //stores all the hidden neurons for each hidden layer
+        //creates all the hidden neurons for each hidden layer
         hiddenLayer = new Hidden_Neuron[NUM_OF_HIDDEN_LAYERS][];
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
             hiddenLayer[i] = new Hidden_Neuron[hiddenNeurons[i]];
@@ -36,6 +36,7 @@ public class Network {
         
         setNetworkConfig();
         setConfig();
+        
         createBiasNeurons();
         createHiddenNeurons();
         createOutputNeurons();
@@ -73,13 +74,15 @@ public class Network {
      * Sets the config in string format
      */
     private void setConfig() {
-        config += "(" + NUM_OF_INPUT_NEURONS;
+        //format for txt file is (InputNeurons_HiddenNeuronsH_HiddenNeuronsH_OutputNeurons)[learning rate]
+        config += "(" + NUM_OF_INPUT_NEURONS + "_";
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
-            config += "_" + NUM_OF_HIDDEN_NEURONS[i] + "_";
+            config = config.concat(NUM_OF_HIDDEN_NEURONS[i] + "H_");
         }
         config += NUM_OF_OUTPUT_NEURONS + ")[" + LEARNING_RATE + "]";
     }
     
+    //getter or the variable config
     public String getConfig() {
         return config;
     }
@@ -114,7 +117,6 @@ public class Network {
     private void getHiddenLayerOutputs(double[] inputs, double[][] hiddenLayer_outputs) {
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
             for (int j = 0; j < NUM_OF_HIDDEN_NEURONS[i]; j++) {
-                
                 hiddenLayer[i][j].calculateOutput(inputs, biasNeurons[i].getOutput(i));
                 hiddenLayer_outputs[i][j] = hiddenLayer[i][j].getOutput();
             }
@@ -203,6 +205,9 @@ public class Network {
         return x;
     }
     
+    /*
+     * Tunes the weights of second to last layer of the network
+     */
     private void tunePenultimateLayer(double[] inputs, int layer) {
         for (int i = 0; i < NUM_OF_HIDDEN_NEURONS[layer]; i++) {
             double deltaSumTotal = 0;
@@ -213,6 +218,9 @@ public class Network {
         }
     }
     
+    /*
+     * Tunes the weights of layers in-between the input layer and the output layer
+     */
     private void tuneInBetweenLayers(double[] inputs, int layer) {
         for (int i = 0; i < NUM_OF_HIDDEN_NEURONS[layer]; i++) {
             double deltaSumTotal = 0;
@@ -260,12 +268,14 @@ public class Network {
     }
     
     /*
-     * Creates hidden neurons
+     * Initialises hidden neurons
      */
     private void createHiddenNeurons() {
+        //iterates through each hidden layer
         for (int i = 0; i < NUM_OF_HIDDEN_LAYERS; i++) {
+            //iterates through each hidden neuron in the hidden layer
             for (int j = 0; j < NUM_OF_HIDDEN_NEURONS[i]; j++) {
-                if (i == 0) {
+                if (i == 0) {//The first hidden layer is the input layer
                     hiddenLayer[i][j] = new Hidden_Neuron(NUM_OF_INPUT_NEURONS);
                 } else {
                     hiddenLayer[i][j] = new Hidden_Neuron(NUM_OF_HIDDEN_NEURONS[i - 1]);
@@ -275,7 +285,7 @@ public class Network {
     }
     
     /*
-     * Creates output neurons
+     * Initialises output neurons
      */
     private void createOutputNeurons() {
         for (int i = 0; i < NUM_OF_OUTPUT_NEURONS; i++) {
@@ -289,9 +299,9 @@ public class Network {
      */
     public int getGuess(double[] outputs) {
         double largest = 0;
-        largest = getLargest(outputs, largest);
+        largest = getLargest(outputs, largest);//gets the largest number out of the array
         for (int i = 0; i < outputs.length; i++) {
-            if (outputs[i] == largest) {
+            if (outputs[i] == largest) {//returns the index of the largest number
                 return i;
             }
         }
@@ -303,6 +313,7 @@ public class Network {
      */
     private double getLargest(double[] outputs, double largest) {
         for (double output : outputs) {
+            //if output is greater than the current largest number then set the largest number to the output
             if (output >= largest) {
                 largest = output;
             }
@@ -348,10 +359,12 @@ public class Network {
     }
     
     /*
-     * Calculates a returns the number of weights in the network
+     * Calculates and returns the number of weights in the network
      * */
     private int getTotalNumOfWeights() {
         int size = 0;
+        //number of weights in a network is:
+        // (neurons in layer[i] * neurons in next layer) + neurons in next layer for each layer
         for (int i = 0; i < networkConfig.length - 1; i++) {
             size += (networkConfig[i] * networkConfig[i + 1]) + networkConfig[i + 1];
         }
@@ -366,11 +379,14 @@ public class Network {
         int lastIndex = 0;
         for (int i = 0; i < networkConfig.length - 1; i++) {
             if (i == networkConfig.length - 2) {
+                //sets the weights for the output layer
                 lastIndex = setWeights(weights, lastIndex, networkConfig[i], i, networkConfig[i + 1], true);
             } else {
+                //sets the weights for the rest of the layers
                 lastIndex = setWeights(weights, lastIndex, networkConfig[i], i, networkConfig[i + 1], false);
             }
         }
+        //sets the weights for the bias neurons
         setBiasWeights(weights, lastIndex);
     }
     

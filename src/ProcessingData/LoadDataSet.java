@@ -11,7 +11,7 @@ public class LoadDataSet extends Function {
     private int batchSize;
 
     /*
-     * Initialises the int 2d array trainingSet
+     * Constructor to initialises the int 2d array trainingSet
      */
     public LoadDataSet(int batchSize, String filePath) throws IOException {
         this.batchSize = batchSize;

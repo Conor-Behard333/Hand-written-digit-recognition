@@ -17,6 +17,7 @@ class ConfidenceUI {
      * Updates the prediction values shown by the progress bars for the output neurons
      */
     void updateValues(double[] output) {
+        //formats the percentage to two decimal places
         DecimalFormat df = new DecimalFormat("#.##");
         for (int i = 0; i < output.length; i++) {
             progressBars[i].setProgress(output[i]);
@@ -30,13 +31,13 @@ class ConfidenceUI {
      */
     private String getStyle(double output) {
         if (output >= 0 && output < 20) {
-            return "-fx-accent: #FF1000";
+            return "-fx-accent: #FF1000";//Red
         } else if (output >= 20 && output < 40) {
-            return "-fx-accent: #FF941E";
+            return "-fx-accent: #FF941E";//Orange
         } else if (output >= 40 && output < 80) {
-            return "-fx-accent: #FFF41F";
+            return "-fx-accent: #FFF41F";//Yellow
         } else if (output >= 80 && output <= 100) {
-            return "-fx-accent: #36FF00";
+            return "-fx-accent: #36FF00";//Green
         }
         return null;
     }
@@ -60,6 +61,9 @@ class ConfidenceUI {
         return new Scene(panel, 400, 600);
     }
     
+    /*
+     * Initialises the labels and progress bars
+     */
     private void initialiseLabelsAndProgressBars() {
         for (int i = 0; i < progressBars.length; i++) {
             labels[i] = new Label(i + ": ");

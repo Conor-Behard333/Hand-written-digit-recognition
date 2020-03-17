@@ -80,23 +80,27 @@ public class ImageConverter extends NeuralNetwork.Function {
     }
 
     /*
+     * Object recognition:
      * Finds the up-most, left-most, right-most and down-most pixel of the image that the user
      * drew and crops the image down
      */
     private int[][] createNewImage(int[][] temp) {
-        int upMost = getLeftAndUpMost(temp, true);
-        int downMost = getRightAndDownMost(temp, true);
-        int leftMost = getLeftAndUpMost(temp, false);
-        int rightMost = getRightAndDownMost(temp, false);
+        int upMost = getLeftAndUpMost(temp, true);//finds up most pixel
+        int downMost = getRightAndDownMost(temp, true);//finds down most pixel
+        int leftMost = getLeftAndUpMost(temp, false);//finds left most pixel
+        int rightMost = getRightAndDownMost(temp, false);//finds right most pixel
 
         int height = (downMost - upMost);
         int width = (rightMost - leftMost);
+        
+        //adds padding on the x and y to make the image slightly larger
         int padding_y = 8;
         int padding_x = 8;
         int[][] newImage = new int[height + 1 + padding_y][width + 1 + padding_x];
 
         fillMatrix(newImage);
 
+        //re-creates image starting from up most and ending at the down most pixel
         int row = padding_y / 2;
         int column = padding_x / 2;
         for (int i = upMost; i <= downMost; i++) {

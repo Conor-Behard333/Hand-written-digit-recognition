@@ -5,7 +5,7 @@ class Output_Neuron extends Function {
     private double output;
     private double[] weights;
     private double[] deltaSum;
-
+    
     /*
      * Initialises global variables
      */
@@ -14,7 +14,7 @@ class Output_Neuron extends Function {
         this.weights = randomiseWeights(weights.length);
         this.deltaSum = new double[previousLayerSize];
     }
-
+    
     /*
      * Tunes the weights by finding the gradient of softMax which is: error * derivative
      * then adds the learning rate * by the previous output * by the gradient for each weight
@@ -31,38 +31,40 @@ class Output_Neuron extends Function {
         }
         tuneBias(numOfOutputNeurons, bias, learningRate, gradient);
     }
-
+    
     /*
      * Calculates the output and assigns it to the variable 'output'
      */
     void calculateOutput(double[] weightedSums, int i) {
         output = softMax(weightedSums, i);
     }
-
+    
     /*
      * Calculates the weighted sum and assigns it to the variable 'weightedSum'
      */
     void calculateWeightedSum(double[] hiddenInputs, double bias) {
         weightedSum = getWeightedSum(hiddenInputs, weights) + bias;
     }
-
+    
+    //Getters
     double[] getWeights() {
         return weights;
     }
-
-    void setWeights(double[] weights) {
-        this.weights = weights;
-    }
-
+    
     double getOutput() {
         return output;
     }
-
+    
     double getWeightedSum() {
         return weightedSum;
     }
-
+    
     double[] getDeltaSum() {
         return deltaSum;
+    }
+    
+    //Setters
+    void setWeights(double[] weights) {
+        this.weights = weights;
     }
 }

@@ -13,6 +13,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -44,19 +45,20 @@ class GuessUI {
     GuessUI() {
         guess = new Stage();
         guess.setTitle("Neural Network - Hand Written Digit Recognition - (784_100H_10)[0.14]");
+        guess.getIcons().add(new Image("https://cdn4.vectorstock.com/i/1000x1000/01/68/pen-icon-vector-23190168.jpg"));
         guess.setResizable(false);
+        
         
         loadFile(true); /*Load the default network config*/
         
         //set up user interface
         ConfidenceUI confidenceUI = setUpConfidenceWindow();
-        
         BorderPane mainWindow = getMainWindow(confidenceUI);
         
         Scene scene = new Scene(mainWindow, 895, 600);
         scene.getStylesheets().add("Styles.css");
         
-        guess.setOnCloseRequest(event -> System.exit(0));//exit program is window is closed
+        guess.setOnCloseRequest(event -> System.exit(0));//exit program if the main window is closed
         guess.setScene(scene);
         guess.show();
     }
@@ -95,7 +97,8 @@ class GuessUI {
     }
     
     /*
-     * Returns a MenuBar which gives
+     * Returns a MenuBar which when selected displays the instructions on how
+     * to use the program
      */
     private MenuBar getMenuBar() {
         Menu menu = new Menu("Tips");
@@ -132,6 +135,7 @@ class GuessUI {
     private ConfidenceUI setUpConfidenceWindow() {
         ConfidenceUI confidenceUI = new ConfidenceUI();
         confidence.setTitle("Neural Network - Confidence");
+        confidence.getIcons().add(new Image("https://media.istockphoto.com/vectors/magnifier-search-prediction-icon-with-name-vector-id1072898784"));
         confidence.setResizable(false);
         confidence.setScene(confidenceUI.getScene());
         confidence.setX(1415);
@@ -263,12 +267,19 @@ class GuessUI {
         return guessButton;
     }
     
+    /*
+     * Creates an alert for the user asking them whether or not the network guessed correctly
+     */
     private void askUserToTrainNetwork(double[] input, int guess) {
         Alert alert = conformationAlert("Train", "Did it guess right?", true);
         Optional<ButtonType> response = alert.showAndWait();
         if (response.get().getText().equalsIgnoreCase("Yes")) {
+            //if it did guess correctly then train the network with the number that it guessed
             retrain(true, input, guess);
         } else if (response.get().getText().equalsIgnoreCase("no")) {
+            /* if it did not guess correctly ask the user what number they drew and train
+             * the network with that number
+             */
             retrain(false, input, guess);
         }
     }
@@ -432,7 +443,7 @@ class GuessUI {
         loadingStage.setTitle("Training Please Wait...");
         ProgressBar loading = new ProgressBar(0);
         loading.setPrefSize(400, 60);
-        loading.setStyle("-fx-accent: #5bc2e7");
+        loading.setStyle("-fx-accent: #5BC2E7");
         Label progress = new Label("Progress: ");
         progress.setTranslateX(10);
         progress.setTranslateY(10);
@@ -547,6 +558,8 @@ class GuessUI {
      */
     private void showInstruction() {
         Stage stage = new Stage();
+        stage.setTitle("Instructions");
+        stage.getIcons().add(new Image("https://static.thenounproject.com/png/660441-200.png"));
         int width = 1000, height = 1000;
         
         TextArea instructions = getInstructions(width, height);
