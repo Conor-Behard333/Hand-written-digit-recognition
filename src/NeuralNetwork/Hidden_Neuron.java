@@ -1,9 +1,11 @@
 package NeuralNetwork;
 
-class Hidden_Neuron extends Function {
+import java.io.Serializable;
+
+class Hidden_Neuron extends Function implements Serializable{
     private double output;
     private double[] weights;
-    private double[] deltaSum;
+    private final double[] DELTA_SUM;
     
     /*
      * Constructor to initialises global variables
@@ -11,7 +13,7 @@ class Hidden_Neuron extends Function {
     Hidden_Neuron(int previousLayerSize) {
         this.weights = new double[previousLayerSize];
         this.weights = randomiseWeights(weights.length);
-        this.deltaSum = new double[previousLayerSize];
+        this.DELTA_SUM = new double[previousLayerSize];
     }
     
     /*
@@ -29,7 +31,7 @@ class Hidden_Neuron extends Function {
         double gradient = deltaSumTotal * derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += learningRate * prevOutputs[i] * gradient;
-            deltaSum[i] = gradient * weights[i];
+            DELTA_SUM[i] = gradient * weights[i];
         }
         tuneBias(numOfHiddenNeurons, bias, learningRate, gradient);
     }
@@ -45,7 +47,7 @@ class Hidden_Neuron extends Function {
     
     //Getters
     double[] getDeltaSum() {
-        return deltaSum;
+        return DELTA_SUM;
     }
     
     double getOutput() {
@@ -54,10 +56,5 @@ class Hidden_Neuron extends Function {
     
     double[] getWeights() {
         return weights;
-    }
-    
-    //Setters
-    void setWeights(double[] weights) {
-        this.weights = weights;
     }
 }

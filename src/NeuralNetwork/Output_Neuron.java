@@ -1,20 +1,22 @@
 package NeuralNetwork;
 
-class Output_Neuron extends Function {
+import java.io.Serializable;
+
+class Output_Neuron extends Function implements Serializable {
     private double weightedSum;
     private double output;
     private double[] weights;
-    private double[] deltaSum;
-    
+    private final double[] DELTA_SUM;
+
     /*
      * Initialises global variables
      */
     Output_Neuron(int previousLayerSize) {
         this.weights = new double[previousLayerSize];
         this.weights = randomiseWeights(weights.length);
-        this.deltaSum = new double[previousLayerSize];
+        this.DELTA_SUM = new double[previousLayerSize];
     }
-    
+
     /*
      * Tunes the weights by finding the gradient of softMax which is: error * derivative
      * then adds the learning rate * by the previous output * by the gradient for each weight
@@ -27,44 +29,39 @@ class Output_Neuron extends Function {
         double gradient = (target - output) * derivative(output);
         for (int i = 0; i < weights.length; i++) {
             weights[i] += learningRate * prevOutputs[i] * gradient;
-            deltaSum[i] = gradient * weights[i];
+            DELTA_SUM[i] = gradient * weights[i];
         }
         tuneBias(numOfOutputNeurons, bias, learningRate, gradient);
     }
-    
+
     /*
      * Calculates the output and assigns it to the variable 'output'
      */
     void calculateOutput(double[] weightedSums, int i) {
         output = softMax(weightedSums, i);
     }
-    
+
     /*
      * Calculates the weighted sum and assigns it to the variable 'weightedSum'
      */
     void calculateWeightedSum(double[] hiddenInputs, double bias) {
         weightedSum = getWeightedSum(hiddenInputs, weights) + bias;
     }
-    
+
     //Getters
     double[] getWeights() {
         return weights;
     }
-    
+
     double getOutput() {
         return output;
     }
-    
+
     double getWeightedSum() {
         return weightedSum;
     }
-    
+
     double[] getDeltaSum() {
-        return deltaSum;
-    }
-    
-    //Setters
-    void setWeights(double[] weights) {
-        this.weights = weights;
+        return DELTA_SUM;
     }
 }

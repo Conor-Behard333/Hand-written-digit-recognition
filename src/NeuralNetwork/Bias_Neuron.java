@@ -1,6 +1,8 @@
 package NeuralNetwork;
 
-class Bias_Neuron extends Function {
+import java.io.Serializable;
+
+class Bias_Neuron extends Function implements Serializable {
     private double[] weights;
     
     /*Constructor to initialise the neuron*/
@@ -22,8 +24,5 @@ class Bias_Neuron extends Function {
     void setWeight(double delta, int index) {
         weights[index] += delta;
     }
-    
-    void setWeights(double[] weights) {
-        this.weights = weights;
-    }
+
 }

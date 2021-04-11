@@ -1,17 +1,8 @@
 package NeuralNetwork;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
+import java.io.Serializable;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class Function {
+public class Function implements Serializable {
     /*
      * Calculates and returns the weighted sum for a neuron
      *
