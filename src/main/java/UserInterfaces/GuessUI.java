@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Arrays;
 import java.util.Optional;
 
 
@@ -247,25 +248,30 @@ class GuessUI {
         guessButton.setPrefSize(width, height);
 
         guessButton.setOnAction(event -> {
-            File image = new File(System.getProperty("user.dir") + "/image.png");
-            getDrawing(draw, image);
+            try {
+                File image = new File(System.getProperty("user.dir") + "/image.png");
+                getDrawing(draw, image);
 
-            double[] input = new ImageConverter().getInput();
-            image.delete();
-            int guess = 0;
-            if (Double.isNaN(input[0])) {
-                Alert alert = conformationAlert("Please draw a number", "Please draw a number from 0 - 9", false);
-                alert.showAndWait();
-            } else {
-                guess = inputImageIntoNetwork(number, confidenceUI, input);/*Inputs image into neural network*/
+                double[] input = new ImageConverter().getInput();
+                image.delete();
+                int guess = 0;
+                if (Double.isNaN(input[0])) {
+                    Alert alert = conformationAlert("Please draw a number", "Please draw a number from 0 - 9", false);
+                    alert.showAndWait();
+                } else {
+                    guess = inputImageIntoNetwork(number, confidenceUI, input);/*Inputs image into neural network*/
+                }
+                /*
+                 * If the train button is toggled then ask the user whether the network guessed correctly
+                 * if it was correct then it will retrain the network
+                 */
+                if (trainButton.isSelected() && !Double.isNaN(input[0])) {
+                    askUserToTrainNetwork(input, guess);
+                }
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Error", Arrays.toString(e.getStackTrace()));
             }
-            /*
-             * If the train button is toggled then ask the user whether the network guessed correctly
-             * if it was correct then it will retrain the network
-             */
-            if (trainButton.isSelected() && !Double.isNaN(input[0])) {
-                askUserToTrainNetwork(input, guess);
-            }
+
         });
         return guessButton;
     }
@@ -619,5 +625,21 @@ class GuessUI {
             alert.getButtonTypes().setAll(okButton);
         }
         return alert;
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String headerText, String contentText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+
+        if (alertType.equals(Alert.AlertType.ERROR)) {
+            TextArea fullMessage = new TextArea(contentText);
+            fullMessage.setWrapText(true);
+            fullMessage.setEditable(false);
+            alert.getDialogPane().setContent(fullMessage);
+        } else {
+            alert.setContentText(contentText);
+        }
+        alert.showAndWait();
     }
 }
