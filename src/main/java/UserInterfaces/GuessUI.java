@@ -248,11 +248,30 @@ class GuessUI {
         guessButton.setPrefSize(width, height);
 
         guessButton.setOnAction(event -> {
+            String[] exploded;
+            StringBuilder path;
             try {
-                File image = new File(System.getProperty("user.dir") + "/image.png");
+                path = new StringBuilder(this.getClass().getResource(this.getClass().getSimpleName() + ".class").toString());
+                exploded = path.toString().split("/");
+
+                int endIndex = 0;
+                for (int i = 0; i < exploded.length; i++) {
+                    if (exploded[i].equals("Neural-Network-1.0-SNAPSHOT-shaded.jar!")) {
+                        endIndex = i;
+                    }
+                }
+                path = new StringBuilder();
+                for (int i = 1; i < endIndex; i++) {
+                    path.append(exploded[i]).append("/");
+                }
+
+                path = new StringBuilder(path.toString().replace("%20", " "));
+
+                File image = new File(path + "image.png");
+
                 getDrawing(draw, image);
 
-                double[] input = new ImageConverter().getInput();
+                double[] input = new ImageConverter().getInput(path.toString());
                 image.delete();
                 int guess = 0;
                 if (Double.isNaN(input[0])) {
@@ -271,7 +290,6 @@ class GuessUI {
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Error", Arrays.toString(e.getStackTrace()));
             }
-
         });
         return guessButton;
     }
@@ -314,8 +332,7 @@ class GuessUI {
      */
     private void getDrawing(Canvas draw, File file) {
         try {
-            WritableImage writableImage = new WritableImage((int) Math.round(draw.getWidth()),
-                    (int) Math.round(draw.getHeight()));
+            WritableImage writableImage = new WritableImage((int) Math.round(draw.getWidth()), (int) Math.round(draw.getHeight()));
             draw.snapshot(null, writableImage);
             invertPixelValues(writableImage, draw);
             BufferedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);

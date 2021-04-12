@@ -14,12 +14,12 @@ public class ImageConverter extends NeuralNetwork.Function {
      * which is then normalised (put between the values of 0 and 1) and finally
      * returned to then be used to be put through the neural network
      */
-    public double[] getInput() {
+    public double[] getInput(String fileDir) {
         int[] input = new int[784];
         File convertedFile = null;
         try {
             //Stage 1
-            BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/image.png"));   /*reads the image the user drew*/
+            BufferedImage image = ImageIO.read(new File(fileDir + "image.png"));   /*reads the image the user drew*/
             image = getScaledImage(20, 20, image);         /*scales the image to 20 by 20*/
             image = getCenteredImage(image);        /*centres the image onto a 28 by 28 image*/
 
@@ -37,7 +37,7 @@ public class ImageConverter extends NeuralNetwork.Function {
 
             //Stage 6
             getPixelValues(input, convertedImage);
-            convertedFile = new File(System.getProperty("user.dir") + "/convertedImage.png");
+            convertedFile = new File(fileDir + "convertedImage.png");
             ImageIO.write(convertedImage, "png", convertedFile);
         } catch (IOException e) {
             e.printStackTrace();
