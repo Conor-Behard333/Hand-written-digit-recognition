@@ -5,7 +5,6 @@ import NeuralNetwork.Network;
 import ProcessingData.ImageConverter;
 import ProcessingData.LoadDataSet;
 import ProcessingData.LoadFile;
-import ProcessingData.SaveFile;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
@@ -26,12 +25,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Optional;
+
 
 class GuessUI {
     private Network network;
@@ -52,7 +55,7 @@ class GuessUI {
         BorderPane mainWindow = getMainWindow(confidenceUI);
 
         Scene scene = new Scene(mainWindow, 895, 600);
-        scene.getStylesheets().add("Styles.css");
+        scene.getStylesheets().add("styles.css");
 
         GUESS.setOnCloseRequest(event -> System.exit(0));//exit program if the main window is closed
         GUESS.setScene(scene);
@@ -244,9 +247,11 @@ class GuessUI {
         guessButton.setPrefSize(width, height);
 
         guessButton.setOnAction(event -> {
-            getDrawing(draw, new File("Resources\\Images\\image.png"));
+            File image = new File(System.getProperty("user.dir") + "/image.png");
+            getDrawing(draw, image);
 
             double[] input = new ImageConverter().getInput();
+            image.delete();
             int guess = 0;
             if (Double.isNaN(input[0])) {
                 Alert alert = conformationAlert("Please draw a number", "Please draw a number from 0 - 9", false);
@@ -353,7 +358,11 @@ class GuessUI {
             Optional<ButtonType> response = alert.showAndWait();
             if (response.isPresent()) {
                 if (response.get().getText().equalsIgnoreCase("yes")) {
-                    SaveNetwork();
+                    DirectoryChooser dc = new DirectoryChooser();
+                    File file = dc.showDialog(GUESS);
+                    if (file != null) {
+                        saveNetwork(file.getAbsolutePath());
+                    }
                 }
             }
         });
@@ -363,9 +372,8 @@ class GuessUI {
     /*
      * Saves the weights in a text file and names the file with the config of the network
      */
-    private void SaveNetwork() {
-        double[] weights = network.getWeights();
-        serialize(network, "Resources\\SaveFiles\\" + network.getConfig());
+    private void saveNetwork(String fileDir) {
+        serialize(network, fileDir + "/" + network.getConfig());
         //Lets the user know that the file has been saved
         Alert done = new Alert(Alert.AlertType.INFORMATION);
         done.setTitle("File saved!");
@@ -434,7 +442,7 @@ class GuessUI {
                 double max = batchSize * epochs;
                 double current = 0;
                 //Load the training data
-                LoadDataSet trainingData = new LoadDataSet(batchSize, "Resources\\Misc\\mnist_train.csv");
+                LoadDataSet trainingData = new LoadDataSet(batchSize, "Misc/mnist_train.csv");
                 //Trains the network
                 for (int j = 0; j < epochs; j++) {
                     for (int i = 0; i < batchSize; i++) {
@@ -476,45 +484,48 @@ class GuessUI {
         String saveFile;
         if (startUp) {
             saveFile = "(784_100H_10)[0.14].ser"; //Default network
+            return (Network) deserialize("SaveFiles/" + saveFile, startUp);
         } else {
             //Gives the user the current options
-            String[] files = getFileNames();
-            saveFile = getChoiceAlert(files, "Choose a config file", "Choose your preset:");
-        }
-        //set the weights for the network if the user chose a file
-        if (saveFile != null) {
-            return (Network) deserialize("Resources/SaveFiles/" + saveFile);
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("ser files", "*.ser"));
+            File file = fc.showOpenDialog(GUESS);
+            if (file != null) {
+                saveFile = file.getPath();
+                return (Network) deserialize(saveFile, startUp);
+            }
         }
         return null;
     }
 
-    private Object deserialize(String filePath) {
+    private Object deserialize(String filePath, boolean startUp) {
         Object obj = null;
         try {
-            System.out.println(filePath);
-            FileInputStream fileIn = new FileInputStream(filePath);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            obj = in.readObject();
-            in.close();
-            fileIn.close();
+            InputStream inputStream;
+            if (startUp) {
+                inputStream = this.getClass().getClassLoader().getResourceAsStream(filePath);
+            } else {
+                inputStream = new FileInputStream(filePath);
+            }
+            File tmpFile = File.createTempFile("file", "temp");
+            assert inputStream != null;
+            FileUtils.copyInputStreamToFile(inputStream, tmpFile);
+            try {
+                FileInputStream fileIn = new FileInputStream(tmpFile);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                obj = in.readObject();
+                in.close();
+                fileIn.close();
+            } finally {
+                if (startUp) {
+                    tmpFile.delete();
+                }
+            }
+
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return obj;
-    }
-
-    /*
-     * Returns the names of all the files in the folder 'SaveFiles'
-     */
-    private String[] getFileNames() {
-        File folder = new File("Resources\\SaveFiles");
-        File[] files = folder.listFiles();
-        assert files != null;
-        String[] fileNames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            fileNames[i] = files[i].getName();
-        }
-        return fileNames;
     }
 
     /*
@@ -559,7 +570,7 @@ class GuessUI {
         TextArea instructions = new TextArea();
         instructions.setPrefSize(width, height);
         instructions.setEditable(false);
-        instructions.setText(new LoadFile().loadTextFile("Resources\\Misc\\Instructions.txt"));
+        instructions.setText(new LoadFile().loadTextFile("Misc/Instructions.txt"));
         instructions.setStyle("-fx-font-size: 1.5em;");
         return instructions;
     }

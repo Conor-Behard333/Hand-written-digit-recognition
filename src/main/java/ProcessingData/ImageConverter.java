@@ -16,9 +16,10 @@ public class ImageConverter extends NeuralNetwork.Function {
      */
     public double[] getInput() {
         int[] input = new int[784];
+        File convertedFile = null;
         try {
             //Stage 1
-            BufferedImage image = ImageIO.read(new File("Resources\\Images\\image.png"));   /*reads the image the user drew*/
+            BufferedImage image = ImageIO.read(new File(System.getProperty("user.dir") + "/image.png"));   /*reads the image the user drew*/
             image = getScaledImage(20, 20, image);         /*scales the image to 20 by 20*/
             image = getCenteredImage(image);        /*centres the image onto a 28 by 28 image*/
 
@@ -36,13 +37,17 @@ public class ImageConverter extends NeuralNetwork.Function {
 
             //Stage 6
             getPixelValues(input, convertedImage);
-            ImageIO.write(convertedImage, "png", new File("Resources\\Images\\ConvertedImage.png"));
+            convertedFile = new File(System.getProperty("user.dir") + "/convertedImage.png");
+            ImageIO.write(convertedImage, "png", convertedFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
         double[] inputDouble = new double[input.length];
         for (int i = 0; i < input.length; i++) {
             inputDouble[i] = input[i];
+        }
+        if (convertedFile != null) {
+            convertedFile.delete();
         }
         return normalise(inputDouble);//normalises the input data
     }
@@ -92,7 +97,7 @@ public class ImageConverter extends NeuralNetwork.Function {
 
         int height = (downMost - upMost);
         int width = (rightMost - leftMost);
-        
+
         //adds padding on the x and y to make the image slightly larger
         int padding_y = 8;
         int padding_x = 8;

@@ -3,7 +3,7 @@ package ProcessingData;
 import NeuralNetwork.Function;
 
 import java.io.*;
-import java.util.Scanner;
+import java.net.URISyntaxException;
 
 public class LoadDataSet extends Function {
     private final int columns = 785;
@@ -15,7 +15,11 @@ public class LoadDataSet extends Function {
      */
     public LoadDataSet(int batchSize, String filePath) throws IOException {
         this.batchSize = batchSize;
-        trainingData = loadData(filePath);
+        try {
+            trainingData = loadData(filePath);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -24,18 +28,23 @@ public class LoadDataSet extends Function {
      *
      * Each row is a different image
      */
-    private int[][] loadData(String fileName) throws IOException {
+    private int[][] loadData(String fileName) throws IOException, URISyntaxException {
         int[][] trainingData = new int[batchSize][columns];
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        String line;
         int row = 0;
-        Scanner n = new Scanner(new File(fileName));
-        n.useDelimiter(",");
-        while (row < batchSize) {
+        while ((line = br.readLine()) != null && row < batchSize) {
+            String[] values = line.split(",");
             for (int i = 0; i < columns; i++) {
-                trainingData[row][i] = (Integer.parseInt(n.next()));
+                trainingData[row][i] = (Integer.parseInt(values[i]));
             }
             row++;
-            n.nextLine();
         }
+        br.close();
+        isr.close();
+        is.close();
         return trainingData;
     }
 
