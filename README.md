@@ -1,6 +1,6 @@
 ## Hand-written digit recognition using a neural network
 
-This was made for my A-Level coursework...
+This was made for my A-Level coursework, I created a neural network which is able to classify drawings of numbers from 0-9.
 
 ## Prerequisites
 
