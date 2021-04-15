@@ -12,7 +12,7 @@ Download the Neural-Network-1.0-SNAPSHOT-shaded.jar file
 
 Then simply run the file by double-clicking it
 
-If the file does not run, try using the command line to run the file. This is down by changing the directory to where
+If the file does not run, try using the command line to run the file. This is done by changing the directory to where
 the jar file is located on you computer and running:
 
 ```
